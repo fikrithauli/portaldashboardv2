@@ -146,25 +146,25 @@
             <div class="content-body">
                 <section id="dashboard-ecommerce">
                     <!-- Line Chart Starts-->
-                @if($detailData->visualization_type === 'Tableau')    
+                    @if($detailData->visualization_type === 'Tableau')
                     <div class="row">
-                    <div class="col-12" style="width:1520px; height:840px;">
-             	<div id='tableauViz'></div>
-                </div>
-                @else
-                <!-- Tampilkan embed_url sesuai kebutuhan PowerBI -->
-                    <div class="col-12 mx-auto mb-4">
-                                {!! $detailData->embed_url !!}
-                            </div>
-                @endif
-                </div>
+                        <div class="col-12" style="width:1520px; height:840px;">
+                            <div id='tableauViz'></div>
+                        </div>
+                        @else
+                        <!-- Tampilkan embed_url sesuai kebutuhan PowerBI -->
+                        <div class="col-12 mx-auto mb-4">
+                            {!! $detailData->embed_url !!}
+                        </div>
+                        @endif
                     </div>
-                    <!-- Line Chart Ends-->
-                </section>
-                <!-- Dashboard Ecommerce ends -->
-                <br><br>
             </div>
+            <!-- Line Chart Ends-->
+            </section>
+            <!-- Dashboard Ecommerce ends -->
+            <br><br>
         </div>
+    </div>
     </div>
     <!-- END: Content-->
 

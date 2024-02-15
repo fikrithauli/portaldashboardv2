@@ -454,25 +454,30 @@
                                             <div class="col-xl-12 col-md-6 col-12">
                                                 <div class="mb-2">
                                                     <label class="form-label" for="basicInput">Visualization Type <small class="text-danger">*</small></label>
-                                                    <select name="visualization_type" class="form-select">
-                                                        <option hidden value="{{ $dashboard->visualization_type }}" selected>{{ $dashboard->visualization_type }}</option>
-                                                        <option value="Tableau">Tableau</option>
-                                                        <option value="PowerBI">Power BI</option>
-                                                    </select>
+                                                    <input type="text" class="form-control" name="visualization_type" value="{{ $dashboard->visualization_type }}" readonly />
                                                 </div>
                                             </div>
-                                            <div class="col-xl-6 col-md-6 col-12">
-                                                <div class="mb-1">
+                                            @if($dashboard->visualization_type === 'Tableau')
+                                            <div class="col-xl-12 col-md-12 col-12">
+                                                <div class="mb-2">
                                                     <label class="form-label" for="basicInput"> Embed URL </label>
-                                                    <input type="text" name="embed_url" class="form-control" value="{{ $dashboard->embed_url }}">
+                                                    <textarea name="embed_url" class="form-control">{{ $dashboard->embed_url }}</textarea>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-6 col-md-6 col-12">
-                                                <div class="mb-1">
+                                            <div class="col-xl-12 col-md-12 col-12">
+                                                <div class="mb-2">
                                                     <label class="form-label" for="basicInput"> View Dashboard </label>
-                                                   <input type="text" class="form-control" name="view_name" value="{{ $dashboard->view_name }}">
+                                                    <input type="text" class="form-control" name="view_name" value="{{ $dashboard->view_name }}">
                                                 </div>
                                             </div>
+                                            @else
+                                            <div class="col-xl-12 col-md-12 col-12">
+                                                <div class="mb-2">
+                                                    <label class="form-label" for="basicInput"> Embed URL </label>
+                                                    <textarea name="embed_url" class="form-control">{{ $dashboard->embed_url }}</textarea>
+                                                </div>
+                                            </div>
+                                            @endif
                                         </div>
                                         <hr>
                                         <button type="submit" class="btn btn-primary">Update</button>&nbsp;
