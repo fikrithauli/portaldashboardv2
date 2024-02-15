@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 12, 2023 at 05:49 AM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 7.4.28
+-- Waktu pembuatan: 09 Feb 2024 pada 17.18
+-- Versi server: 10.4.24-MariaDB
+-- Versi PHP: 7.4.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `broadcasts`
+-- Struktur dari tabel `broadcasts`
 --
 
 CREATE TABLE `broadcasts` (
@@ -37,7 +37,7 @@ CREATE TABLE `broadcasts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `broadcasts`
+-- Dumping data untuk tabel `broadcasts`
 --
 
 INSERT INTO `broadcasts` (`id`, `flag`, `dashboards_id`, `recipients_id`, `is_active`, `created_at`) VALUES
@@ -1743,7 +1743,7 @@ INSERT INTO `broadcasts` (`id`, `flag`, `dashboards_id`, `recipients_id`, `is_ac
 -- --------------------------------------------------------
 
 --
--- Table structure for table `categories`
+-- Struktur dari tabel `categories`
 --
 
 CREATE TABLE `categories` (
@@ -1752,7 +1752,7 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `categories`
+-- Dumping data untuk tabel `categories`
 --
 
 INSERT INTO `categories` (`category_id`, `category_name`) VALUES
@@ -1766,7 +1766,7 @@ INSERT INTO `categories` (`category_id`, `category_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dashboard`
+-- Struktur dari tabel `dashboard`
 --
 
 CREATE TABLE `dashboard` (
@@ -1774,6 +1774,7 @@ CREATE TABLE `dashboard` (
   `category_id` int(11) NOT NULL,
   `dashboard_name` varchar(225) NOT NULL,
   `description` text NOT NULL,
+  `visualization_type` text DEFAULT NULL,
   `embed_url` text DEFAULT NULL,
   `view_name` text DEFAULT NULL,
   `image` text DEFAULT NULL,
@@ -1782,16 +1783,16 @@ CREATE TABLE `dashboard` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `dashboard`
+-- Dumping data untuk tabel `dashboard`
 --
 
-INSERT INTO `dashboard` (`dashboard_id`, `category_id`, `dashboard_name`, `description`, `embed_url`, `view_name`, `image`, `dashboard_status`, `created_at`) VALUES
-(1, 12, 'Customer Satisfaction Index Dashboard', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.', '<script type=\'module\' src=\'https://tabfire.telkomsel.co.id/javascripts/api/tableau.embedding.3.latest.min.js\'> </script><tableau-viz id=\'tableau-viz\' src=\'https://tabfire.telkomsel.co.id/??/views/CSIDashboard/Home\' width=\'1366\' height=\'808\' hide-tabs toolbar=\'bottom\' ></tableau-viz>', 'CSIDashboard/Home', '1694427766_CSI.png', 1, '2023-09-11 10:22:46');
+INSERT INTO `dashboard` (`dashboard_id`, `category_id`, `dashboard_name`, `description`, `visualization_type`, `embed_url`, `view_name`, `image`, `dashboard_status`, `created_at`) VALUES
+(1, 12, 'Customer Satisfaction Index Dashboard', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.', 'Tableau', 'http://localhost:3001/superseru', 'CSIDashboard/Home', '1694427766_CSI.png', 1, '2024-02-09 04:01:33');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dashboards`
+-- Struktur dari tabel `dashboards`
 --
 
 CREATE TABLE `dashboards` (
@@ -1804,7 +1805,7 @@ CREATE TABLE `dashboards` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `dashboards`
+-- Dumping data untuk tabel `dashboards`
 --
 
 INSERT INTO `dashboards` (`id`, `name`, `category`, `is_active`, `description`, `pic`) VALUES
@@ -1867,7 +1868,7 @@ INSERT INTO `dashboards` (`id`, `name`, `category`, `is_active`, `description`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detail_logins`
+-- Struktur dari tabel `detail_logins`
 --
 
 CREATE TABLE `detail_logins` (
@@ -1881,51 +1882,16 @@ CREATE TABLE `detail_logins` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `detail_logins`
+-- Dumping data untuk tabel `detail_logins`
 --
 
 INSERT INTO `detail_logins` (`id`, `user_id`, `last_login_browser`, `last_login_ip`, `last_login_location`, `created_at`, `updated_at`) VALUES
-(61, 3, 'Chrome on Windows', '10.38.66.156', 'Indonesia', '2023-09-02 17:09:48', '2023-09-02 17:09:48'),
-(62, 20, 'Chrome on Windows', '10.38.66.156', 'Indonesia', '2023-09-02 17:14:16', '2023-09-02 17:14:16'),
-(63, 20, 'Chrome on Windows', '10.38.66.156', 'Indonesia', '2023-09-02 17:15:03', '2023-09-02 17:15:03'),
-(64, 3, 'Chrome on Windows', '10.38.66.156', 'Indonesia', '2023-09-02 17:15:36', '2023-09-02 17:15:36'),
-(65, 3, 'Chrome on Windows', '10.38.66.156', 'Indonesia', '2023-09-02 17:20:56', '2023-09-02 17:20:56'),
-(66, 20, 'Chrome on Windows', '10.38.66.156', 'Indonesia', '2023-09-02 17:25:09', '2023-09-02 17:25:09'),
-(67, 3, 'Chrome on Windows', '10.38.85.175', 'Indonesia', '2023-09-04 07:16:03', '2023-09-04 07:16:03'),
-(68, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-04 09:10:20', '2023-09-04 09:10:20'),
-(69, 3, 'Chrome on Windows', '10.38.85.175', 'Indonesia', '2023-09-04 11:50:44', '2023-09-04 11:50:44'),
-(70, 3, 'Chrome on Windows', '10.38.65.163', 'Indonesia', '2023-09-05 08:36:34', '2023-09-05 08:36:34'),
-(71, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-05 08:45:46', '2023-09-05 08:45:46'),
-(72, 3, 'Chrome on Windows', '10.40.113.248', 'Indonesia', '2023-09-05 09:04:42', '2023-09-05 09:04:42'),
-(73, 19, 'Chrome on Windows', '10.40.113.248', 'Indonesia', '2023-09-05 09:07:51', '2023-09-05 09:07:51'),
-(74, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-05 16:12:45', '2023-09-05 16:12:45'),
-(75, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-05 16:18:46', '2023-09-05 16:18:46'),
-(76, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-05 16:24:55', '2023-09-05 16:24:55'),
-(77, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-07 09:37:31', '2023-09-07 09:37:31'),
-(78, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-07 09:41:45', '2023-09-07 09:41:45'),
-(79, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-07 16:00:21', '2023-09-07 16:00:21'),
-(80, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-07 16:15:19', '2023-09-07 16:15:19'),
-(81, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-08 10:41:22', '2023-09-08 10:41:22'),
-(82, 3, 'Chrome on Windows', '10.40.99.30', 'Indonesia', '2023-09-08 11:03:31', '2023-09-08 11:03:31'),
-(83, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-08 11:24:47', '2023-09-08 11:24:47'),
-(84, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-08 11:30:16', '2023-09-08 11:30:16'),
-(85, 3, 'Chrome on Windows', '10.38.84.193', 'Indonesia', '2023-09-08 15:46:20', '2023-09-08 15:46:20'),
-(86, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-08 21:24:47', '2023-09-08 21:24:47'),
-(87, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-10 16:24:48', '2023-09-10 16:24:48'),
-(88, 3, 'Chrome on Windows', '10.40.100.61', 'Indonesia', '2023-09-10 17:03:35', '2023-09-10 17:03:35'),
-(89, 3, 'Chrome on Windows', '10.40.100.61', 'Indonesia', '2023-09-10 21:16:59', '2023-09-10 21:16:59'),
-(90, 3, 'Chrome on Windows', '10.47.199.157', 'Indonesia', '2023-09-11 09:47:22', '2023-09-11 09:47:22'),
-(91, 3, 'Chrome on Windows', '10.47.199.157', 'Indonesia', '2023-09-11 14:08:03', '2023-09-11 14:08:03'),
-(92, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-11 16:03:09', '2023-09-11 16:03:09'),
-(93, 3, 'Chrome on Windows', '10.2.114.197', 'Indonesia', '2023-09-11 17:17:01', '2023-09-11 17:17:01'),
-(94, 20, 'Chrome on Windows', '10.40.104.98', 'Indonesia', '2023-09-11 17:26:47', '2023-09-11 17:26:47'),
-(95, 3, 'Chrome on Windows', '10.40.104.98', 'Indonesia', '2023-09-11 17:28:24', '2023-09-11 17:28:24'),
-(96, 3, 'Chrome on Windows', '10.38.83.128', 'Indonesia', '2023-09-12 10:28:28', '2023-09-12 10:28:28');
+(114, 1, 'Chrome on Windows', '192.168.0.176', 'Indonesia', '2024-02-09 11:02:08', '2024-02-09 11:02:08');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Struktur dari tabel `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -1937,7 +1903,7 @@ CREATE TABLE `migrations` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permissions`
+-- Struktur dari tabel `permissions`
 --
 
 CREATE TABLE `permissions` (
@@ -1948,17 +1914,10 @@ CREATE TABLE `permissions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `permissions`
---
-
-INSERT INTO `permissions` (`id`, `user_id`, `dashboard_id`, `created_at`, `updated_at`) VALUES
-(1, 20, '2,1', '2023-08-31 02:40:00', '2023-09-02 10:01:33');
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permission_request`
+-- Struktur dari tabel `permission_request`
 --
 
 CREATE TABLE `permission_request` (
@@ -1972,18 +1931,10 @@ CREATE TABLE `permission_request` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `permission_request`
---
-
-INSERT INTO `permission_request` (`request_id`, `dashboard_id`, `name`, `departement`, `reason`, `request_status`, `created_at`, `updated_at`) VALUES
-(14, 1, 'Abieza Syahdilla', 'Accounting', 'sample', 2, '2023-08-18 02:31:13', '2023-08-23 09:14:39'),
-(18, 2, 'Dhany_W_Setyawan', 'Manager Analytics Dashboard', 'Test', 1, '2023-09-02 09:54:39', '2023-09-02 10:00:41');
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `recipients`
+-- Struktur dari tabel `recipients`
 --
 
 CREATE TABLE `recipients` (
@@ -1996,7 +1947,7 @@ CREATE TABLE `recipients` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `recipients`
+-- Dumping data untuk tabel `recipients`
 --
 
 INSERT INTO `recipients` (`id`, `name`, `email`, `job_title`, `is_active`, `created_at`) VALUES
@@ -2283,7 +2234,7 @@ INSERT INTO `recipients` (`id`, `name`, `email`, `job_title`, `is_active`, `crea
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `users`
 --
 
 CREATE TABLE `users` (
@@ -2301,143 +2252,141 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `google_id`, `microsoft_id`, `avatar`, `job_title`, `role_id`, `created_at`, `updated_at`) VALUES
-(3, 'Dani Wika', 'admin@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, NULL, NULL, 1, '2023-07-31 07:32:28', '2023-08-18 11:09:59'),
-(12, 'Abieza Syahdilla', 'abieza.eresha@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, '3b381b9e73e59335', NULL, 'Software Engineer', 2, '2023-08-14 04:09:14', '2023-08-15 07:39:16'),
-(19, 'fikri_thauli', 'fikri_thauli@telkomsel.co.id', NULL, NULL, '28952ad4-150a-43da-8dd4-85a58b3bc7d7', NULL, 'Staff Analytics Dashboard', 2, '2023-08-30 09:40:47', '2023-09-05 02:07:51'),
-(20, 'Dhany_W_Setyawan', 'dhany_w_setyawan@telkomsel.co.id', NULL, NULL, '514cfab4-20db-41ce-b6a4-8d69a28499ae', NULL, 'Manager Analytics Dashboard', 2, '2023-08-31 02:25:42', '2023-09-11 10:26:46');
+(1, 'Dany Wika', 'admin@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, NULL, 'Administrator', 1, '2024-01-13 16:01:53', '2024-01-13 16:01:53'),
+(2, 'Abieza Syahdilla', 'abieza.eresha@gmail.com', NULL, NULL, 'd1a9b7cd-6037-4542-b5e5-b5e376a90d2c', NULL, 'Technical Support', 2, '2024-01-13 16:06:15', '2024-01-17 03:43:49');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `broadcasts`
+-- Indeks untuk tabel `broadcasts`
 --
 ALTER TABLE `broadcasts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `categories`
+-- Indeks untuk tabel `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`category_id`);
 
 --
--- Indexes for table `dashboard`
+-- Indeks untuk tabel `dashboard`
 --
 ALTER TABLE `dashboard`
   ADD PRIMARY KEY (`dashboard_id`);
 
 --
--- Indexes for table `dashboards`
+-- Indeks untuk tabel `dashboards`
 --
 ALTER TABLE `dashboards`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `detail_logins`
+-- Indeks untuk tabel `detail_logins`
 --
 ALTER TABLE `detail_logins`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `migrations`
+-- Indeks untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `permissions`
+-- Indeks untuk tabel `permissions`
 --
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `permission_request`
+-- Indeks untuk tabel `permission_request`
 --
 ALTER TABLE `permission_request`
   ADD PRIMARY KEY (`request_id`);
 
 --
--- Indexes for table `recipients`
+-- Indeks untuk tabel `recipients`
 --
 ALTER TABLE `recipients`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `broadcasts`
+-- AUTO_INCREMENT untuk tabel `broadcasts`
 --
 ALTER TABLE `broadcasts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1940;
 
 --
--- AUTO_INCREMENT for table `categories`
+-- AUTO_INCREMENT untuk tabel `categories`
 --
 ALTER TABLE `categories`
   MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `dashboard`
+-- AUTO_INCREMENT untuk tabel `dashboard`
 --
 ALTER TABLE `dashboard`
   MODIFY `dashboard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `dashboards`
+-- AUTO_INCREMENT untuk tabel `dashboards`
 --
 ALTER TABLE `dashboards`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
--- AUTO_INCREMENT for table `detail_logins`
+-- AUTO_INCREMENT untuk tabel `detail_logins`
 --
 ALTER TABLE `detail_logins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `permissions`
+-- AUTO_INCREMENT untuk tabel `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `permission_request`
+-- AUTO_INCREMENT untuk tabel `permission_request`
 --
 ALTER TABLE `permission_request`
-  MODIFY `request_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `request_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
--- AUTO_INCREMENT for table `recipients`
+-- AUTO_INCREMENT untuk tabel `recipients`
 --
 ALTER TABLE `recipients`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=448;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -59,90 +59,51 @@ class ContentController extends Controller
         return view('content.dashboardAdd', compact('header', 'footer', 'user', 'categories', 'position'));
     }
 
-    // public function dashboardStore(Request $request)
-    // {
-    //     // Validasi input
-    //     $validatedData = $request->validate([
-    //         'category_id'       => 'required',
-    //         'dashboard_name'    => 'required|max:255',
-    //         'description'       => 'required',
-    //         'embed_url'         => 'required',
-    //         'view_name'         => 'required',
-    //         'image'             => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Hanya menerima file gambar dengan ekstensi yang diizinkan (jpeg, png, jpg, gif) dengan ukuran maksimum 2MB
-    //     ]);
-
-    //     // Mengunggah gambar jika ada
-    //     $imagePath = null;
-    //     if ($request->hasFile('image')) {
-    //         $image = $request->file('image');
-    //         $imageName = time() . '_' . $image->getClientOriginalName();
-
-    //         $image->move(base_path('uploads'), $imageName);
-
-    //         $imagePath = $imageName;
-    //     }
-
-    //     // Menggunakan query builder untuk menyimpan data about baru
-    //     DB::table('dashboard')->insert([
-    //         'category_id'       => $validatedData['category_id'],
-    //         'dashboard_name'    => $validatedData['dashboard_name'],
-    //         'description'       => $validatedData['description'],
-    //         'embed_url'         => $validatedData['embed_url'],
-    //         'view_name'         => $validatedData['view_name'],
-    //         'image'             => $imagePath,
-    //         'dashboard_status'  => 1,
-    //         'created_at'        => now(), // Tambahkan kolom 'created_at' dengan waktu saat ini
-    //     ]);
-
-    //     // Redirect atau berikan respons sesuai kebutuhan
-    //     return redirect()->route('content-dashboard')->with('success', 'Dashboard added successfully');
-    // }
-
     public function dashboardStore(Request $request)
-{
-	try {
-	// Memastikan bahwa semua field yang diperlukan diisi
-	$requiredFields = ['category_id', 'dashboard_name', 'description', 'visualization_type', 'embed_url'];
-	foreach ($requiredFields as $field) {
-	if (!$request->filled($field)) {
-	// Redirect dengan pesan kesalahan jika ada field yang tidak diisi
-	return redirect()->route('content-dashboard')->with('error', 'All fields are required');
-	}
-}
+    {
+        try {
+            // Memastikan bahwa semua field yang diperlukan diisi
+            $requiredFields = ['category_id', 'dashboard_name', 'description', 'visualization_type', 'embed_url'];
+            foreach ($requiredFields as $field) {
+                if (!$request->filled($field)) {
+                    // Redirect dengan pesan kesalahan jika ada field yang tidak diisi
+                    return redirect()->route('content-dashboard')->with('error', 'All fields are required');
+                }
+            }
 
-	// Mengunggah gambar jika ada
-	$imagePath = null;
-	if ($request->hasFile('image')) {
-	$image = $request->file('image');
-	$imageName = time() . '_' . $image->getClientOriginalName();
-	
-	$image->move(base_path('uploads'), $imageName);
+            // Mengunggah gambar jika ada
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . $image->getClientOriginalName();
 
-	$imagePath = $imageName;
-}
+                $image->move(base_path('uploads'), $imageName);
 
-	// Menggunakan Query Builder untuk menyimpan data ke dalam tabel dashboard
-	DB::table('dashboard')->insert([
-		'category_id' => $request->input('category_id'),
-		'dashboard_name' => $request->input('dashboard_name'),
-		'description' => $request->input('description'),
-		'visualization_type' => $request->input('visualization_type'),
-		'embed_url' => $request->input('embed_url'),
-		'view_name' => $request->input('view_name'),
-		'image' => $imagePath,
-		'dashboard_status' => 1,
-		'created_at' => now(),
-	]);
+                $imagePath = $imageName;
+            }
 
-	// Redirect atau berikan respons sesuai kebutuhan
-	return redirect()->route('content-dashboard')->with('success', 'Dashboard added successfully');
-	} catch (\Exception $e) {
-	// Tampilkan pesan kesalahan dan redirect dengan pesan kesalahan
-	dd($e->getMessage());
-	// Atau bisa juga ditangani dengan cara lain, seperti me-redirect kembali dengan pesan error
-	// return redirect()->route('content-dashboard')->with('error', 'Error: ' . $e->getMessage());
-	}
-}
+            // Menggunakan Query Builder untuk menyimpan data ke dalam tabel dashboard
+            DB::table('dashboard')->insert([
+                'category_id' => $request->input('category_id'),
+                'dashboard_name' => $request->input('dashboard_name'),
+                'description' => $request->input('description'),
+                'visualization_type' => $request->input('visualization_type'),
+                'embed_url' => $request->input('embed_url'),
+                'view_name' => $request->input('view_name'),
+                'image' => $imagePath,
+                'dashboard_status' => 1,
+                'created_at' => now(),
+            ]);
+
+            // Redirect atau berikan respons sesuai kebutuhan
+            return redirect()->route('content-dashboard')->with('success', 'Dashboard added successfully');
+        } catch (\Exception $e) {
+            // Tampilkan pesan kesalahan dan redirect dengan pesan kesalahan
+            dd($e->getMessage());
+            // Atau bisa juga ditangani dengan cara lain, seperti me-redirect kembali dengan pesan error
+            // return redirect()->route('content-dashboard')->with('error', 'Error: ' . $e->getMessage());
+        }
+    }
 
     public function dashboardEdit($id)
     {
@@ -171,12 +132,13 @@ class ContentController extends Controller
 
     //     // Validasi input
     //     $validatedData = $request->validate([
-    //         'category_id'       => 'required',
-    //         'dashboard_name'    => 'required|max:255',
-    //         'description'       => 'required',
-    //         'embed_url'         => 'required',
-    //         'view_name'         => 'required',
-    //         'image'             => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Hanya menerima file gambar dengan ekstensi yang diizinkan (jpeg, png, jpg, gif) dengan ukuran maksimum 2MB
+    //         'category_id' => 'required',
+    //         'dashboard_name' => 'required|max:255',
+    //         'description' => 'required',
+    //         'visualization_type' => 'required',
+    //         'embed_url' => 'required',
+    //         'view_name' => 'required',
+    //         'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Hanya menerima file gambar dengan ekstensi yang diizinkan (jpeg, png, jpg, gif) dengan ukuran maksimum 2MB
     //     ]);
 
     //     // Mengunggah gambar jika ada
@@ -198,64 +160,56 @@ class ContentController extends Controller
 
     //     // Menggunakan query builder untuk mengupdate data dashboard
     //     DB::table('dashboard')->where('dashboard_id', $id)->update([
-    //         'category_id'       => $validatedData['category_id'],
-    //         'dashboard_name'    => $validatedData['dashboard_name'],
-    //         'description'       => $validatedData['description'],
-    //         'embed_url'         => $validatedData['embed_url'],
-    //         'view_name'         => $validatedData['view_name'],
-    //         'image'             => $imagePath, // Use the new image path
+    //         'category_id' => $validatedData['category_id'],
+    //         'dashboard_name' => $validatedData['dashboard_name'],
+    //         'description' => $validatedData['description'],
+    //         'visualization_type' => $validatedData['visualization_type'],
+    //         'embed_url' => $validatedData['embed_url'],
+    //         'view_name' => $validatedData['view_name'],
+    //         'image' => $imagePath, // Use the new image path
     //     ]);
 
     //     // Redirect atau berikan respons sesuai kebutuhan
     //     return redirect()->route('content-dashboard')->with('success', 'Dashboard updated successfully');
     // }
+
     public function dashboardUpdate(Request $request, $id)
     {
         // Retrieve the old dashboard data
         $oldDashboard = DB::table('dashboard')->where('dashboard_id', $id)->first();
-    
-            // Validasi input
-            $validatedData = $request->validate([
-            'category_id' => 'required',
-            'dashboard_name' => 'required|max:255',
-            'description' => 'required',
-            'visualization_type' => 'required',
-            'embed_url' => 'required',
-            'view_name' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Hanya menerima file gambar dengan ekstensi yang diizinkan (jpeg, png, jpg, gif) dengan ukuran maksimum 2MB
-    ]);
-    
+
         // Mengunggah gambar jika ada
-            $imagePath = $oldDashboard->image; // Default to the old image
-            if ($request->hasFile('image')) {
+        $imagePath = $oldDashboard->image; // Default to the old image
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
             $image->move(base_path('uploads'), $imageName);
             $imagePath = $imageName; // Use the new image if available
-    
-        // Hapus gambar lama jika ada
+
+            // Hapus gambar lama jika ada
             if ($oldDashboard && $oldDashboard->image) {
-            $oldImagePath = public_path('uploads/' . $oldDashboard->image);
-            if (file_exists($oldImagePath)) {
-            unlink($oldImagePath);
+                $oldImagePath = public_path('uploads/' . $oldDashboard->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
             }
         }
-    }
-    
+
         // Menggunakan query builder untuk mengupdate data dashboard
         DB::table('dashboard')->where('dashboard_id', $id)->update([
-            'category_id' => $validatedData['category_id'],
-            'dashboard_name' => $validatedData['dashboard_name'],
-            'description' => $validatedData['description'],
-            'visualization_type' => $validatedData['visualization_type'],
-            'embed_url' => $validatedData['embed_url'],
-            'view_name' => $validatedData['view_name'],
+            'category_id' => $request->input('category_id'),
+            'dashboard_name' => $request->input('dashboard_name'),
+            'description' => $request->input('description'),
+            'visualization_type' => $request->input('visualization_type'),
+            'embed_url' => $request->input('embed_url'),
+            'view_name' => $request->input('view_name'),
             'image' => $imagePath, // Use the new image path
-    ]);
-    
+        ]);
+
         // Redirect atau berikan respons sesuai kebutuhan
         return redirect()->route('content-dashboard')->with('success', 'Dashboard updated successfully');
     }
+
 
 
     public function dashboardDestroy($id)
