@@ -156,8 +156,8 @@
                         <div class="col-12 mx-auto mb-4">
                             {!! $detailData->embed_url !!}
                         </div>
-                        @endif
                     </div>
+                    @endif
             </div>
             <!-- Line Chart Ends-->
             </section>

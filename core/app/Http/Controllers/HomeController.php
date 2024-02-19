@@ -82,20 +82,39 @@ class HomeController extends Controller
         return view('home', compact('user', 'footer', 'filteredData', 'categories', 'position', 'allowedDashboardIds'));
     }
 
-    // public function showDetail($dashboard_name)
-    // {
-    //     // Replace '-' with ' ' to convert it back to the original name
-    //     $dashboard_name = str_replace('-', ' ', $dashboard_name);
+    public function showDetail($dashboard_name)
+    {
+        $dashboard_name = str_replace('-', ' ', $dashboard_name);
 
-    //     // Fetch the data based on the provided dashboard_name
-    //     $detailData = DB::table('dashboard')
-    //         ->where('dashboard_name', $dashboard_name)
-    //         ->first();
+        $detailData = DB::table('dashboard')
+            ->where('dashboard_name', $dashboard_name)
+            ->first();
 
-    //     return view('detail', compact('cleanedEmbedUrl'));
-    // }
+        // Check if the visualization_type is tableau
+        if ($detailData->visualization_type === 'Tableau') {
+            // Get the ticket from the API
+            $response = Http::get('http://10.2.114.197:8000/ticket');
+            $ticket = $response->json();
 
-    // public function showDetail($dashboard_name)
+            // Get the view_name from the detailData
+            $viewName = $detailData->view_name;
+
+            // Combine embed_url, 'trusted', ticket, and view_name to form the final URL
+            $url = "https://tabfire.telkomsel.co.id/trusted/{$ticket}/views/{$viewName}";
+        } else {
+            // Use embed_url if visualization_type is not tableau
+            $url = $detailData->embed_url;
+        }
+
+        $data = [
+            'url' => $url,
+            'detailData' => $detailData,
+        ];
+
+        return view('summarize', $data);
+    }
+
+    //     public function showDetail($dashboard_name)
     // {
     //     $dashboard_name = str_replace('-', ' ', $dashboard_name);
 
@@ -107,7 +126,11 @@ class HomeController extends Controller
     //     $response = Http::get('http://10.2.114.197:8000/ticket');
     //     $ticket = $response->json();
 
-    //     $url = "https://tabfire.telkomsel.co.id/trusted/{$ticket}/views/HMS-Dashboard/1_Cover";
+    //     // Get the view_name from the detailData
+    //     $viewName = $detailData->view_name;
+
+    //     // Combine embed_url, 'trusted', ticket, and view_name to form the final URL
+    //     $url = "https://tabfire.telkomsel.co.id/trusted/{$ticket}/views/{$viewName}";
 
     //     $data = [
     //         'url' => $url,
@@ -116,31 +139,5 @@ class HomeController extends Controller
 
     //     return view('detail', $data);
     // }
-
-    public function showDetail($dashboard_name)
-{
-    $dashboard_name = str_replace('-', ' ', $dashboard_name);
-
-    $detailData = DB::table('dashboard')
-        ->where('dashboard_name', $dashboard_name)
-        ->first();
-
-    // Get the ticket from the API
-    $response = Http::get('http://10.2.114.197:8000/ticket');
-    $ticket = $response->json();
-
-    // Get the view_name from the detailData
-    $viewName = $detailData->view_name;
-
-    // Combine embed_url, 'trusted', ticket, and view_name to form the final URL
-    $url = "https://tabfire.telkomsel.co.id/trusted/{$ticket}/views/{$viewName}";
-
-    $data = [
-        'url' => $url,
-        'detailData' => $detailData,
-    ];
-
-    return view('detail', $data);
-}
 
 }
