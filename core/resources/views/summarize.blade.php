@@ -1,71 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="tivo admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
-    <meta name="keywords" content="admin template, Tivo admin template, dashboard template, flat admin template, responsive admin template, web app">
-    <meta name="author" content="pixelstrap">
-    <link rel="icon" href="{{ asset('assets/tsel_ico.png') }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('assets/tsel_ico.png') }}" type="image/x-icon">
-    <title>Dashboard Generator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/font-awesome.css') }}">
-    <!-- ico-font-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/icofont.css') }}">
-    <!-- Themify icon-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/themify.css') }}">
-    <!-- Flag icon-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/flag-icon.css') }}">
-    <!-- Feather icon-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/feather-icon.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/scrollbar.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/date-picker.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/owlcarousel.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/prism.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/whether-icon.css') }}">
-    <!-- Bootstrap css-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/vendors/bootstrap.css') }}">
-    <!-- App css-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/style.css') }}">
-    <link id="color" rel="stylesheet" href="{{ asset('gpt/css/color-1.css') }}" media="screen">
-    <!-- Responsive css-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('gpt/css/responsive.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.4/sweetalert2.min.js" integrity="sha512-AXRSg1bk/WYB9XiMgxJJS+jsAuMyS46bL0NZUo0tc2luqTAtDC3zI7UumzsQvFR07j+h2hG37FD9s8RcHTBApA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.4/sweetalert2.all.js" integrity="sha512-3Nqc7XqFok0aQ4QwMhbaBs9/QtKMgvY49WTRVNJwc5gq6Icgiw2ROwK5oVcNR1L5undxFQPLIKgTWSi2a92MFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
+    <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+    <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
+    <meta name="author" content="PIXINVENT">
+    <title>Analytics Dashboard - AAGM</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://upload.wikimedia.org/wikipedia/commons/b/bc/Telkomsel_2021_icon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
 
-    <!-- toastr -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/vendors.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/charts/apexcharts.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/extensions/toastr.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/select/select2.min.css') }}">
+    <!-- END: Vendor CSS-->
 
-    <script type="module">
-        import {
-            TableauViz
-        } from "https://tabfire.telkomsel.co.id/javascripts/api/tableau.embedding.3.latest.min.js";
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/bootstrap-extended.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/colors.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/components.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/themes/dark-layout.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/themes/bordered-layout.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/themes/semi-dark-layout.css') }}">
 
-        // Initialization of the Tableau visualization via JavaScript. Learn more here:
-        // https://help.tableau.com/current/api/embedding_api/en-us/docs/embedding_api_configure.html
-        const viz = new TableauViz();
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/core/menu/menu-types/vertical-menu.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/dashboard-ecommerce.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/charts/chart-apex.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/extensions/ext-component-toastr.css') }}">
 
-        viz.src = "{{ $url }}";
-        viz.toolbar = "show";
+    <!-- Datatable -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-        document.getElementById("tableauViz").appendChild(viz);
-    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
+    <script src="https://unpkg.com/exceljs/dist/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+    <!-- Tambahkan script toastr CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+
+    <!-- END: Page CSS-->
+
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+
 </head>
+<!-- END: Head-->
 
 <style>
-    /* Tambahkan gaya CSS sesuai kebutuhan Anda */
-    .hidden {
-        display: none;
+    /* Menerapkan transisi pada elemen saat disentuh (hovered) */
+    ul.nav li.nav-item a.nav-link:hover {
+        animation: shake-once 0.5s ease-in-out;
     }
 
-    .text-bold {
-        font-weight: bold;
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-content {
+        flex: 1;
+    }
+
+    .action-button-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .action-button {
+        margin-left: 10px;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter {
+        text-align: right;
+        margin-right: 13px;
+    }
+
+    div.dataTables_wrapper div.dataTables_paginate {
+        text-align: right;
+        margin-right: 13px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    div.dataTables_wrapper .dataTables_length {
+        text-align: left;
+        margin-left: 13px;
+    }
+
+    div.dataTables_wrapper .dataTables_info {
+        text-align: left;
+        margin-left: 13px;
+        margin-bottom: 10px;
+    }
+
+    .hr-gradient {
+        height: 4px;
+        border: none;
+        background-image: linear-gradient(to right, #8A2BE2 50%, #FF8C00 50%);
+    }
+
+    .img-container {
+        width: 70%;
+        height: 75px;
+        position: relative;
+    }
+
+    .img-container .image-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .img-container .image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-box {
+        width: 100%;
+        max-width: 300px;
+        /* Sesuaikan dengan lebar maksimum yang Anda inginkan */
+        margin-bottom: 20px;
+        /* Gaya lain yang diperlukan untuk tata letak, warna latar belakang, dll. */
+    }
+
+    .product-box .product-img {
+        position: relative;
+        overflow: hidden;
+        /* Gaya lain yang diperlukan untuk tata letak, padding, dll. */
+    }
+
+    .product-box .product-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Gaya lain yang diperlukan untuk tata letak, padding, dll. */
+    }
+
+    /* Gaya lain yang diperlukan untuk tata letak teks, harga, dll. */
+
+    .btn {
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+    }
+
+    .btn::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: #000;
+        transition: transform 0.3s ease-in-out;
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+
+    .btn:hover::after {
+        transform: scaleX(1);
     }
 
     @keyframes spin {
@@ -78,740 +193,452 @@
         }
     }
 
-    .spinner-container {
-        display: flex;
-        align-items: center;
+    .btn i.fa-cog {
+        animation: spin 2s linear infinite;
     }
 
-    .spinner-wrapper {
-        display: flex;
-        /* Membuat flex container agar elemen anak berada dalam satu baris */
-        align-items: center;
-        /* Posisi elemen anak secara vertikal di tengah */
+    .modal-refer-earn-step {
+        position: relative;
     }
 
-    .spinner {
-        border: 4px solid rgba(0, 0, 0, 0.1);
-        border-left: 4px solid blue;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        animation: spin 1s linear infinite;
-        margin-right: 5px;
+    .modal-refer-earn-step i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
-    /* Tambahkan gaya untuk efek loading */
-    .loading-overlay {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.8);
-        z-index: 999;
+    .modal-refer-earn-step .text-center {
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        transform: translate(10px, -50%);
+        white-space: nowrap;
     }
 
-    /* Tambahkan gaya untuk elemen spinner (icon) */
-    .spinner-con {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.8);
-        z-index: 999;
-    }
-
-    /* Tambahkan gaya untuk ikon */
-    .fa-person-running {
-        margin-left: 8px;
-        font-size: 16px;
-        color: #3498db;
-        animation: pulse 1s infinite alternate;
-        /* Tambahkan efek animasi pulsasi */
-    }
-
-    /* Tambahkan gaya untuk teks */
-    .loading-text {
-        margin-left: 10px;
-        font-size: 14px;
-        animation: pulse 1s infinite alternate;
-        /* Tambahkan efek animasi pulsasi */
-    }
-
-    /* Animasi pulsasi */
-    @keyframes pulse {
-        0% {
-            opacity: 0.5;
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
-
-    /* Tambahkan gaya untuk elemen konten */
-    #myProjectBox {
-        display: none;
-    }
-
-    #cardImage {
-        display: none;
+    .form-check {
+        margin-bottom: 18px;
+        /* Adjust the margin to add space between the checkboxes */
     }
 </style>
 
-<body>
-    <!-- tap on top starts-->
-    <div class="tap-top"><i data-feather="chevrons-up"></i></div>
-    <!-- tap on tap ends-->
-    <!-- Loader starts-->
-    <div class="loader-wrapper">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"> </div>
-        <div class="dot"></div>
-    </div>
-    <!-- Loader ends-->
-    <!-- page-wrapper Start-->
-    <div class="page-wrapper compact-wrapper" id="pageWrapper">
-        <!-- Page Header Start-->
-        <div class="page-header">
-            <div class="header-wrapper row m-0">
-                <div class="header-logo-wrapper col-auto p-0">
-                    <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
-                    <div class="logo-header-main"><a href="index.html"><img src="{{ asset('tsel.png') }}" width="140" alt=""></a></div>
-                </div>
-                <div class="left-header col horizontal-wrapper ps-0">
+<!-- BEGIN: Body-->
 
-                </div>
-                <div class="nav-right col-6 pull-right right-header p-0">
-                    <ul class="nav-menus">
-                        <li class="maximize"><a href="#!" onclick="javascript:toggleFullScreen()"></a></li>
+<body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="">
 
-                        @if(Auth::check())
-                        <li class="profile-nav onhover-dropdown">
-                            <div class="account-user"><i data-feather="user"></i></div>
-                            <ul class="profile-dropdown onhover-show-div">
-                                <li><a href="user-profile.html"><i data-feather="help-circle"></i><span>Log History</span></a></li>
-                                <li><a href="login.html"><i data-feather="power"></i><span>Log out</span></a></li>
-                            </ul>
-                        </li>
-                        @endif
-                    </ul>
-                </div>
-                <script class="result-template" type="text/x-handlebars-template">
-                    <div class="ProfileCard u-cf">                        
-            <div class="ProfileCard-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-airplay m-0"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><polygon points="12 15 17 21 7 21 12 15"></polygon></svg></div>
-            <div class="ProfileCard-details">
-            <div class="ProfileCard-realName"></div>
-            </div>
-            </div>
-          </script>
-                <script class="empty-template" type="text/x-handlebars-template"><div class="EmptyMessage">Your search turned up 0 results. This most likely means the backend is down, yikes!</div></script>
-            </div>
-        </div>
-        <!-- Page Header Ends-->
-        <!-- Page Body Start-->
-        <div class="page-body-wrapper">
-            <!-- Page Sidebar Start-->
-            <div class="sidebar-wrapper mt-2">
-                <div>
-                    <div class="logo-wrapper"><a href="index.html"><img class="img-fluid for-light" src="../assets/images/logo/logo.png" alt=""></a>
-                        <div class="back-btn"><i data-feather="grid"></i></div>
-                        <div class="toggle-sidebar icon-box-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
-                    </div>
-                    <div class="logo-icon-wrapper"><a href="index.html">
-                            <div class="icon-box-sidebar"><i data-feather="grid"></i></div>
-                        </a></div>
-                    <nav class="sidebar-main">
-                        <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
-                        <div id="sidebar-menu">
-                            <ul class="sidebar-links" id="simple-bar">
-                                <li class="back-btn">
-                                    <div class="mobile-back text-end"><span>Back</span><i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-                                </li>
-                                <li class="pin-title sidebar-list">
-                                    <h6>Pinned</h6>
-                                </li>
-                                <hr>
-                                <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title" href="{{ url('/home') }}"><i data-feather="home"></i><span>Dashboard</span></a></li>
-                                @if(Auth::user()->role_id == 1)
-                                <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title" href="#"><i data-feather="package"></i><span>Content Management</span></a>
-                                    <ul class="sidebar-submenu">
-                                        <li>
-                                            <a class="submenu-title" href="{{ url('/categories') }}">&nbsp;Categories List<span class="sub-arrow"></span></a>
-                                        </li>
-                                        <li>
-                                            <a class="submenu-title" href="{{ url('/content-dashboard') }}">&nbsp;Dashboard List<span class="sub-arrow"></span></a>
-                                        </li>
-                                        <li>
-                                            <a class="submenu-title" href="{{ url('/service-interruption') }}">&nbsp;Maintenance<span class="sub-arrow"></span></a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                @php
-                                $pendingRequestsCount = DB::table('permission_request')->where('request_status', 0)->count();
-                                @endphp
-                                <li class="sidebar-list"><i class="fa fa-thumb-tack"></i>
-                                    <a class="sidebar-link sidebar-title" href="{{ url('/permission') }}">
-                                        @if ($pendingRequestsCount > 0)
-                                        <span class="badge rounded-pill bg-danger badge-up small-badge">{{ $pendingRequestsCount }}</span>
-                                        @endif
-                                        <i data-feather="shield"></i>
-                                        <span> Roles &amp; Permission</span>
-                                    </a>
-                                </li>
+    <!-- BEGIN: Header-->
+    <nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow container-xxl">
+        <div class="navbar-container d-flex content">
+            <div class="bookmark-wrapper d-flex align-items-center">
+                <ul class="nav navbar-nav d-xl-none">
+                    <li class="nav-item"><a class="nav-link menu-toggle" href="#"><i class="ficon" data-feather="menu"></i></a></li>
+                </ul>
+                <ul class="nav navbar-nav bookmark-icons">
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('/home') }}"><i class="ficon" data-feather="home"></i>&nbsp; Home</a></li>&nbsp;&nbsp;
 
-                                <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title" href="{{ url('/user-management') }}"><i data-feather="users"></i><span>User Management</span></a></li>
-                                @endif
-                            </ul>
+                    @if(Auth::user()->role_id == 1)
+                    <li class="nav-item dropdown d-none d-lg-block">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="ficon" data-feather="package"></i>&nbsp; Content Management
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ url('/categories') }}">Categories List</a>
+                            <a class="dropdown-item" href="{{ url('/content-dashboard') }}">Dashboard List</a>
+                            <a class="dropdown-item" href="{{ url('/service-interruption') }}">Under Maintenance</a>
+                            <!-- Tambahkan menu-item lainnya jika diperlukan -->
                         </div>
-                    </nav>
-                </div>
+                    </li>&nbsp;&nbsp;
+
+                    @php
+                    $pendingRequestsCount = DB::table('permission_request')->where('request_status', 0)->count();
+                    @endphp
+                    <li class="nav-item dropdown-notification me-25">
+                        <a class="nav-link" href="{{ url('/permission') }}">
+                            <div class="d-flex align-items-center">
+                                <div class="position-relative">
+                                    <i class="ficon" data-feather="shield"></i>&nbsp;&nbsp;
+                                    @if ($pendingRequestsCount > 0)
+                                    <span class="badge rounded-pill bg-danger badge-up small-badge">{{ $pendingRequestsCount }}</span>
+                                    @endif
+                                </div>&nbsp;
+                                <span class="menu-title text-truncate" data-i18n="Roles &amp; Permission">
+                                    Roles &amp; Permission
+                                </span>
+                            </div>
+                        </a>
+                    </li>&nbsp;&nbsp;
+
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('/user-management') }}"><i class="ficon" data-feather="users"></i>&nbsp; User Management</a></li>&nbsp;&nbsp;
+                    @endif
+                </ul>
+
             </div>
-            <!-- Page Sidebar Ends-->
-            <div class="page-body">
-                <div class="container-fluid general-widget">
+            <ul class="nav navbar-nav align-items-center ms-auto">
+                @if(Auth::check())
+                <li class="nav-item dropdown dropdown-user">
+                    <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="user-nav d-sm-flex d-none">
+                            <span class="user-name fw-bolder">Hi, {{ Auth::user()->name }}</span>
+                            @if (Auth::user()->role_id == 1)
+                            <span class="user-status">Administrator</span>
+                            @elseif (Auth::user()->role_id == 2)
+                            @if (Auth::user()->job_title)
+                            <span class="user-status">{{ Auth::user()->job_title }}</span>
+                            @else
+                            <span class="user-status">Users</span>
+                            @endif
+                            @endif
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
+                        <a class="dropdown-item" href="{{ url('/settings') }}"><i class="me-50" data-feather="help-circle"></i> Log history</a>
+                        <div class="dropdown-divider"></div>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="me-50" data-feather="power"></i> Logout</a>
+                    </div>
+                </li>
+                @endif
+
+            </ul>
+        </div>
+    </nav>
+    <!-- END: Header-->
+
+
+    <!-- BEGIN: Main Menu-->
+    <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+        <div class="navbar-header">
+            <ul class="nav navbar-nav flex-row">
+                <li class="nav-item me-auto">
+                    <img src="{{ asset('tsel.png') }}" width="170" alt="">
+                </li>
+                <!-- <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pe-0" data-bs-toggle="collapse"><i class="d-block d-xl-none text-primary toggle-icon font-medium-4" data-feather="x"></i><i class="d-none d-xl-block collapse-toggle-icon font-medium-4  text-primary" data-feather="disc" data-ticon="disc"></i></a></li> -->
+            </ul>
+        </div>
+        <div class="shadow-bottom"></div>
+        <div class="main-menu-content">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                <li class="navigation-header mt-3">
+                    <span data-i18n="Search">Select Dashboard</span>
+                    <i data-feather="more-horizontal"></i>
+                </li>
+
+                <li class="nav-item mt-2">
                     <div class="row">
-                        <div class="col-sm-12 col-xl-12">
+                        &nbsp;&nbsp;&nbsp;
+                        <div class="col-md-11">
+                            <select name="imageSelector" class="form-select" id="imageSelector">
+                                <option hidden>Please Select</option>
+                                <option value="superseru" data-src="{{ asset('images/superseru.jpg') }}">Superseru</option>
+                                <option value="rgb" data-src="{{ asset('images/rgb.jpg') }}">RGB</option>
+                                <option value="cb" data-src="{{ asset('images/cb.jpg') }}">CB</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <!-- END: Main Menu-->
+
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content ">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper container-xxl p-0">
+            <div class="content-body">
+
+                <section id="nav-tabs-aligned">
+                    <div class="row match-height">
+                        <!-- Centered Aligned Tabs starts -->
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="card">
+                                <img class="card-img-top" id="selectedImage" src="" alt="Card image cap" style="display: none;" />
+                            </div>
+                        </div>
+
+                        <div class="col-xl-12 col-lg-12">
+                            <div id="textareaContainer" class="ml-4">
+                                <textarea id="question" class="form-control">Explain the meaning of the picture and give me a neat 3 point summary.</textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-2 col-lg-12 mt-1">
+                            <button class="btn btn-sm btn-outline-primary" id="summarizeButton">
+                                <span class="ml-4" id="buttonText">Summarize...</span>
+                            </button>
+                        </div>
+
+
+
+                        <div class="col-xl-12 col-lg-12 mt-2">
                             <div class="card">
                                 <div class="card-body">
-                                    <ul class="nav nav-pills nav-dark justify-content-center" id="pills-successtab" role="tablist">
-                                        <li class="nav-item"><a class="nav-link" id="pills-successhome-tab" data-bs-toggle="pill" href="#pills-successhome" role="tab" aria-controls="pills-successhome" aria-selected="true"><i class="fa-solid fa-chart-bar"></i> AI Generator</a></li>
-                                        <li class="nav-item"><a class="nav-link active" id="pills-successprofile-tab" data-bs-toggle="pill" href="#pills-successprofile" role="tab" aria-controls="pills-successprofile" aria-selected="false"><i class="fa-solid fa-chart-simple"></i> AI Summarizer</a></li>
-                                        <li class="nav-item"><a class="nav-link" id="pills-successcontact-tab" data-bs-toggle="pill" href="#pills-successcontact" role="tab" aria-controls="pills-successcontact" aria-selected="false"><i class="fa-brands fa-rocketchat"></i> Chatbot</a></li>
-                                    </ul>
+                                    <p class="card-text">
+                                    <div class="col-sm-12 col-xl-12">
+                                        <span id="result-container"></span>
+                                    </div>
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-xl-12">
-                            <div class="tab-content" id="pills-successtabContent">
-
-                                <!-- tab generator -->
-                                <div class="tab-pane fade show" id="pills-successhome" role="tabpanel" aria-labelledby="pills-successhome-tab">
-                                    <div class="row">
-                                        <div class="col-sm-12 col-xl-12">
-                                            <div class="col-12" style="width:1520px; height:840px;">
-                                                <div id='tableauViz'></div>
-                                            </div>
-                                            @else
-                                            <!-- Tampilkan embed_url sesuai kebutuhan PowerBI -->
-                                            <div class="col-12 mx-auto mb-4">
-                                                {!! $detailData->embed_url !!}
-                                            </div>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <!-- tab insighter -->
-                                <div class="tab-pane fade show active mb-5" id="pills-successprofile" role="tabpanel" aria-labelledby="pills-successprofile-tab">
-                                    <div class="row">
-                                        <div class="col-sm-12 col-xl-12">
-                                            <div class="card" id="cardImage">
-                                                <div class="card-body">
-                                                    <!-- Gambar di tengah card body -->
-                                                    <div class="text-center">
-                                                        <img src="" alt="Image" class="img-fluid">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-sm-12 col-xl-12 mb-4">
-                                            <button id="regenerateButton" class="btn btn-sm btn-outline-light txt-dark" style="background-color: #FFFFFF; border: 1px solid #dbd8d8;" type="button" onclick="regenerateQuestions()">
-                                                <i class="fa-solid fa-arrows-rotate text-primary"></i>&nbsp; Re-generate question
-                                            </button>
-                                        </div>
-
-                                        <div id="loadingContainer" class="spinner-container mb-4 mt-2">
-                                            <i class="fa-solid fa-person-running"></i>
-                                            <div class="loading-text">
-                                                Looking for questions
-                                            </div>
-                                        </div>
-
-                                        <div id="myProjectBox" class="col-xxl-12 col-lg-12 box-col-33 col-md-12 mt-2">
-                                            <div class="project-box" style="background-color: #FFFFFF; border: 1px solid #dbd8d8;">
-                                                <span class="badge badge-light text-dark toggle-icon" onclick="toggleProjectBox()"><i class="fa-solid fa-chevron-up"></i></span>
-                                                <h6 style="margin-bottom: 30px;">Show random questions :</h6>
-                                                <div class="content">
-                                                    <div id="questionsContainer" class="col-12 mt-3">
-                                                        <!-- Questions will be dynamically added here -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-12 col-xl-12 mb-1">
-                                            <button class="btn btn-sm btn-outline-light txt-dark hidden" style="background-color: #FFFFFF; border: 1px solid #dbd8d8;" type="button" id="showButton" onclick="showProjectBox()">Show Sample Question</button>
-                                        </div>
-
-
-                                        <div class="col-sm-12 col-xl-12 mt-3">
-                                            <div class="d-flex mb-2">
-                                                <div class="flex-grow-1 ml-5 mr-5">
-                                                    <div class="form-check form-switch ml-4">
-                                                        <input class="form-check-input" id="flexSwitchCheckDefault" type="checkbox" onchange="toggleElements()">
-                                                        <label class="form-check-label" for="flexSwitchCheckDefault">
-                                                            <span id="switchStatusText">Edit prompt</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="ml-4">
-                                                <input type="file" class="form-control" id="image">
-                                            </div>
-
-                                            <div id="textareaContainer" class="ml-4 mt-3">
-                                                <textarea id="question" class="form-control">Explain the meaning of the picture and give me a neat 3 point summary</textarea>
-                                            </div>
-                                        </div>
-
-                                        <!-- HTML part -->
-                                        <div class="col-sm-12 col-xl-12 mt-3">
-                                            <button class="btn btn-sm btn-outline-light txt-dark" style="background-color: #FFFFFF; border: 1px solid #dbd8d8; display: flex; align-items: center;" type="button" onclick="submitForm()">
-                                                <div id="loadingSpinner" class="spinner-container ml-2" style="display: none;">
-                                                    <div class="spinner-wrapper">
-                                                        <div class="spinner"></div>
-                                                    </div>
-                                                </div>
-                                                &nbsp;&nbsp;<span class="ml-4" id="buttonText">Summarize...</span>
-                                            </button>
-                                        </div>
-
-
-                                        <div id="projectBox" class="container col-12 mt-3" style="display: none;">
-                                            <div class="col-xxl-12 col-lg-12 box-col-33 col-md-12 mt-3">
-                                                <div class="project-box" style="background-color: #FFFFFF; border: 1px solid #dbd8d8;">
-                                                    <div class="content">
-                                                        <div class="col-12 mt-1">
-                                                            <div>
-                                                                <span id="result-container"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-
-                                <!-- tab chatbot -->
-                                <div class="tab-pane fade" id="pills-successcontact" role="tabpanel" aria-labelledby="pills-successcontact-tab">
-
-                                </div>
-                            </div>
-                        </div>
-
-
-
+                        <!-- Centered Aligned Tabs ends -->
                     </div>
-                </div>
-                <!-- Container-fluid Ends-->
+                </section>
+
             </div>
-            <!-- footer start-->
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-6 p-0 footer-left">
-                            <p class="mb-0">Copyright © 2023 <font color="red">PT Telekomunikasi Selular</font>. All rights reserved.</p>
-                        </div>
-                    </div>
-                </div>
-            </footer>
         </div>
     </div>
-    <!-- latest jquery-->
-    <script src="{{ asset('gpt/js/jquery-3.6.0.min.js') }}"></script>
-    <!-- Bootstrap js-->
-    <script src="{{ asset('gpt/js/bootstrap/bootstrap.bundle.min.js') }}"></script>
-    <!-- feather icon js-->
-    <script src="{{ asset('gpt/js/icons/feather-icon/feather.min.js') }}"></script>
-    <script src="{{ asset('gpt/js/icons/feather-icon/feather-icon.js') }}"></script>
-    <!-- scrollbar js-->
-    <script src="{{ asset('gpt/js/scrollbar/simplebar.js') }}"></script>
-    <script src="{{ asset('gpt/js/scrollbar/custom.js') }}"></script>
-    <!-- Sidebar jquery-->
-    <script src="{{ asset('gpt/js/config.js') }}"></script>
-    <script src="{{ asset('gpt/js/sidebar-menu.js') }}"></script>
-    <script src="{{ asset('gpt/js/prism/prism.min.js') }}"></script>
-    <script src="{{ asset('gpt/js/clipboard/clipboard.min.js') }}"></script>
-    <script src="{{ asset('gpt/js/counter/jquery.waypoints.min.js') }}"></script>
-    <script src="{{ asset('gpt/js/counter/jquery.counterup.min.js') }}"></script>
-    <script src="{{ asset('gpt/js/counter/counter-custom.js') }}"></script>
-    <script src="{{ asset('gpt/js/custom-card/custom-card.js') }}"></script>
-    <script src="{{ asset('gpt/js/datepicker/date-picker/datepicker.js') }}"></script>
-    <script src="{{ asset('gpt/js/datepicker/date-picker/datepicker.en.js') }}"></script>
-    <script src="{{ asset('gpt/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
-    <script src="{{ asset('gpt/js/owlcarousel/owl.carousel.js') }}"></script>
-    <script src="{{ asset('gpt/js/general-widget.js') }}"></script>
-    <script src="{{ asset('gpt/js/height-equal.js') }}"></script>
-    <!-- Template js-->
-    <script src="{{ asset('gpt/js/script.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <!-- login js-->
+    <!-- END: Content-->
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+    <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
+    <!-- END: Footer-->
 
-    <!-- kode js API Vision -->
+
+    <!-- BEGIN: Vendor JS-->
+    <script src="{{ asset('app-assets/vendors/js/vendors.min.js') }}"></script>
+    <!-- BEGIN Vendor JS-->
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="{{ asset('app-assets/vendors/js/charts/apexcharts.min.js') }}"></script>
+    <!-- END: Page Vendor JS-->
+
+    <!-- BEGIN: Theme JS-->
+    <script src="{{ asset('app-assets/js/core/app-menu.js') }}"></script>
+    <script src="{{ asset('app-assets/js/core/app.js') }}"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+    <script src="{{ asset('app-assets/js/scripts/pages/dashboard-ecommerce.js') }}"></script>
+    <!-- END: Page JS-->
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="{{ asset('app-assets/vendors/js/forms/select/select2.full.min.js') }}"></script>
+    <script src="{{ asset('app-assets/js/scripts/forms/form-select2.js') }}"></script>
+    <!-- END: Page Vendor JS-->
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/responsive.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/datatables.checkboxes.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/datatables.buttons.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/jszip.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js') }}"></script>
+    <script src="{{ asset('app-assets/vendors/js/pickers/flatpickr/flatpickr.min.js') }}"></script>
+    <!-- END: Page Vendor JS-->
+
+    <script src="{{ asset('app-assets/js/scripts/pages/page-account-settings-account.js') }}"></script>
+    <script src="{{ asset('app-assets/js/scripts/pages/modal-share-project.js') }}"></script>
+    <script src="{{ asset('app-assets/js/scripts/components/components-dropdowns.js') }}"></script>
+
     <script>
-        async function submitForm() {
-            const question = document.getElementById('question').value;
-            const imageInput = document.getElementById('image');
-            const image = imageInput.files[0];
-
-            // Check if both question and image are filled
-            if (!question && !image) {
-                // Display toastr alert for both fields not filled
-                toastr.options = {
-                    "closeButton": true,
-                    "progressBar": true,
-                    "positionClass": "toast-top-right",
-                    "showDuration": "200",
-                    "hideDuration": "800",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "slideDown",
-                    "hideMethod": "slideUp",
-                };
-                toastr.error('', 'Please fill in both question and image fields.', {
-                    "progressBar": true,
-                    "timeOut": 5000
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
                 });
-                return; // Stop further execution if not filled
             }
+        })
+    </script>
 
-            // Check if question or image is not filled
-            if (!question || !image) {
-                // Build the toastr message dynamically based on missing fields
-                let errorMessage = 'Please fill in the following field ';
-                if (!question) {
-                    errorMessage += 'question ';
-                }
-                if (!image) {
-                    errorMessage += 'image ';
-                }
+    <!-- <script>
+        var imageSelector = document.getElementById('imageSelector'); // Select 
+        var summarizeButton = document.getElementById('summarizeButton'); // Tombol "Summarize"
+        var selectElement = document.getElementById('imageSelector');
+        var imageElement = document.getElementById('selectedImage');
 
-                // Display toastr alert
-                toastr.options = {
-                    "closeButton": true,
-                    "progressBar": true,
-                    "positionClass": "toast-top-right",
-                    "showDuration": "200",
-                    "hideDuration": "800",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "slideDown",
-                    "hideMethod": "slideUp",
-                };
-                toastr.error('', errorMessage, {
-                    "progressBar": true,
-                    "timeOut": 5000
-                });
-                return; // Stop further execution if not filled
+        // Tambahkan event listener untuk perubahan pada select
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var imageUrl = selectedOption.getAttribute('data-src');
+
+            if (imageUrl) {
+                imageElement.src = imageUrl;
+                imageElement.style.display = 'block'; // Tampilkan gambar jika ada URL
+            } else {
+                imageElement.style.display = 'none'; // Sembunyikan gambar jika tidak ada URL
             }
+        });
 
-            const formData = new FormData();
-            formData.append('image', image);
+        // Tambahkan event listener untuk tombol "Summarize"
+        summarizeButton.addEventListener('click', function() {
+            var questionText = document.getElementById('question').value;
+            var selectedOption = imageSelector.options[imageSelector.selectedIndex];
+            var imageUrl = selectedOption.getAttribute('data-src');
+            var imageName = selectedOption.value + '.jpg'; // Nama file
+            var blob = null;
 
-            // Read image file as binary string
-            const reader = new FileReader();
-            reader.readAsBinaryString(image);
-            reader.onloadend = function() {
-                const binaryData = reader.result;
+            if (imageUrl && questionText) {
+                // Ambil gambar dari URL
+                fetch(imageUrl)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        // Buat objek File dari blob
+                        var file = new File([blob], imageName, {
+                            type: 'image/jpeg'
+                        });
 
-                // Append binary data to FormData
-                formData.append('image_binary', binaryData);
+                        // Siapkan FormData
+                        var formData = new FormData();
+                        formData.append('image', file);
+                        formData.append('question', questionText);
 
-                // Tampilkan loader spinner dan ubah teks tombol
-                const buttonText = document.getElementById('buttonText');
-                const loadingSpinner = document.getElementById('loadingSpinner');
-
-                buttonText.textContent = 'Summarizing process...';
-                loadingSpinner.style.display = 'inline-block'; // Menampilkan spinner
-
-                // Send the request
-                sendRequest(question, formData);
-            };
-        }
-
-        async function sendRequest(question, formData) {
-            try {
-                const response = await fetch(`http://127.0.0.1:8000/api/vision?question=${encodeURIComponent(question)}`, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Authorization': 'Bearer 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',
-                    },
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    displayResults(result);
-                } else {
-                    console.error('Error:', response.status);
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
+                        // Kirim data ke server
+                        fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questionText), {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'Authorization': 'Bearer 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'
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                } else {
+                                    throw new Error('Server responded with non-OK status');
+                                }
+                            })
+                            .then(data => {
+                                // Extracting the content from the first choice
+                                const content = data.gpt.choices[0].message.content;
+                                console.log(content);
+                                document.getElementById('result-container').innerText = content;
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching image:', error);
+                    });
+            } else {
+                console.error('Please select an image and provide a question text.');
             }
-        }
+        });
+    </script> -->
 
-        async function displayResults(result) {
-            const resultContainer = document.getElementById('result-container');
-            const cardImage = document.getElementById('cardImage');
-            const buttonText = document.getElementById('buttonText');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            const projectBox = document.getElementById('projectBox');
-
-            // Extracting the "choices" array from the "gpt" object
-            const choices = result.gpt.choices;
-
-            // Extracting the content from the first choice
-            const content = choices[0].message.content;
-
-            // Update the image source inside the card
-            const cardImageElement = cardImage.querySelector('img');
-            cardImageElement.src = result.base64_image;
-            cardImageElement.alt = 'Uploaded Image';
-
-            // Show the cardImage element
-            cardImage.style.display = 'block';
-
-            // Clear previous content
-            resultContainer.innerHTML = '';
-
-            // Display projectBox
-            projectBox.style.display = 'block';
-
-            // Tampilkan pertanyaan
-            resultContainer.innerHTML += `<h6>${result.question}</h6>`;
-
-            // Mengetik ulang (typing effect) pada content
-            await typeWriter(content, resultContainer);
-
-            // Sembunyikan loader spinner setelah hasil ditampilkan
-            loadingSpinner.style.display = 'none';
-
-            // Kembalikan teks tombol ke kondisi awal
-            buttonText.textContent = 'Summarize...';
-
-            // Tampilkan hasil setelah jawaban sudah ada
-            resultContainer.classList.remove('result-hidden');
-        }
-
+    <script>
         // Fungsi untuk mengetik ulang (typing effect)
-        async function typeWriter(text, element) {
-            for (let i = 0; i < text.length; i++) {
-                element.innerHTML += text.charAt(i);
-                await sleep(20); // Mengatur kecepatan pengetikan (dalam milidetik)
-            }
+        async function typeWriter(content, element) {
+            let i = 0;
+            const typingEffect = async () => {
+                if (i < content.length) {
+                    element.innerText += content.charAt(i);
+                    if (content.charAt(i) === " ") {
+                        element.innerText += "\u00A0"; // Add a non-breaking space for spaces
+                    }
+                    i++;
+                    await sleep(20); // Mengatur kecepatan pengetikan (dalam milidetik)
+                    typingEffect();
+                }
+            };
+            typingEffect();
         }
+
 
         // Fungsi untuk mengatur waktu jeda
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
-    </script>
 
-    <!-- kode js menampilkan sample question -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show loading container initially
-            const loadingContainer = document.getElementById('loadingContainer');
-            const myProjectBox = document.getElementById('myProjectBox');
+        // Select element dari HTML
+        var imageSelector = document.getElementById('imageSelector');
+        var summarizeButton = document.getElementById('summarizeButton');
+        var selectElement = document.getElementById('imageSelector');
+        var imageElement = document.getElementById('selectedImage');
 
-            // Hide myProjectBox initially
-            myProjectBox.style.display = 'none';
+        // Tambahkan event listener untuk perubahan pada select
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var imageUrl = selectedOption.getAttribute('data-src');
 
-            setTimeout(function() {
-                // Hide loading container after 2 seconds
-                loadingContainer.style.display = 'none';
-
-                // Show myProjectBox after hiding loading container
-                myProjectBox.style.display = 'block';
-            }, 5000); // 2000 milliseconds = 2 seconds
+            if (imageUrl) {
+                imageElement.src = imageUrl;
+                imageElement.style.display = 'block'; // Tampilkan gambar jika ada URL
+            } else {
+                imageElement.style.display = 'none'; // Sembunyikan gambar jika tidak ada URL
+            }
         });
 
-        function toggleProjectBox() {
-            // Toggle the visibility of myProjectBox
-            const myProjectBox = document.getElementById('myProjectBox');
-            myProjectBox.style.display = myProjectBox.style.display === 'none' ? 'block' : 'none';
-        }
-    </script>
+        // Tambahkan event listener untuk tombol "Summarize"
+        // Tambahkan event listener untuk tombol "Summarize"
+        summarizeButton.addEventListener('click', function() {
+            var questionText = document.getElementById('question').value;
+            var selectedOption = imageSelector.options[imageSelector.selectedIndex];
+            var imageUrl = selectedOption.getAttribute('data-src');
+            var imageName = selectedOption.value + '.jpg'; // Nama file
+            var blob = null;
 
-    <!-- kode js hidden sample quest -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            displayRandomQuestions(10);
+            if (imageUrl && questionText) {
+                // Ambil gambar dari URL
+                fetch(imageUrl)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        // Buat objek File dari blob
+                        var file = new File([blob], imageName, {
+                            type: 'image/jpeg'
+                        });
+
+                        // Siapkan FormData
+                        var formData = new FormData();
+                        formData.append('image', file);
+                        formData.append('question', questionText);
+
+                        // Kirim data ke server
+                        fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questionText), {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'Authorization': 'Bearer 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'
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                } else {
+                                    throw new Error('Server responded with non-OK status');
+                                }
+                            })
+                            .then(data => {
+                                // Extracting the content from the first choice
+                                const content = data.gpt.choices[0].message.content;
+                                console.log(content);
+
+                                // Clear previous content
+                                document.getElementById('result-container').innerText = '';
+
+                                // Typewriter effect
+                                typeWriter(content, document.getElementById('result-container'));
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching image:', error);
+                    });
+            } else {
+                console.error('Please select an image and provide a question text.');
+            }
         });
-
-        function toggleProjectBox() {
-            const projectBox = document.getElementById('myProjectBox');
-            const toggleIcon = document.querySelector('.toggle-icon');
-            const showButton = document.getElementById('showButton');
-
-            if (projectBox.style.display === 'none') {
-                projectBox.style.display = 'block';
-                toggleIcon.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
-                showButton.classList.add('hidden');
-            } else {
-                projectBox.style.display = 'none';
-                toggleIcon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
-                showButton.classList.remove('hidden');
-            }
-        }
-
-        function showProjectBox() {
-            const projectBox = document.getElementById('myProjectBox');
-            const toggleIcon = document.querySelector('.toggle-icon');
-            const showButton = document.getElementById('showButton');
-
-            projectBox.style.display = 'block';
-            toggleIcon.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
-            showButton.classList.add('hidden');
-        }
-
-        function regenerateQuestions() {
-            // Ubah teks tombol menjadi "Re-generate Process"
-            document.getElementById('regenerateButton').innerHTML = '<i class="fa-solid fa-spinner fa-spin text-primary"></i>&nbsp; Re-generate Process';
-
-            // Sembunyikan myProjectBox dan showButton selama 3 detik
-            document.getElementById('myProjectBox').style.display = 'none';
-            document.getElementById('showButton').style.display = 'none';
-
-            // Proses yang memakan waktu (misalnya, pengaturan nilai default)
-            setTimeout(function() {
-                // Setelah 3 detik, tampilkan kembali myProjectBox dan showButton
-                document.getElementById('myProjectBox').style.display = 'block';
-
-                // Ubah teks tombol kembali ke "Re-generate sample question"
-                document.getElementById('regenerateButton').innerHTML = '<i class="fa-solid fa-arrows-rotate text-primary"></i>&nbsp; Re-generate sample question';
-
-                // Tampilkan 10 pertanyaan acak
-                displayRandomQuestions(10);
-            }, 3000); // Waktu dalam milidetik (3000 milidetik = 3 detik)
-        }
-
-        function displayRandomQuestions(numQuestions) {
-            const questionsContainer = document.getElementById('questionsContainer');
-            questionsContainer.innerHTML = '';
-
-            const allQuestions = [
-                "Bagaimana ringkasan performa top region untuk paket internet Superseru?",
-                "Berapa total penjualan harian dalam satu minggu terakhir?",
-                "Seberapa besar kontribusi pendapatan harian untuk setiap region?",
-                "Apa saja fitur unggulan yang ditawarkan dalam paket Superseru?",
-                "Berikan summary dari daily trend revenue diatas?",
-                "Apakah Superseru menawarkan kecepatan internet yang tinggi?",
-                "Apa jenis bonus atau tambahan yang bisa saya dapatkan dengan menggunakan produk Superseru?",
-                "Bagaimana cara mengaktifkan atau menonaktifkan fitur tertentu pada Superseru?",
-                "Adakah pilihan tambahan atau upgrade yang dapat saya lakukan pada paket Superseru?",
-                "Apakah Superseru memberikan keuntungan khusus bagi pelanggan setia Telkomsel?",
-                "Bagaimana cara mendapatkan bantuan atau dukungan pelanggan terkait produk Superseru?",
-                "Apakah ada program reward atau promo khusus untuk pengguna Superseru?",
-                "Bagaimana cara melakukan pembayaran tagihan untuk paket Superseru?",
-                "Apakah Superseru memiliki jangkauan sinyal yang luas di seluruh Indonesia?",
-                "Apa yang membedakan Superseru dari produk serupa di pasaran?",
-                "Bagaimana cara melakukan migrasi atau upgrade paket ke Superseru?",
-                "Adakah fitur keamanan atau proteksi khusus yang disertakan dalam Superseru?",
-                "Apakah Superseru dapat digunakan untuk keperluan bisnis atau hanya untuk penggunaan pribadi?",
-                "Bagaimana cara mengakses konten eksklusif yang mungkin disertakan dalam Superseru?",
-                "Apa kebijakan Telkomsel terkait privasi pengguna Superseru?",
-                "Bagaimana cara memperpanjang masa aktif atau masa berlaku paket Superseru?",
-                // Pertanyaan terkait pendapatan, MoM, dan data berdasarkan channel, paket, serta jumlah pelanggan
-                "Bagaimana performa pendapatan MoM untuk paket Superseru?",
-                "Apakah terdapat perbedaan pendapatan antara saluran distribusi yang berbeda?",
-                "Bagaimana kontribusi pendapatan dari setiap paket Superseru?",
-                "Berapa total jumlah pelanggan (subscriber) yang tercatat untuk paket Superseru?",
-                "Apakah terdapat tren pertumbuhan pelanggan Superseru dalam beberapa bulan terakhir?",
-                // Pertanyaan summary untuk beberapa region dan paket tertentu
-                "Bagaimana performa penjualan untuk region Jawa Timur (Jatim)?",
-                "Seberapa besar kontribusi pendapatan dari Superseru 50K di region Sumatera Selatan (Sumbagsel)?",
-                "Berapa jumlah pelanggan (subscriber) Superseru di Sumatera Utara (Sumbagut)?",
-                "Bagaimana pendapatan harian dari paket Superseru di Western Jabodetabek?",
-                "Apakah Superseru 100K memiliki kontribusi yang signifikan pada pendapatan?",
-                // Pertanyaan berdasarkan channel
-                "Bagaimana performa penjualan melalui saluran MyTelkomsel?",
-                "Seberapa efektifnya saluran Digipos dalam mendistribusikan paket Superseru?",
-                "Berapa kontribusi pendapatan dari saluran UMB (USSD Menu Browser)?",
-                "Bagaimana performa paket Superseru yang dijual melalui saluran URP Modem?",
-                // Pertanyaan berdasarkan paket
-                "Berapa total pendapatan dari paket Superseru 50K?",
-                "Apakah Superseru 75K memiliki tingkat penjualan yang baik di pasar?",
-                "Bagaimana performa pendapatan dari paket Superseru 150K?",
-                // Pertanyaan jumlah pelanggan (subscriber)
-                "Berapa total pelanggan (subscriber) Superseru di akhir bulan terakhir?",
-                "Seberapa besar pertumbuhan jumlah pelanggan (subscriber) Superseru dalam satu bulan terakhir?",
-            ];
-
-            const shuffledQuestions = shuffleArray(allQuestions);
-
-            for (let i = 0; i < numQuestions; i++) {
-                const questionDiv = document.createElement('div');
-                questionDiv.innerHTML = `<span>${i + 1}. ${shuffledQuestions[i]}</span><div style="margin-bottom: 10px;"></div>`;
-                questionsContainer.appendChild(questionDiv);
-            }
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
     </script>
-
-    <script>
-        // Function to hide elements initially
-        function hideElements() {
-            var imageInput = document.getElementById('image');
-            var textareaContainer = document.getElementById('textareaContainer');
-            imageInput.style.display = 'none';
-            textareaContainer.style.display = 'none';
-        }
-
-        // Function to toggle elements based on checkbox state
-        function toggleElements() {
-            var checkbox = document.getElementById('flexSwitchCheckDefault');
-            var imageInput = document.getElementById('image');
-            var textareaContainer = document.getElementById('textareaContainer');
-
-            if (checkbox.checked) {
-                // Jika checkbox dicentang, tampilkan kembali elemen imageInput dan textareaContainer
-                imageInput.style.display = 'block';
-                textareaContainer.style.display = 'block';
-            } else {
-                // Jika checkbox tidak dicentang, sembunyikan elemen imageInput dan textareaContainer
-                imageInput.style.display = 'none';
-                textareaContainer.style.display = 'none';
-            }
-        }
-
-        // Call hideElements function when the page loads
-        window.onload = hideElements;
-    </script>
-
 
 
 </body>
+<!-- END: Body-->
 
 </html>
