@@ -50,6 +50,20 @@
     <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script type="module">
+        import {
+            TableauViz
+        } from "https://tabfire.telkomsel.co.id/javascripts/api/tableau.embedding.3.latest.min.js";
+
+        // Initialization of the Tableau visualization via JavaScript. Learn more here:
+        // https://help.tableau.com/current/api/embedding_api/en-us/docs/embedding_api_configure.html
+        const viz = new TableauViz();
+
+        viz.src = "{{ $url }}";
+        viz.toolbar = "show";
+
+        document.getElementById("tableauViz").appendChild(viz);
+    </script>
 
 
 
@@ -57,6 +71,10 @@
 
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+    <!-- Tambahkan script toastr CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 </head>
 <!-- END: Head-->
@@ -147,6 +165,10 @@
         /* Gaya lain yang diperlukan untuk tata letak, padding, dll. */
     }
 
+    #cardResult {
+        display: none;
+    }
+
     .product-box .product-img img {
         width: 100%;
         height: 100%;
@@ -183,15 +205,23 @@
         transform: scaleX(1);
     }
 
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
+    .spinner {
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-left-color: #7983ff;
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+        /* Sesuaikan dengan jarak yang diinginkan antara spinner dan teks */
+        animation: spin 1s linear infinite;
+    }
 
-        100% {
+    @keyframes spin {
+        to {
             transform: rotate(360deg);
         }
     }
+
 
     .btn i.fa-cog {
         animation: spin 2s linear infinite;
@@ -321,7 +351,7 @@
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
                 <li class="navigation-header mt-3">
-                    <span data-i18n="Search">Select Dashboard</span>
+                    <span data-i18n="Search">Select Image</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -357,36 +387,89 @@
                         <!-- Centered Aligned Tabs starts -->
                         <div class="col-xl-12 col-lg-12">
                             <div class="card">
-                                <img class="card-img-top" id="selectedImage" src="" alt="Card image cap" style="display: none;" />
-                            </div>
-                        </div>
-
-                        <div class="col-xl-12 col-lg-12">
-                            <div id="textareaContainer" class="ml-4">
-                                <textarea id="question" class="form-control">Explain the meaning of the picture and give me a neat 3 point summary.</textarea>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-2 col-lg-12 mt-1">
-                            <button class="btn btn-sm btn-outline-primary" id="summarizeButton">
-                                <span class="ml-4" id="buttonText">Summarize...</span>
-                            </button>
-                        </div>
-
-
-
-                        <div class="col-xl-12 col-lg-12 mt-2">
-                            <div class="card">
                                 <div class="card-body">
-                                    <p class="card-text">
-                                    <div class="col-sm-12 col-xl-12">
-                                        <span id="result-container"></span>
+                                    <ul class="nav nav-tabs justify-content-center" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="home-tab-center" data-bs-toggle="tab" href="#home-center" aria-controls="home-center" role="tab" aria-selected="true">AI Generator</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="service-tab-center" data-bs-toggle="tab" href="#service-center" aria-controls="service-center" role="tab" aria-selected="false">AI Summarizer</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="account-tab-center" data-bs-toggle="tab" href="#account-center" aria-controls="account-center" role="tab" aria-selected="false">Chatbot</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane" id="home-center" aria-labelledby="home-tab-center" role="tabpanel">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-xl-12">
+                                                    @if($detailData->visualization_type === 'Tableau')
+                                                    <div class="col-12" style="width:1520px; height:840px;">
+                                                        <div id='tableauViz'></div>
+                                                    </div>
+                                                    @else
+                                                    <!-- Tampilkan embed_url sesuai kebutuhan PowerBI -->
+                                                    <div class="col-12 mx-auto mb-4">
+                                                        {!! $detailData->embed_url !!}
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane active" id="service-center" aria-labelledby="service-tab-center" role="tabpanel">
+                                            <div class="row match-height">
+                                                <!-- Centered Aligned Tabs starts -->
+                                                <div class="col-xl-12 col-lg-12">
+                                                    <div class="card">
+                                                        <img class="card-img-top" id="selectedImage" src="" alt="Card image cap" style="display: none;" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-12 col-lg-12">
+                                                    <div id="questionContainer">
+                                                        <!-- Di sini akan ditampilkan daftar pertanyaan -->
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-xl-12 col-lg-12">
+                                                    <div id="textareaContainer" class="ml-4">
+                                                        <textarea id="question" class="form-control">Explain the meaning of the picture and give me a neat 3 point summary.</textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xl-2 col-lg-12 mt-1">
+                                                    <button class="btn btn-sm btn-outline-primary" id="summarizeButton">
+                                                        <span id="spinner" class="spinner" style="display: none;"></span>
+                                                        <span id="buttonText">Summarize...</span>
+                                                    </button>
+
+                                                </div>
+
+
+
+                                                <div class="col-xl-12 col-lg-12 mt-2">
+                                                    <div class="card" id="cardResult" style="background-color: #333333; color: white;">
+                                                        <div class="card-body">
+                                                            <p class="card-text">
+                                                            <div class="col-sm-12 col-xl-12">
+                                                                <span id="result-container"></span>
+                                                            </div>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Centered Aligned Tabs ends -->
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="account-center" aria-labelledby="account-tab-center" role="tabpanel">
+
+                                        </div>
                                     </div>
-                                    </p>
                                 </div>
                             </div>
                         </div>
-
                         <!-- Centered Aligned Tabs ends -->
                     </div>
                 </section>
@@ -443,6 +526,7 @@
     <script src="{{ asset('app-assets/js/scripts/pages/page-account-settings-account.js') }}"></script>
     <script src="{{ asset('app-assets/js/scripts/pages/modal-share-project.js') }}"></script>
     <script src="{{ asset('app-assets/js/scripts/components/components-dropdowns.js') }}"></script>
+    <script src="{{ asset('app-assets/js/scripts/components/components-navs.js') }}"></script>
 
     <script>
         $(window).on('load', function() {
@@ -456,82 +540,6 @@
     </script>
 
     <!-- <script>
-        var imageSelector = document.getElementById('imageSelector'); // Select 
-        var summarizeButton = document.getElementById('summarizeButton'); // Tombol "Summarize"
-        var selectElement = document.getElementById('imageSelector');
-        var imageElement = document.getElementById('selectedImage');
-
-        // Tambahkan event listener untuk perubahan pada select
-        selectElement.addEventListener('change', function() {
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            var imageUrl = selectedOption.getAttribute('data-src');
-
-            if (imageUrl) {
-                imageElement.src = imageUrl;
-                imageElement.style.display = 'block'; // Tampilkan gambar jika ada URL
-            } else {
-                imageElement.style.display = 'none'; // Sembunyikan gambar jika tidak ada URL
-            }
-        });
-
-        // Tambahkan event listener untuk tombol "Summarize"
-        summarizeButton.addEventListener('click', function() {
-            var questionText = document.getElementById('question').value;
-            var selectedOption = imageSelector.options[imageSelector.selectedIndex];
-            var imageUrl = selectedOption.getAttribute('data-src');
-            var imageName = selectedOption.value + '.jpg'; // Nama file
-            var blob = null;
-
-            if (imageUrl && questionText) {
-                // Ambil gambar dari URL
-                fetch(imageUrl)
-                    .then(response => response.blob())
-                    .then(blob => {
-                        // Buat objek File dari blob
-                        var file = new File([blob], imageName, {
-                            type: 'image/jpeg'
-                        });
-
-                        // Siapkan FormData
-                        var formData = new FormData();
-                        formData.append('image', file);
-                        formData.append('question', questionText);
-
-                        // Kirim data ke server
-                        fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questionText), {
-                                method: 'POST',
-                                body: formData,
-                                headers: {
-                                    'Authorization': 'Bearer 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'
-                                }
-                            })
-                            .then(response => {
-                                if (response.ok) {
-                                    return response.json();
-                                } else {
-                                    throw new Error('Server responded with non-OK status');
-                                }
-                            })
-                            .then(data => {
-                                // Extracting the content from the first choice
-                                const content = data.gpt.choices[0].message.content;
-                                console.log(content);
-                                document.getElementById('result-container').innerText = content;
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                            });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching image:', error);
-                    });
-            } else {
-                console.error('Please select an image and provide a question text.');
-            }
-        });
-    </script> -->
-
-    <script>
         // Fungsi untuk mengetik ulang (typing effect)
         async function typeWriter(content, element) {
             let i = 0;
@@ -575,35 +583,42 @@
         });
 
         // Tambahkan event listener untuk tombol "Summarize"
-        // Tambahkan event listener untuk tombol "Summarize"
         summarizeButton.addEventListener('click', function() {
+            var spinner = document.getElementById('spinner');
+            var buttonText = document.getElementById('buttonText');
             var questionText = document.getElementById('question').value;
             var selectedOption = imageSelector.options[imageSelector.selectedIndex];
             var imageUrl = selectedOption.getAttribute('data-src');
             var imageName = selectedOption.value + '.jpg'; // Nama file
             var blob = null;
 
-            if (imageUrl && questionText) {
-                // Ambil gambar dari URL
+            if (!imageUrl) {
+                // Tampilkan pesan error menggunakan toastr jika tidak ada gambar yang dipilih
+                toastr.error('Please select an image.');
+                return; // Keluar dari fungsi jika tidak ada gambar yang dipilih
+            }
+
+            // Tampilkan spinner dan ubah teks tombol saat proses dimulai
+            spinner.style.display = 'inline-block';
+            buttonText.innerText = 'Summarizing...';
+
+            if (questionText) {
                 fetch(imageUrl)
                     .then(response => response.blob())
                     .then(blob => {
-                        // Buat objek File dari blob
                         var file = new File([blob], imageName, {
                             type: 'image/jpeg'
                         });
 
-                        // Siapkan FormData
                         var formData = new FormData();
                         formData.append('image', file);
                         formData.append('question', questionText);
 
-                        // Kirim data ke server
                         fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questionText), {
                                 method: 'POST',
                                 body: formData,
                                 headers: {
-                                    'Authorization': 'Bearer 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'
+                                    'Authorization': 'Bearer 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'
                                 }
                             })
                             .then(response => {
@@ -614,25 +629,147 @@
                                 }
                             })
                             .then(data => {
-                                // Extracting the content from the first choice
                                 const content = data.gpt.choices[0].message.content;
-                                console.log(content);
-
-                                // Clear previous content
                                 document.getElementById('result-container').innerText = '';
-
-                                // Typewriter effect
                                 typeWriter(content, document.getElementById('result-container'));
                             })
                             .catch(error => {
                                 console.error('Error:', error);
+                            })
+                            .finally(() => {
+                                // Sembunyikan spinner dan kembalikan teks tombol saat proses selesai
+                                spinner.style.display = 'none';
+                                buttonText.innerText = 'Summarize...';
                             });
                     })
                     .catch(error => {
                         console.error('Error fetching image:', error);
                     });
             } else {
-                console.error('Please select an image and provide a question text.');
+                toastr.error('Please provide a question text.'); // Tampilkan pesan error jika tidak ada teks pertanyaan
+            }
+        });
+    </script> -->
+
+    <script>
+        // Fungsi untuk menampilkan atau menyembunyikan elemen
+        function toggleElementVisibility(elementId, isVisible) {
+            var element = document.getElementById(elementId);
+            if (isVisible) {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+
+        // Fungsi untuk mengetik ulang (typing effect)
+        async function typeWriter(content, element) {
+            let i = 0;
+            const typingEffect = async () => {
+                if (i < content.length) {
+                    element.innerText += content.charAt(i);
+                    if (content.charAt(i) === " ") {
+                        element.innerText += "\u00A0"; // Add a non-breaking space for spaces
+                    }
+                    i++;
+                    await sleep(20); // Mengatur kecepatan pengetikan (dalam milidetik)
+                    typingEffect();
+                }
+            };
+            typingEffect();
+        }
+
+        // Fungsi untuk mengatur waktu jeda
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Select element dari HTML
+        var imageSelector = document.getElementById('imageSelector');
+        var summarizeButton = document.getElementById('summarizeButton');
+        var selectElement = document.getElementById('imageSelector');
+        var imageElement = document.getElementById('selectedImage');
+
+        // Tambahkan event listener untuk perubahan pada select
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var imageUrl = selectedOption.getAttribute('data-src');
+
+            if (imageUrl) {
+                imageElement.src = imageUrl;
+                imageElement.style.display = 'block'; // Tampilkan gambar jika ada URL
+            } else {
+                imageElement.style.display = 'none'; // Sembunyikan gambar jika tidak ada URL
+            }
+        });
+
+        // Tambahkan event listener untuk tombol "Summarize"
+        summarizeButton.addEventListener('click', function() {
+            var spinner = document.getElementById('spinner');
+            var buttonText = document.getElementById('buttonText');
+            var questionText = document.getElementById('question').value;
+            var selectedOption = imageSelector.options[imageSelector.selectedIndex];
+            var imageUrl = selectedOption.getAttribute('data-src');
+            var imageName = selectedOption.value + '.jpg'; // Nama file
+            var blob = null;
+
+            if (!imageUrl) {
+                // Tampilkan pesan error menggunakan toastr jika tidak ada gambar yang dipilih
+                toastr.error('Please select an image.');
+                return; // Keluar dari fungsi jika tidak ada gambar yang dipilih
+            }
+
+            // Tampilkan spinner dan ubah teks tombol saat proses dimulai
+            spinner.style.display = 'inline-block';
+            buttonText.innerText = 'Loading...';
+
+            if (questionText) {
+                fetch(imageUrl)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        var file = new File([blob], imageName, {
+                            type: 'image/jpeg'
+                        });
+
+                        var formData = new FormData();
+                        formData.append('image', file);
+                        formData.append('question', questionText);
+
+                        fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questionText), {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'Authorization': 'Bearer'
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                } else {
+                                    throw new Error('Server responded with non-OK status');
+                                }
+                            })
+                            .then(data => {
+                                const content = data.gpt.choices[0].message.content;
+                                // Tampilkan kartu dengan hasil respons
+                                toggleElementVisibility('cardResult', true);
+                                document.getElementById('result-container').innerText = '';
+                                typeWriter(content, document.getElementById('result-container'));
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            })
+                            .finally(() => {
+                                // Sembunyikan spinner dan kembalikan teks tombol saat proses selesai
+                                spinner.style.display = 'none';
+                                buttonText.innerText = 'Summarize...';
+                            });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching image:', error);
+                    });
+            } else {
+                toastr.error('Please provide a question text.'); // Tampilkan pesan error jika tidak ada teks pertanyaan
             }
         });
     </script>
