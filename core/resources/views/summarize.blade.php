@@ -434,7 +434,7 @@
 
                                                 <div class="col-xl-12 col-lg-12">
                                                     <div id="textareaContainer" class="ml-4">
-                                                        <textarea id="question" class="form-control">Explain the meaning of the picture and give me a neat 3 point summary.</textarea>
+                                                        <textarea id="question" class="form-control">Please summarize this dashboard in the style of 5 main points.</textarea>
                                                     </div>
                                                 </div>
 
@@ -652,6 +652,10 @@
     </script> -->
 
     <script>
+        const apiKey = "{{ env('OPENAI_API_KEY') }}";
+    </script>
+
+    <script>
         // Fungsi untuk menampilkan atau menyembunyikan elemen
         function toggleElementVisibility(elementId, isVisible) {
             var element = document.getElementById(elementId);
@@ -739,7 +743,7 @@
                                 method: 'POST',
                                 body: formData,
                                 headers: {
-                                    'Authorization': 'Bearer'
+                                    'Authorization': 'Bearer ' + apiKey
                                 }
                             })
                             .then(response => {
