@@ -463,14 +463,15 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-xl-6 col-md-6 col-12" id="embedUrlContainer" style="display: none;">
+                                            <div class="col-xl-12 col-md-6 col-12" id="embedUrlContainer" style="display: none;">
                                                 <div class="mb-2">
                                                     <label class="form-label" for="basicInput">Embed URL <small class="text-danger">*</small></label>
-                                                    <input type="text" name="embed_url" id="embedUrl" class="form-control" autocomplete="off">
+                                                    <textarea name="embed_url" id="embedUrl" class="form-control"></textarea>
+                                                    <!-- <input type="text" name="embed_url" id="embedUrl" class="form-control" autocomplete="off"> -->
                                                 </div>
                                             </div>
 
-                                            <div class="col-xl-6 col-md-6 col-12" id="viewNameContainer" style="display: none;">
+                                            <div class="col-xl-12 col-md-6 col-12" id="viewNameContainer" style="display: none;">
                                                 <div class="mb-2">
                                                     <label class="form-label" for="basicInput">View Dashboard <small class="text-danger">*</small></label>
                                                     <input type="text" name="view_name" id="viewName" class="form-control" autocomplete="off">

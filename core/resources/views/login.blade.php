@@ -102,10 +102,6 @@
                                 <div class="divider my-2">
                                     <div class="divider-text">OR</div>
                                 </div>
-                                <!-- <a href="{{ route('login.google') }}" class="btn btn-outline-secondary w-100" tabindex="4">
-                                    <img src="{{ asset('assets/gmail.png') }}" width="20" alt="" style="margin-right: 10px;">&nbsp;
-                                    <span style="font-size: 14px;" class="text-black">Login with Google</span>
-                                </a> -->
                                 <a href="https://10.251.94.223:5000/login" class="btn btn-outline-secondary w-100" tabindex="4">
                                     <img src="{{ asset('assets/microsoft.png') }}" width="20" alt="" style="margin-right: 10px;">&nbsp;
                                     <span style="font-size: 14px;" class="text-black">Login with Microsoft</span>
