@@ -747,7 +747,7 @@
                         // Hapus daftar pertanyaan sebelum fetching pertanyaan baru
                         document.getElementById('questionsContainer').innerText = '';
 
-                        fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questText), {
+                        fetch('http://10.251.94.223:8000/api/vision?question=' + encodeURIComponent(questText), {
                                 method: 'POST',
                                 body: formData,
                                 headers: {
