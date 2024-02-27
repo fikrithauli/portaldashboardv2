@@ -469,7 +469,7 @@
                                                 <div class="col-xl-2 col-lg-12 mt-1">
                                                     <button class="btn btn-sm btn-outline-dark" id="summarizeButton">
                                                         <span id="spinner" class="spinner" style="display: none;"></span>
-                                                        <span id="buttonText">Summarize...</span>
+                                                        <span id="buttonText">Submit</span>
                                                     </button>
                                                 </div>
 
@@ -565,10 +565,6 @@
     </script>
 
     <script>
-        const apiKey = "{{ env('OPENAI_API_KEY') }}";
-    </script>
-
-    <script>
         // Fungsi untuk menampilkan atau menyembunyikan elemen
         function toggleElementVisibility(elementId, isVisible) {
             var element = document.getElementById(elementId);
@@ -655,9 +651,6 @@
                         fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questionText), {
                                 method: 'POST',
                                 body: formData,
-                                headers: {
-                                    'Authorization': 'Bearer ' + apiKey
-                                }
                             })
                             .then(response => {
                                 if (response.ok) {
@@ -750,9 +743,6 @@
                         fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questText), {
                                 method: 'POST',
                                 body: formData,
-                                headers: {
-                                    'Authorization': 'Bearer ' + apiKey
-                                }
                             })
                             .then(response => {
                                 if (response.ok) {
@@ -808,6 +798,5 @@
     </script>
 
 </body>
-<!-- END: Body-->
 
 </html>
