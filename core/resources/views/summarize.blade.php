@@ -425,11 +425,39 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-12 col-lg-12">
-                                                    <div id="questionContainer">
-                                                        <!-- Di sini akan ditampilkan daftar pertanyaan -->
+                                                <div class="col-xl-5 col-lg-12 mb-3" id="loadingButton" style="display: none;">
+                                                    <button class="btn btn-outline-dark" type="button" disabled>
+                                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                        <span class="ms-25 align-middle">Looking for questions...</span>
+                                                    </button>
+                                                </div>
+
+
+                                                <div class="col-xl-12 col-lg-12" id="cardContainer" style="display: none;">
+                                                    <div class="card">
+                                                        <div class="card-header">
+                                                            <h4 class="card-title">Generate Question</h4>
+                                                            <div class="heading-elements">
+                                                                <ul class="list-inline mb-0">
+                                                                    <li>
+                                                                        <a data-action="collapse"><i data-feather="chevron-down"></i></a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a data-action="reload" id="reloadButton"><i data-feather="rotate-cw"></i></a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-content collapse show">
+                                                            <div class="card-body">
+                                                                <div id="questionsContainer">
+                                                                    <!-- Pertanyaan-pertanyaan akan ditampilkan di sini -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
+
 
 
                                                 <div class="col-xl-12 col-lg-12">
@@ -439,14 +467,11 @@
                                                 </div>
 
                                                 <div class="col-xl-2 col-lg-12 mt-1">
-                                                    <button class="btn btn-sm btn-outline-primary" id="summarizeButton">
+                                                    <button class="btn btn-sm btn-outline-dark" id="summarizeButton">
                                                         <span id="spinner" class="spinner" style="display: none;"></span>
                                                         <span id="buttonText">Summarize...</span>
                                                     </button>
-
                                                 </div>
-
-
 
                                                 <div class="col-xl-12 col-lg-12 mt-2">
                                                     <div class="card" id="cardResult" style="background-color: #333333; color: white;">
@@ -538,118 +563,6 @@
             }
         })
     </script>
-
-    <!-- <script>
-        // Fungsi untuk mengetik ulang (typing effect)
-        async function typeWriter(content, element) {
-            let i = 0;
-            const typingEffect = async () => {
-                if (i < content.length) {
-                    element.innerText += content.charAt(i);
-                    if (content.charAt(i) === " ") {
-                        element.innerText += "\u00A0"; // Add a non-breaking space for spaces
-                    }
-                    i++;
-                    await sleep(20); // Mengatur kecepatan pengetikan (dalam milidetik)
-                    typingEffect();
-                }
-            };
-            typingEffect();
-        }
-
-
-        // Fungsi untuk mengatur waktu jeda
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        // Select element dari HTML
-        var imageSelector = document.getElementById('imageSelector');
-        var summarizeButton = document.getElementById('summarizeButton');
-        var selectElement = document.getElementById('imageSelector');
-        var imageElement = document.getElementById('selectedImage');
-
-        // Tambahkan event listener untuk perubahan pada select
-        selectElement.addEventListener('change', function() {
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            var imageUrl = selectedOption.getAttribute('data-src');
-
-            if (imageUrl) {
-                imageElement.src = imageUrl;
-                imageElement.style.display = 'block'; // Tampilkan gambar jika ada URL
-            } else {
-                imageElement.style.display = 'none'; // Sembunyikan gambar jika tidak ada URL
-            }
-        });
-
-        // Tambahkan event listener untuk tombol "Summarize"
-        summarizeButton.addEventListener('click', function() {
-            var spinner = document.getElementById('spinner');
-            var buttonText = document.getElementById('buttonText');
-            var questionText = document.getElementById('question').value;
-            var selectedOption = imageSelector.options[imageSelector.selectedIndex];
-            var imageUrl = selectedOption.getAttribute('data-src');
-            var imageName = selectedOption.value + '.jpg'; // Nama file
-            var blob = null;
-
-            if (!imageUrl) {
-                // Tampilkan pesan error menggunakan toastr jika tidak ada gambar yang dipilih
-                toastr.error('Please select an image.');
-                return; // Keluar dari fungsi jika tidak ada gambar yang dipilih
-            }
-
-            // Tampilkan spinner dan ubah teks tombol saat proses dimulai
-            spinner.style.display = 'inline-block';
-            buttonText.innerText = 'Summarizing...';
-
-            if (questionText) {
-                fetch(imageUrl)
-                    .then(response => response.blob())
-                    .then(blob => {
-                        var file = new File([blob], imageName, {
-                            type: 'image/jpeg'
-                        });
-
-                        var formData = new FormData();
-                        formData.append('image', file);
-                        formData.append('question', questionText);
-
-                        fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questionText), {
-                                method: 'POST',
-                                body: formData,
-                                headers: {
-                                    'Authorization': 'Bearer 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'
-                                }
-                            })
-                            .then(response => {
-                                if (response.ok) {
-                                    return response.json();
-                                } else {
-                                    throw new Error('Server responded with non-OK status');
-                                }
-                            })
-                            .then(data => {
-                                const content = data.gpt.choices[0].message.content;
-                                document.getElementById('result-container').innerText = '';
-                                typeWriter(content, document.getElementById('result-container'));
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                            })
-                            .finally(() => {
-                                // Sembunyikan spinner dan kembalikan teks tombol saat proses selesai
-                                spinner.style.display = 'none';
-                                buttonText.innerText = 'Summarize...';
-                            });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching image:', error);
-                    });
-            } else {
-                toastr.error('Please provide a question text.'); // Tampilkan pesan error jika tidak ada teks pertanyaan
-            }
-        });
-    </script> -->
 
     <script>
         const apiKey = "{{ env('OPENAI_API_KEY') }}";
@@ -778,6 +691,121 @@
         });
     </script>
 
+    <script>
+        // Fungsi untuk mengetik ulang (typing effect)
+        async function animationWriter(content, element) {
+            let i = 0;
+            const typingEffect = async () => {
+                if (i < content.length) {
+                    element.innerText += content.charAt(i);
+                    if (content.charAt(i) === " ") {
+                        element.innerText += "\u00A0"; // Add a non-breaking space for spaces
+                    }
+                    i++;
+                    await sleep(1); // Mengatur kecepatan pengetikan (dalam milidetik)
+                    typingEffect();
+                }
+            };
+            typingEffect();
+        }
+
+        // Fungsi untuk mengatur waktu jeda
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Fungsi untuk menampilkan pertanyaan berdasarkan gambar yang dipilih
+        function showQuestionsBasedOnImage(selectedOption) {
+            var imageUrl = selectedOption.getAttribute('data-src');
+            var imageName = selectedOption.value + '.jpg'; // Nama file
+            var blob = null;
+            var questText = "Generate me 10 relevant questions based on image"
+
+            if (!imageUrl) {
+                toastr.error('Please select an image.');
+                return;
+            }
+
+            // Tampilkan loading button
+            var loadingButton = document.getElementById('loadingButton');
+            loadingButton.style.display = 'block';
+
+            // Fetch pertama ke endpoint vision
+            fetch(imageUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    var file = new File([blob], imageName, {
+                        type: 'image/jpeg'
+                    });
+
+                    var formData = new FormData();
+                    formData.append('image', file);
+                    formData.append('question', questText);
+
+                    // Tunda tampilan daftar pertanyaan selama 3 detik
+                    setTimeout(function() {
+                        // Hapus daftar pertanyaan sebelum fetching pertanyaan baru
+                        document.getElementById('questionsContainer').innerText = '';
+
+                        fetch('http://127.0.0.1:8000/api/vision?question=' + encodeURIComponent(questText), {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'Authorization': 'Bearer ' + apiKey
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                } else {
+                                    throw new Error('Server responded with non-OK status');
+                                }
+                            })
+                            .then(data => {
+                                const content = data.gpt.choices[0].message.content;
+                                // Tampilkan kartu dengan hasil respons
+                                document.getElementById('questionsContainer').innerText = '';
+                                animationWriter(content, document.getElementById('questionsContainer'));
+
+                                // Sembunyikan loading button setelah selesai
+                                loadingButton.style.display = 'none';
+
+                                // Tampilkan cardContainer setelah selesai
+                                var cardContainer = document.getElementById('cardContainer');
+                                cardContainer.style.display = 'block';
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            })
+                            .finally(() => {
+                                // Sembunyikan loading button setelah selesai
+                                loadingButton.style.display = 'none';
+                            });
+                    }, 3000); // Tunda selama 3 detik
+                })
+                .catch(error => {
+                    console.error('Error fetching image:', error);
+                });
+        }
+
+        // Fungsi untuk generate daftar pertanyaan lagi
+        function reloadQuestions() {
+            // Panggil kembali fungsi showQuestionsBasedOnImage dengan gambar yang saat ini dipilih
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            showQuestionsBasedOnImage(selectedOption);
+        }
+
+        // Tambahkan event listener untuk perubahan pada select
+        var selectElement = document.getElementById('imageSelector');
+        selectElement.addEventListener('change', function() {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            showQuestionsBasedOnImage(selectedOption);
+        });
+
+        // Tambahkan event listener untuk klik pada tombol reload
+        var reloadButton = document.getElementById('reloadButton');
+        reloadButton.addEventListener('click', reloadQuestions);
+    </script>
 
 </body>
 <!-- END: Body-->
