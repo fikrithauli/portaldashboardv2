@@ -590,7 +590,7 @@
 
                                                 <div class="row match-height">
                                                     <div class="col-xl-12 col-lg-12">
-                                                        <div class="chat-container" id="chat-container">
+                                                        <div class="chat-container" id="chat-container" style="max-height: 300px; overflow-y: auto;">
                                                             <div class="message user-message d-none" id="userMessageContainer" style="display: none;">
                                                                 <img src="{{ asset('user.png') }}" alt="User Avatar" class="avatar" id="userAvatar">
                                                                 <div class="message-content" id="userMessageContent">
