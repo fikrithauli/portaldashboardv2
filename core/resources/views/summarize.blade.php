@@ -591,7 +591,7 @@
                                                 <div class="row match-height">
                                                     <div class="col-xl-12 col-lg-12">
                                                         <div class="chat-container" id="chat-container">
-                                                            <div class="message user-message" id="userMessageContainer" style="display: none;">
+                                                            <div class="message user-message d-none" id="userMessageContainer" style="display: none;">
                                                                 <img src="{{ asset('user.png') }}" alt="User Avatar" class="avatar" id="userAvatar">
                                                                 <div class="message-content" id="userMessageContent">
                                                                     <div><strong>You</strong></div>
@@ -1030,7 +1030,13 @@
                     botName.innerHTML = "<strong>GPT</strong>";
 
                     const botText = document.createElement("div");
-                    botText.innerHTML = data.gpt.choices[0].message.content;
+
+                    // Pengecekan untuk menampilkan jawaban hardcode
+                    if (data.gpt && data.gpt.choices && data.gpt.choices.length > 0) {
+                        botText.innerHTML = data.gpt.choices[0].message.content;
+                    } else {
+                        botText.innerHTML = "Saya tidak dapat memahami pertanyaan Anda, silakan pilih dashboard terlebih dahulu!";
+                    }
 
                     botMessageContent.appendChild(botName);
                     botMessageContent.appendChild(botText);
@@ -1055,7 +1061,29 @@
 
             // Fungsi untuk mengirim pesan dari pengguna
             async function sendMessage() {
-                const selectedOption = document.getElementById('imageSelector').options[document.getElementById('imageSelector').selectedIndex];
+                // Mendapatkan elemen select (drop-down) untuk gambar
+                const imageSelector = document.getElementById('imageSelector');
+
+                // Mendapatkan opsi gambar yang dipilih
+                const selectedOption = imageSelector.options[imageSelector.selectedIndex];
+
+                // Periksa apakah gambar sudah dipilih
+                if (!selectedOption || selectedOption.value === "") {
+                    toastr.error('Please select an image.');
+                    return;
+                }
+
+                // Show user message
+                const userInput = document.getElementById("userMessage").value;
+
+                // Periksa apakah pesan pengguna tidak kosong
+                if (!userInput.trim()) {
+                    toastr.error('Please enter a message.');
+                    return;
+                }
+
+                // Sembunyikan elemen userMessageContainer
+                document.getElementById("userMessageContainer").style.display = "none";
 
                 try {
                     // Ganti ikon dengan loader saat proses pengiriman
@@ -1070,6 +1098,7 @@
                     sendButton.innerHTML = 'Kirim';
                 }
             }
+
 
             // Get reference to the send button
             const sendButton = document.getElementById("sendButton");
