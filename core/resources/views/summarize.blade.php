@@ -269,6 +269,78 @@
             color: #ffffff;
             /* Warna teks putih */
         }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: scroll;
+            padding: 20px;
+        }
+
+        .message {
+            display: flex;
+            align-items: center;
+            max-width: 99%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .user-message {
+            background-color: #f0f0f0;
+            align-self: flex-start;
+            color: #000000;
+        }
+
+        .bot-message {
+            background-color: #000000;
+            color: #ffffff;
+            align-self: flex-start;
+        }
+
+        .avatar {
+            border-radius: 50%;
+            margin-right: 10px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 
     <!-- BEGIN: Body-->
@@ -518,34 +590,28 @@
 
                                                 <div class="row match-height">
                                                     <div class="col-xl-12 col-lg-12">
-                                                        <section class="chat-app-window">
-                                                            <!-- Active Chat -->
-                                                            <div class="active-chat">
-
-                                                                <div class="card shadow-none bg-transparent border-secondary">
-                                                                    <div class="card-body">
-                                                                        <p class="card-text">
-                                                                        <div id="chat-messages" style="max-height: 400px; overflow-y: auto;"></div>
-                                                                        </p>
-                                                                    </div>
+                                                        <div class="chat-container" id="chat-container">
+                                                            <div class="message user-message" id="userMessageContainer" style="display: none;">
+                                                                <img src="{{ asset('user.png') }}" alt="User Avatar" class="avatar" id="userAvatar">
+                                                                <div class="message-content" id="userMessageContent">
+                                                                    <div><strong>You</strong></div>
+                                                                    <div>Hallo, bagaimana kabarmu?</div>
                                                                 </div>
-
-                                                                <!-- User Chat messages -->
-                                                                <!-- Submit Chat form -->
-                                                                <form class="chat-app-form mt-5" style="display: flex; align-items: center; padding: 10px; border-top: 1px solid #ddd; justify-content: flex-end;">
-                                                                    <div class="input-group input-group-merge me-1 form-send-message" style="flex: 1; margin-right: 10px;">
-                                                                        <input type="text" id="userMessage" class="form-control message" placeholder="Type your message" />
-                                                                        <span class="input-group-text"></span>
-                                                                    </div>
-                                                                    <button type="button" class="btn btn-primary send" onclick="sendMessage()" id="sendButton">
-                                                                        <i data-feather="send" class="d-lg-none"></i>
-                                                                        <span class="d-none d-lg-block"><i data-feather='send'></i></span>
-                                                                    </button>
-                                                                </form>
-                                                                <!--/ Submit Chat form -->
                                                             </div>
-                                                            <!--/ Active Chat -->
-                                                        </section>
+
+                                                            <div class="message bot-message" id="botMessageContainer">
+                                                                <img src="{{ asset('bot.webp') }}" alt="GPT Avatar" class="avatar" id="botAvatar">
+                                                                <div class="message-content" id="botMessageContent">
+                                                                    <div><strong>GPT</strong></div>
+                                                                    <div>Hi, Can I help you?</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="input-container">
+                                                            <input type="text" id="userMessage" placeholder="Ketik pesan...">
+                                                            <button id="sendButton" onclick="sendMessage()">Kirim</button>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -565,7 +631,6 @@
 
         <div class="sidenav-overlay"></div>
         <div class="drag-target"></div>
-        <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
         <!-- END: Footer-->
 
 
@@ -732,7 +797,7 @@
                                 .finally(() => {
                                     // Sembunyikan spinner dan kembalikan teks tombol saat proses selesai
                                     spinner.style.display = 'none';
-                                    buttonText.innerText = 'Summarize...';
+                                    buttonText.innerText = 'Submit';
                                 });
                         })
                         .catch(error => {
@@ -859,20 +924,49 @@
 
         <script>
             let originalIcon; // Variable to store the original button icon
+            let isFirstUserMessage = true;
 
             // Fungsi untuk menampilkan pertanyaan berdasarkan gambar yang dipilih
             async function addMessage(selectedOption) {
-                const chatMessages = document.getElementById("chat-messages");
+                const chatMessages = document.getElementById("chat-container");
                 const message = document.createElement("div");
-                message.classList.add("user");
+                message.classList.add("message", "user-message");
+
+                // Tampilkan pesan pengguna hanya jika ini bukan pesan pertama
+                if (!isFirstUserMessage) {
+                    document.getElementById("userMessageContainer").style.display = "block";
+                }
+
+                isFirstUserMessage = false;
 
                 // Show user message
                 const userInput = document.getElementById("userMessage").value;
+
+                const avatar = document.createElement("img");
+                avatar.src = "{{ asset('user.png') }}";
+                avatar.alt = "User Avatar";
+                avatar.classList.add("avatar");
+
+                const messageContent = document.createElement("div");
+                messageContent.classList.add("message-content");
+
+                const name = document.createElement("div");
+                name.innerHTML = "<strong>You</strong>";
+
+                const text = document.createElement("div");
+                text.innerHTML = userInput;
+
+                messageContent.appendChild(name);
+                messageContent.appendChild(text);
+
+                message.appendChild(avatar);
+                message.appendChild(messageContent);
+
                 chatMessages.appendChild(message);
 
                 var imageUrl = selectedOption.getAttribute('data-src');
                 var imageName = selectedOption.value + '.jpg';
-                var questText = userInput; // Menggunakan nilai dari input user
+                var questText = userInput;
 
                 try {
                     // Fetch gambar
@@ -911,7 +1005,7 @@
 
             // Fungsi untuk menampilkan pesan dari bot
             async function addBotMessage(data) {
-                const chatMessages = document.getElementById("chat-messages");
+                const chatMessages = document.getElementById("chat-container");
 
                 try {
                     // Simpan ikon asli
@@ -922,29 +1016,29 @@
 
                     // Membuat card baru untuk pertanyaan dari data.question (warna biru)
                     const questionCard = document.createElement("div");
-                    questionCard.classList.add("card", "shadow-none", "border-primary", "mt-1", "text-white", "bg-primary"); // Tambahkan kelas text-white dan bg-primary
-                    questionCard.innerHTML = `
-        <div class="card-body">
-            <div class="row justify-content-end">
-                <div class="col-auto">
-                    <p class="card-text">${data.question}</p>
-                </div>
-            </div>
-        </div>`;
-                    chatMessages.appendChild(questionCard);
+                    questionCard.classList.add("message", "bot-message");
 
-                    // Membuat card baru untuk jawaban dari gpt.choices (warna putih)
-                    const answerCard = document.createElement("div");
-                    answerCard.classList.add("card", "shadow-none", "bg-white", "border-secondary", "text-dark"); // Tambahkan kelas bg-white dan text-dark
-                    answerCard.innerHTML = `
-        <div class="card-body">
-            <div class="row justify-content-start">
-                <div class="col-auto">
-                    <p class="card-text">${data.gpt.choices[0].message.content}</p>
-                </div>
-            </div>
-        </div>`;
-                    chatMessages.appendChild(answerCard);
+                    const botAvatar = document.createElement("img");
+                    botAvatar.src = "{{ asset('bot.webp') }}";
+                    botAvatar.alt = "GPT Avatar";
+                    botAvatar.classList.add("avatar");
+
+                    const botMessageContent = document.createElement("div");
+                    botMessageContent.classList.add("message-content");
+
+                    const botName = document.createElement("div");
+                    botName.innerHTML = "<strong>GPT</strong>";
+
+                    const botText = document.createElement("div");
+                    botText.innerHTML = data.gpt.choices[0].message.content;
+
+                    botMessageContent.appendChild(botName);
+                    botMessageContent.appendChild(botText);
+
+                    questionCard.appendChild(botAvatar);
+                    questionCard.appendChild(botMessageContent);
+
+                    chatMessages.appendChild(questionCard);
 
                     // Gulirkan halaman ke bawah agar jawaban terbaru terlihat
                     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -972,8 +1066,8 @@
                     console.error('Error:', error);
                     // Handle error if needed
                 } finally {
-                    // Setelah respons diterima atau jika terjadi kesalahan, kembalikan ikon asli
-                    sendButton.innerHTML = originalIcon;
+                    // Setelah respons diterima atau jika terjadi kesalahan, kembalikan ikon ke teks "Kirim"
+                    sendButton.innerHTML = 'Kirim';
                 }
             }
 
