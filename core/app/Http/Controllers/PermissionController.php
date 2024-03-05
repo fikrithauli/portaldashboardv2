@@ -33,9 +33,9 @@ class PermissionController extends Controller
 
         // Mengambil semua dashboard dari tabel dashboard
         $dashboards = DB::table('dashboard')
-            ->orderBy('created_at', 'desc') // Mengurutkan descending berdasarkan kolom created_at
+            ->orderBy('created_at', 'desc')
+            ->distinct('dashboard_id') // Menggunakan kolom ID sebagai kolom yang unik
             ->get();
-
 
         // Melakukan join antara tabel permissions dan users berdasarkan user_id
         $permission = DB::table('permissions')
@@ -44,7 +44,6 @@ class PermissionController extends Controller
             ->join('dashboard', 'permissions.dashboard_id', '=', 'dashboard.dashboard_id')
             ->select('permissions.*', 'permission_request.*', 'permissions.dashboard_id AS permission_type', 'users.*', 'users.name as user_name', 'dashboard.dashboard_name')
             ->get();
-
 
         $accounts = DB::table('users')
             ->select('users.*')
