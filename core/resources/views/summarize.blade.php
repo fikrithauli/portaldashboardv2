@@ -831,6 +831,7 @@
                 var blob = null;
                 var questText = "Generate me 10 relevant questions based on image"
 
+                // kondisi untuk menampilkan alert jika dashboard image kosong
                 if (!imageUrl) {
                     toastr.error('Please select an image.');
                     return;
@@ -895,7 +896,7 @@
                     });
             }
 
-            // Fungsi untuk generate daftar pertanyaan lagi
+            // Fungsi untuk repeat generate daftar pertanyaan
             function reloadQuestions() {
                 // Panggil kembali fungsi showQuestionsBasedOnImage dengan gambar yang saat ini dipilih
                 var selectedOption = selectElement.options[selectElement.selectedIndex];
