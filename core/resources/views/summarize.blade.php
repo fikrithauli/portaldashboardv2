@@ -580,14 +580,6 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane" id="account-center" aria-labelledby="account-tab-center" role="tabpanel">
-                                                <!-- <div id="chat-container">
-                                                    <div id="chat-messages" style="background-color: #333333; color: white;"></div>
-                                                    <div id="user-input">
-                                                        <input type="text" id="userMessage" placeholder="Type your message..." />
-                                                        <button class="btn btn-primary" onclick="sendMessage()">Send</button>
-                                                    </div>
-                                                </div> -->
-
                                                 <div class="row match-height">
                                                     <div class="col-xl-12 col-lg-12">
                                                         <div class="chat-container" id="chat-container" style="max-height: 300px; overflow-y: auto;">
@@ -773,7 +765,7 @@
                             formData.append('image', file);
                             formData.append('question', questionText);
 
-                            fetch('https://192.168.0.179:8000/api/vision?question=' + encodeURIComponent(questionText), {
+                            fetch('https://192.168.105.67:8000/api/vision?question=' + encodeURIComponent(questionText), {
                                     method: 'POST',
                                     body: formData,
                                 })
@@ -865,7 +857,7 @@
                             // Hapus daftar pertanyaan sebelum fetching pertanyaan baru
                             document.getElementById('questionsContainer').innerText = '';
 
-                            fetch('https://192.168.0.179:8000/api/vision?question=' + encodeURIComponent(questText), {
+                            fetch('https://192.168.105.67:8000/api/vision?question=' + encodeURIComponent(questText), {
                                     method: 'POST',
                                     body: formData,
                                 })
@@ -984,7 +976,7 @@
                     formData.append('question', questText);
 
                     // Fetch pertanyaan dari API
-                    const visionResponse = await fetch('https://192.168.0.179:8000/api/vision?question=' + encodeURIComponent(questText), {
+                    const visionResponse = await fetch('https://192.168.105.67:8000/api/vision?question=' + encodeURIComponent(questText), {
                         method: 'POST',
                         body: formData,
                     });

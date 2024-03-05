@@ -99,7 +99,6 @@ Route::post('/user/store', [UserController::class, 'store'])->name('user.store')
 Route::post('/upload-recipients', [UserController::class, 'upload'])->name('upload-recipients');
 Route::get('/recipient_dashboards/{recipient_id}', [UserController::class, 'showRecipientDashboards'])->name('recipient_dashboards');
 
-
 // rute user management dashboards
 Route::get('/add-dashboards', [UserController::class, 'add_dashboards'])->name('add-dashboards');
 Route::post('/create-dashboards', [UserController::class, 'storeDashboards'])->name('create-dashboards');

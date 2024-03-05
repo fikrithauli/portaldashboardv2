@@ -31,10 +31,9 @@ class PermissionController extends Controller
 
         $categories = Category::all();
 
-        // Mengambil semua dashboard dari tabel dashboard
         $dashboards = DB::table('dashboard')
             ->orderBy('created_at', 'desc')
-            ->distinct('dashboard_id') // Menggunakan kolom ID sebagai kolom yang unik
+            ->groupBy('dashboard_name')
             ->get();
 
         // Melakukan join antara tabel permissions dan users berdasarkan user_id
@@ -123,7 +122,6 @@ class PermissionController extends Controller
 
         return redirect()->route('permission')->with('success', 'Permissions added successfully!');
     }
-
 
     public function edit($id)
     {
