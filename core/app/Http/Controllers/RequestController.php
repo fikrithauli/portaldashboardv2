@@ -30,6 +30,7 @@ class RequestController extends Controller
         // Validasi input
         $validatedData = $request->validate([
             'dashboard_id' => 'required',
+            'user_id' => 'required',
             'name' => 'required',
             'departement' => 'required',
             'reason' => 'required',
@@ -38,7 +39,7 @@ class RequestController extends Controller
         // Check if a request with the same dashboard_id, name, and request_status=0 already exists
         $existingRequest = DB::table('permission_request')
             ->where('dashboard_id', $validatedData['dashboard_id'])
-            ->where('name', $validatedData['name'])
+            ->where('user_id', $validatedData['user_id'])
             ->where('request_status', 0)
             ->first();
 
@@ -50,6 +51,7 @@ class RequestController extends Controller
         // If no existing request with request_status=0 is found, insert the new entry into the database
         DB::table('permission_request')->insert([
             'dashboard_id' => $validatedData['dashboard_id'],
+            'user_id' => $validatedData['user_id'],
             'name' => $validatedData['name'],
             'departement' => $validatedData['departement'],
             'reason' => $validatedData['reason'],

@@ -499,7 +499,7 @@
                                                             <td><span class="">{{ $r->name }}</span></td>
                                                             <td><span class="">{{ $r->dashboard_name }}</span></td>
                                                             <td><span class="">{{ $r->departement }}</span></td>
-                                                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#detailRequest_{{ $r->request_id }}"><i data-feather='link'></i>&nbsp; Lihat alasan</a></td>
+                                                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#detailRequest_{{ $r->request_id }}">View</a></td>
                                                             <td>
                                                                 @if ($r->request_status == 0)
                                                                 <span class="badge badge-glow bg-warning">Pending</span>
@@ -510,11 +510,11 @@
                                                             <td>
                                                                 @if ($r->request_status == 0)
                                                                 <div class="btn-group">
-                                                                    <a href="{{ route('approve.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-sm btn-success">
-                                                                        <i data-feather='check-circle'></i>&nbsp; Approve
+                                                                    <a href="{{ route('approve.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-sm btn-light">
+                                                                        Approve
                                                                     </a>&nbsp;&nbsp;
-                                                                    <a href="{{ route('reject.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-sm btn-danger">
-                                                                        <i data-feather='slash'></i>&nbsp; Reject
+                                                                    <a href="{{ route('reject.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-sm btn-dark">
+                                                                        Reject
                                                                     </a>
                                                                 </div>
                                                                 @else
@@ -534,9 +534,9 @@
                                                 <table id="examples" class="table table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th>Name</th>
+                                                            <th>Applicant Name</th>
                                                             <th>Departement</th>
-                                                            <th>Permission Type</th>
+                                                            <th>Dashboard Activity</th>
                                                             <th>Status</th>
                                                             <th>Actions</th>
                                                         </tr>
@@ -545,25 +545,16 @@
                                                         @foreach($permission as $p)
                                                         <tr>
                                                             <td><span class="">{{ $p->user_name }}</span></td>
-                                                            <td><span class="">{{ $p->departement }}</span></td>
+                                                            <td><span class="">{{ $p->job_title }}</span></td>
+                                                            <td>{{ $p->dashboard_count }} Dashboards</td>
                                                             <td>
-                                                                @foreach (explode(',', $p->dashboard_id) as $dashboardId)
-                                                                @php
-                                                                $dashboard = DB::table('dashboard')->where('dashboard_id', $dashboardId)->first();
-                                                                @endphp
-                                                                {{ $dashboard->dashboard_name }}
-                                                                @if (!$loop->last)
-                                                                ,
-                                                                @endif
-                                                                @endforeach
-                                                            </td>
-                                                            <td>
-                                                                @if ($p->permission_type == NULL)
+                                                                @if ($p->dashboard_count == 0)
                                                                 <span class="badge badge-glow bg-danger">Not active</span>
                                                                 @else
                                                                 <span class="badge badge-glow bg-success">Active</span>
                                                                 @endif
                                                             </td>
+
                                                             <td>
                                                                 <div class="btn-group">
                                                                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editRoleModal_{{ $p->user_id }}">
@@ -718,7 +709,6 @@
                                         <!-- Permission table -->
                                         <div class="table-responsive">
 
-
                                             <table id="permission" class="table table-hover" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -727,20 +717,22 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($dashboards as $dashboard)
+                                                    @foreach($permissions as $per)
+                                                    @if($per->user_id == $p->user_id)
                                                     <tr>
-                                                        <td>{{ $dashboard->dashboard_name }}</td>
+                                                        <td>{{ $per->dashboard_name }}</td>
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="form-check form-switch me-3 me-lg-5">
-                                                                    <input type="checkbox" class="form-check-input" name="permissions[]" value="{{ $dashboard->dashboard_id }}" {{ in_array($dashboard->dashboard_id, explode(',', $p->dashboard_id)) ? 'checked' : '' }}>
-                                                                    <label class="form-check-label" id="checkboxLabel{{ $dashboard->dashboard_id }}">
-                                                                        {{ in_array($dashboard->dashboard_id, explode(',', $p->dashboard_id)) ? 'Open' : 'Close' }}
+                                                                    <input type="checkbox" class="form-check-input" name="permissions[]" value="{{ $per->dashboard_id }}" data-user-id="{{ $p->user_id }}" {{ $per->permission_type == 1 ? 'checked' : '' }}>
+                                                                    <label class="form-check-label" id="">
+                                                                        <!-- Label text or additional content -->
                                                                     </label>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                     </tr>
+                                                    @endif
                                                     @endforeach
                                                 </tbody>
                                             </table>

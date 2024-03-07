@@ -32,50 +32,45 @@ class HomeController extends Controller
         $categories = Category::all();
         $position = $request->input('position', 'Home');
 
-        // $header = view('partials.header', compact('categories', 'position'));
         $footer = view('partials.footer', compact('position'));
 
-        // Ambil semua data dashboard dari tabel dashboard
         $query = DB::table('dashboard')
             ->join('categories', 'dashboard.category_id', '=', 'categories.category_id')
-            ->select('dashboard.*', 'categories.*');
+            ->leftJoin('permissions', 'dashboard.dashboard_id', '=', 'permissions.dashboard_id')
+            ->select('dashboard.*', 'categories.*', 'permissions.permission_type');
 
-        // Ambil data kategori yang dipilih dari form
         $selectedCategoryIds = $request->input('category_id');
 
-        // Jika 'All Categories' dipilih, tidak perlu menambahkan kriteria filter untuk kolom kategori.
-        if ($selectedCategoryIds && in_array(
-            'all',
-            $selectedCategoryIds
-        )) {
+        if ($selectedCategoryIds && in_array('all', $selectedCategoryIds)) {
             // Do nothing, show all dashboards.
         } elseif ($selectedCategoryIds) {
             $query->whereIn('dashboard.category_id', $selectedCategoryIds);
         }
 
-        // Urutkan data berdasarkan 'created_at' secara descending (desc).
         $query->orderByDesc('dashboard.created_at');
-
-        // Eksekusi query dan ambil data dashboard yang sudah difilter
         $filteredData = $query->get();
 
-        // Inisialisasi array untuk menyimpan ID dashboard yang diizinkan
+        // Add request_status to each dashboard in $filteredData
+        foreach ($filteredData as $dashboard) {
+            $dashboard->request_status = DB::table('permission_request')
+                ->where('dashboard_id', $dashboard->dashboard_id)
+                ->pluck('request_status')
+                ->first();
+        }
+
         $allowedDashboardIds = [];
 
         if ($user->role_id == 2) {
-            // Jika user memiliki role_id 2, ambil data permissions berdasarkan user_id
             $user_permissions = DB::table('permissions')
                 ->where('user_id', $user->id)
                 ->pluck('dashboard_id')
                 ->toArray();
 
-            // Ubah data permissions menjadi array dan tambahkan ke dalam array allowedDashboardIds
             foreach ($user_permissions as $dashboard_ids) {
                 $ids = explode(',', $dashboard_ids);
                 $allowedDashboardIds = array_merge($allowedDashboardIds, $ids);
             }
         } else {
-            // Jika user memiliki role_id 1, izinkan semua dashboard
             $allowedDashboardIds = $filteredData->pluck('dashboard_id')->toArray();
         }
 

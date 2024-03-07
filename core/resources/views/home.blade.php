@@ -376,17 +376,6 @@
                         <!-- Tempat untuk menampilkan data filter -->
                     </div>
                 </li>
-
-
-                <!-- @foreach($categories as $category)
-                <li class="nav-item mt-2">
-                    <a class="d-flex align-items-center" href="">
-                        <i data-feather="circle"></i><span class="menu-title text-truncate" data-i18n="{{ $category->category_name }}">{{ $category->category_name }}</span>
-                    </a>
-                </li>
-                @endforeach -->
-
-
             </ul>
         </div>
     </div>
@@ -407,46 +396,81 @@
                             <div class="card-body">
                                 <h4 class="card-title">{{ $row->dashboard_name }}</h4>
                                 <p class="card-text">{{ $row->description }}</p>
-                                <!-- @if(Auth::user()->role_id == 1 || in_array($row->dashboard_id, $allowedDashboardIds))
-                            <a href="{{ route('detail', ['dashboard_name' => str_replace(' ', '-', $row->dashboard_name)]) }}" class="btn btn-relief-primary mt-2">Detail Dashboard</a>
-                            @else
-                            <div class="not-allowed">
-                                <button class="btn btn-primary mt-2" disabled>Detail Dashboard</button>
-                                <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $row->dashboard_id }}"><i data-feather='plus-circle'></i>&nbsp; Add Request</button>
-                            </div>
-                            @endif -->
 
-                                @if(Auth::user()->role_id == 1 || in_array($row->dashboard_id, $allowedDashboardIds))
+                                @php
+                                $user = Auth::user();
+                                $permission = DB::table('permissions')
+                                ->where('dashboard_id', $row->dashboard_id)
+                                ->where('user_id', $user->id) // Assuming there's a 'user_id' column in your permissions table
+                                ->first();
+                                @endphp
+
+                                @if ($user->role_id == 1 || in_array($row->dashboard_id, $allowedDashboardIds))
+
                                 @if ($row->dashboard_status == 0)
                                 <a href="#" id="maintenance-link" class="btn btn-danger mt-2">Under Maintenance</a>
                                 @else
-                                <a href="{{ route('detail', ['dashboard_name' => str_replace(' ', '-', $row->dashboard_name)]) }}" class="btn btn-relief-primary mt-2">Detail Dashboard</a>
-                                @endif
+                                @if ($permission && $permission->permission_type == 0)
+                                <button class="btn btn-danger mt-2">
+                                    Access revoked
+                                </button>
                                 @else
+                                <a href="{{ route('detail', ['dashboard_name' => str_replace(' ', '-', $row->dashboard_name)]) }}" class="btn btn-relief-primary mt-2">View Dashboard</a>
+                                @endif
+                                @endif
+
+                                @else
+
                                 <div class="not-allowed">
                                     @if ($row->dashboard_status == 0)
                                     <a href="#" id="maintenance-link" class="btn btn-danger mt-2">Under Maintenance</a>
                                     @else
-                                    <button class="btn btn-primary mt-2" disabled>Detail Dashboard</button>
+                                    @if ($permission && $permission->permission_type == 0 && $user->role_id == 2)
+                                    <button class="btn btn-warning mt-2">
+                                        Suspend
+                                    </button>
+                                    @else
+                                    <!-- <button class="btn btn-primary mt-2" disabled>Detail Dashboard</button> -->
                                     @endif
 
-                                    @if(Auth::user()->role_id == 1 || $row->dashboard_status != 0)
-                                    <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $row->dashboard_id }}"><i data-feather='plus-circle'></i>&nbsp; Add Request</button>
+                                    @if ($user->role_id == 1 || $row->dashboard_status != 0)
+
+                                    @php
+                                    $user = Auth::user();
+                                    $requestStatus = DB::table('permission_request')
+                                    ->where('dashboard_id', $row->dashboard_id)
+                                    ->where('name', $user->name) // Assuming there's a 'user_id' column in your permission_request table
+                                    ->pluck('request_status')
+                                    ->first();
+                                    @endphp
+
+                                    @if ($requestStatus === 0)
+                                    <button class="btn btn-warning mt-2">
+                                        Waiting for permit approval
+                                    </button>
+                                    @else
+                                    <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $row->dashboard_id }}">
+                                        Request access
+                                    </button>
+                                    @endif
+                                    @endif
+
                                     @endif
                                 </div>
-                                @endif
 
+                                @endif
 
                             </div>
                         </div>
                     </div>
+
                     @endforeach
                     @else
                     <div class="col-12 text-center">
                         <center> <img src="{{ asset('no-data.svg') }}" width="600" alt="No Data" /><br><br><br>
                             <span class="mt-4">
                                 <strong>
-                                    <h4>Oops, tidak ada dashboard yang tersedia untuk saat ini.</h4>
+                                    <h4>Oops, no dashboard available at this time.</h4>
                                 </strong>
                             </span>
                     </div>
@@ -483,6 +507,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label" for="modalEditUserFirstName">Full Name <small class="text-danger">*</small></label>
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" class="form-control" />
                             <input type="text" id="modalEditUserFirstName" name="name" value="{{ Auth::user()->name }}" class="form-control" readonly />
                         </div>
                         <div class="col-12 col-md-6">

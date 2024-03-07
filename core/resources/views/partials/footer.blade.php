@@ -1,7 +1,5 @@
   <!-- BEGIN: Footer-->
-  <footer class="footer footer-static footer-light">
-      <p class="clearfix mb-0"><span class="float-md-start d-block d-md-inline-block mt-25">Copyright &copy; 2023<a class="ms-25 text-primary"> PT Telekomunikasi Selular</a><span class="d-none d-sm-inline-block">, All rights Reserved</span></span></p>
-  </footer>
+
   <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
   <!-- END: Footer-->
 
@@ -93,6 +91,16 @@
       });
   </script>
 
+  <script>
+      $(document).ready(function() {
+          $('#permissionss').DataTable({
+              "lengthMenu": [5, 10, 25, 50], // Menampilkan pilihan jumlah data per halaman
+              "pageLength": 5, // Default tampilan 5 data per halaman
+              // Tambahan opsi atau pengaturan lain yang mungkin Anda butuhkan
+          });
+      });
+  </script>
+
 
   <script>
       $(window).on('load', function() {
@@ -138,7 +146,7 @@
       });
   </script>
 
-  <script>
+  <!-- <script>
       $(document).ready(function() {
           // Tangkap event saat tombol filter di-klik
           $('#filterBtn').on('click', function() {
@@ -237,7 +245,222 @@
               }
           }
       });
+  </script> -->
+
+  <!-- <script>
+      $(document).ready(function() {
+          // Tangkap event saat tombol filter di-klik
+          $('#filterBtn').on('click', function() {
+              Swal.fire({
+                  title: 'Please Wait',
+                  allowOutsideClick: false,
+                  showCancelButton: false,
+                  showConfirmButton: false,
+                  timerProgressBar: true,
+                  onBeforeOpen: () => {
+                      Swal.showLoading();
+                  }
+              });
+
+              var formData = $('#filterForm').serialize();
+
+              $.ajax({
+                  url: "{{ route('filter.category') }}",
+                  type: "POST",
+                  data: formData,
+                  success: function(response) {
+                      updateCards(response);
+
+                      // Tunda penutupan SweetAlert selama 1 detik
+                      setTimeout(function() {
+                          Swal.close(); // Tutup SweetAlert setelah 1 detik
+                      }, 1000);
+                  },
+                  error: function(error) {
+                      console.error('Error:', error);
+
+                      // Tunda penutupan SweetAlert selama 1 detik
+                      setTimeout(function() {
+                          Swal.close(); // Tutup SweetAlert setelah 1 detik
+                      }, 1000);
+                  }
+              });
+          });
+
+          // Fungsi untuk memperbarui data pada card dengan data yang diterima dari server
+          function updateCards(data) {
+              var dashboardContainer = $('#dashboardContainer');
+
+              // Clear the content in the div with id dashboardContainer
+              dashboardContainer.empty();
+
+              if (data.length === 0) {
+                  // Display an image and message if no data is found
+                  var noDataHtml = `
+            <center><img src="{{ asset('no-data.svg') }}" width="600" alt="Card image cap" /><br><br><br>
+            <span class="mt-4">
+                <strong>
+                    <h4>Oops, the data you were looking for was not found.</h4>
+                </strong>
+            </span>
+        `;
+                  dashboardContainer.append(noDataHtml);
+              } else {
+                  // Update cards with data received from the server
+                  $.each(data, function(index, row) {
+                      var dashboardNameSlug = encodeURIComponent(row.dashboard_name.replace(/\s+/g, '-'));
+                      var detailButton = '';
+
+                      if (row.dashboard_status === 0) {
+                          // If dashboard status is 0, display the "Under Maintenance" button
+                          detailButton = `<a href="#" class="btn btn-danger mt-2 btn-under-maintenance">Under Maintenance</a>`;
+                      } else if (row.is_allowed) {
+                          // If dashboard is allowed for the user, display the "Detail Dashboard" button
+                          detailButton = `<a href="/portaldashboard/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">Detail Dashboard</a>`;
+                      } else {
+                          // If dashboard is not allowed for the user, display the appropriate buttons based on request_status
+                          if (row.request_status === 0) {
+                              // If request_status is 0, display the " Waiting for permit approval" button
+                              detailButton = `
+                        <button class="btn btn-warning mt-2">
+                             Waiting for permit approval
+                        </button>`;
+                          } else {
+                              // If request_status is not 0, display the "Request access" button
+                              detailButton = `
+                        <div class="not-allowed">
+                            
+                            <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal${row.dashboard_id}">
+                               Request access
+                            </button>
+                        </div>`;
+                          }
+                      }
+
+                      var cardHtml = `
+                <div class="col-md-6 col-lg-4" id="dashboard${row.dashboard_id}">
+                    <div class="card text-center">
+                        <img class="card-img-top" src="{{ asset('core/uploads/') }}/${row.image}" alt="Card image cap" />
+                        <div class="card-body">
+                            <h4 class="card-title">${row.dashboard_name}</h4>
+                            <p class="card-text">${row.description}</p>
+                            ${detailButton}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+                      dashboardContainer.append(cardHtml);
+                  });
+              }
+          }
+      });
+  </script> -->
+
+  <script>
+      $(document).ready(function() {
+          $('#filterBtn').on('click', function() {
+              Swal.fire({
+                  title: 'Please Wait',
+                  allowOutsideClick: false,
+                  showCancelButton: false,
+                  showConfirmButton: false,
+                  timerProgressBar: true,
+                  onBeforeOpen: () => {
+                      Swal.showLoading();
+                  }
+              });
+
+              var formData = $('#filterForm').serialize();
+
+              $.ajax({
+                  url: "{{ route('filter.category') }}",
+                  type: "POST",
+                  data: formData,
+                  success: function(response) {
+                      updateCards(response);
+
+                      setTimeout(function() {
+                          Swal.close();
+                      }, 1000);
+                  },
+                  error: function(error) {
+                      console.error('Error:', error);
+
+                      setTimeout(function() {
+                          Swal.close();
+                      }, 1000);
+                  }
+              });
+          });
+
+          function updateCards(data) {
+              var dashboardContainer = $('#dashboardContainer');
+              dashboardContainer.empty();
+
+              if (data.length === 0) {
+                  var noDataHtml = `
+          <center><img src="{{ asset('no-data.svg') }}" width="600" alt="Card image cap" /><br><br><br>
+          <span class="mt-4">
+            <strong>
+              <h4>Oops, the data you were looking for was not found.</h4>
+            </strong>
+          </span>
+        `;
+                  dashboardContainer.append(noDataHtml);
+              } else {
+                  $.each(data, function(index, row) {
+                      var dashboardNameSlug = encodeURIComponent(row.dashboard_name.replace(/\s+/g, '-'));
+                      var detailButton = '';
+
+                      if (row.dashboard_status === 0) {
+                          detailButton = `<a href="#" class="btn btn-danger mt-2 btn-under-maintenance">Under Maintenance</a>`;
+                      } else if (row.is_allowed) {
+                          if (row.permission_type === 0) {
+                              // If permission_type is 0, display "Suspend" button
+                              detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
+                          } else {
+                              // Otherwise, display "Detail Dashboard" button
+                              detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
+                          }
+                      } else {
+                          var permissionType = row.permission_type || 0; // default to 0 if permission_type is null
+                          if (row.request_status === 0) {
+                              detailButton = `<button class="btn btn-warning mt-2">Waiting for permit approval</button>`;
+                          } else {
+                              if (permissionType === 0) {
+                                  detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
+                              } else {
+                                  detailButton = `
+                  <div class="not-allowed">
+                    <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal${row.dashboard_id}">
+                      Request access
+                    </button>
+                  </div>`;
+                              }
+                          }
+                      }
+
+                      var cardHtml = `
+            <div class="col-md-6 col-lg-4" id="dashboard${row.dashboard_id}">
+              <div class="card text-center">
+                <img class="card-img-top" src="{{ asset('core/uploads/') }}/${row.image}" alt="Card image cap" />
+                <div class="card-body">
+                  <h4 class="card-title">${row.dashboard_name}</h4>
+                  <p class="card-text">${row.description}</p>
+                  ${detailButton}
+                </div>
+              </div>
+            </div>
+          `;
+
+                      dashboardContainer.append(cardHtml);
+                  });
+              }
+          }
+      });
   </script>
+
 
   <script>
       function showPleaseWaitAlertAndMaintenance() {
@@ -327,32 +550,6 @@
               "timeOut": 5000
           });
       }
-  </script>
-
-  <script>
-      $(document).ready(function() {
-          $('input[type="checkbox"]').each(function() {
-              var checkbox = $(this);
-              var label = $('#checkboxLabel' + checkbox.val());
-
-              label.text(checkbox.is(':checked') ? 'Open' : 'Close');
-
-              checkbox.on('change', function() {
-                  label.text(checkbox.is(':checked') ? 'Open' : 'Close');
-              });
-          });
-      });
-  </script>
-
-  <script>
-      $(document).ready(function() {
-          $('input[type="checkbox"]').on('change', function() {
-              var checkbox = $(this);
-              var label = $('#checkboxLabelView' + checkbox.val());
-
-              label.text(checkbox.is(':checked') ? 'Open' : 'Close');
-          });
-      });
   </script>
 
   <script>
@@ -509,24 +706,24 @@
       feather.replace(); // Initialize Feather icons (assuming you're using Feather icons library)
   </script>
 
-    <script>
-        $(document).ready(function() {
-            $('#selectPlatform').change(function() {
-                var selectedPlatform = $(this).val();
+  <script>
+      $(document).ready(function() {
+          $('#selectPlatform').change(function() {
+              var selectedPlatform = $(this).val();
 
-                // Hide all fields initially
-                $('#embedUrlContainer, #viewNameContainer').hide();
+              // Hide all fields initially
+              $('#embedUrlContainer, #viewNameContainer').hide();
 
-                // Show fields based on selected platform
-                if (selectedPlatform === 'Tableau') {
-                    $('#embedUrlContainer').show();
-                    $('#viewNameContainer').show();
-                } else if (selectedPlatform === 'PowerBI') {
-                    $('#embedUrlContainer').show();
-                }
-            });
-        });
-    </script>
+              // Show fields based on selected platform
+              if (selectedPlatform === 'Tableau') {
+                  $('#embedUrlContainer').show();
+                  $('#viewNameContainer').show();
+              } else if (selectedPlatform === 'PowerBI') {
+                  $('#embedUrlContainer').show();
+              }
+          });
+      });
+  </script>
 
 
 
