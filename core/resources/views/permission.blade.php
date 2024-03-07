@@ -709,7 +709,7 @@
                                         <!-- Permission table -->
                                         <div class="table-responsive">
 
-                                            <table id="permission" class="table table-hover" style="width:100%">
+                                            <table id="dataTables_{{ $p->user_id }}" class="table table-hover" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>Dashboard Name</th>

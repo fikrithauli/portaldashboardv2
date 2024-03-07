@@ -83,13 +83,14 @@
 
   <script>
       $(document).ready(function() {
-          $('#permission').DataTable({
-              "lengthMenu": [5, 10, 25, 50], // Menampilkan pilihan jumlah data per halaman
-              "pageLength": 5, // Default tampilan 5 data per halaman
-              // Tambahan opsi atau pengaturan lain yang mungkin Anda butuhkan
+          $('[id^="dataTables_"]').DataTable({
+              "lengthMenu": [5, 10, 25, 50],
+              "pageLength": 5,
+              // Opsi atau pengaturan lain yang mungkin Anda butuhkan
           });
       });
   </script>
+
 
   <script>
       $(document).ready(function() {
