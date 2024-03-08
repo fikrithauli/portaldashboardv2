@@ -330,7 +330,7 @@
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
                             <form action="{{ route('search') }}" method="GET" class="input-group">
-                                <input type="text" class="form-control" name="keyword" placeholder="Dashboard name" />
+                                <input type="text" class="form-control" name="keyword" placeholder="Dashboard name" autocomplete="off" />
                                 <button type="submit" class="btn btn-primary"><i data-feather="search"></i></button>
                             </form>
 
