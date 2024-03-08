@@ -47,6 +47,65 @@
   <script src="{{ asset('app-assets/js/scripts/components/components-dropdowns.js') }}"></script>
 
 
+
+  <!-- <script>
+      $(document).ready(function() {
+          // Tangani klik tombol untuk membuka modal
+          $('.open-modal').on('click', function() {
+              var selectedUserId = $(this).data('selected-user-id');
+              var url = $(this).data('url');
+
+              // Kirim permintaan AJAX untuk mendapatkan data izin
+              $.ajax({
+                  url: url,
+                  type: 'GET',
+                  success: function(response) {
+                      // Perbarui modal dengan data yang diterima
+                      response
+                  },
+                  error: function(error) {
+                      console.error(error);
+                  }
+              });
+          });
+      });
+  </script> -->
+
+  <script>
+      $(document).ready(function() {
+          $('.open-modal').on('click', function() {
+              var selectedUserId = $(this).data('selected-user-id');
+              var url = $(this).data('url');
+
+              $.ajax({
+                  url: url,
+                  type: 'GET',
+                  success: function(response) {
+                      $('#permissions-table tbody').empty();
+
+                      $.each(response, function(index, permission) {
+                          var newRow = $('<tr>');
+                          newRow.append('<td>' + permission.dashboard_name + '</td>');
+
+                          var checkboxColumn = $('<td>');
+                          var checkbox = $('<input type="checkbox" class="form-check-input">');
+                          var label = $('<label class="form-check-label"></label>');
+
+                          checkboxColumn.append(checkbox);
+                          checkboxColumn.append(label);
+                          newRow.append(checkboxColumn);
+
+                          $('#permissions-table tbody').append(newRow);
+                      });
+                  },
+                  error: function(error) {
+                      console.error(error);
+                  }
+              });
+          });
+      });
+  </script>
+
   <script>
       $(document).ready(function() {
           $('#example').DataTable({
@@ -83,7 +142,7 @@
 
   <script>
       $(document).ready(function() {
-          $('[id^="dataTables_"]').DataTable({
+          $('[id^="permissions-table"]').DataTable({
               "lengthMenu": [5, 10, 25, 50],
               "pageLength": 5,
               // Opsi atau pengaturan lain yang mungkin Anda butuhkan

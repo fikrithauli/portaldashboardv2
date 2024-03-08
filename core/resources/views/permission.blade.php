@@ -557,7 +557,7 @@
 
                                                             <td>
                                                                 <div class="btn-group">
-                                                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editRoleModal_{{ $p->user_id }}">
+                                                                    <button type="button" class="btn btn-sm btn-primary open-modal" data-bs-toggle="modal" data-bs-target="#listModal{{ $p->reff_user }}" data-selected-user-id="{{ $p->reff_user }}" data-url="{{ route('get.permissions', $p->reff_user) }}">
                                                                         <i data-feather='settings'></i>
                                                                     </button>
                                                                 </div>
@@ -689,7 +689,7 @@
 
                 <!-- update modal -->
                 @foreach($permission as $p)
-                <div class="modal fade" id="editRoleModal_{{ $p->user_id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="listModal{{ $p->reff_user }}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-add-new-role">
                         <div class="modal-content">
                             <div class="modal-header bg-transparent">
@@ -703,13 +703,14 @@
                                 <form class="row" action="{{ route('permissions.update', $p->user_id) }}" method="post">
                                     @csrf
                                     @method('put')
+                                    <input type="hidden" name="selected_user_id" value="{{ $p->reff_user }}">
                                     <div class="col-12">
                                         <h5 class="mt-3 pt-50"><i data-feather="alert-circle"></i>&nbsp; Dashboard Permissions</h5>
                                         <hr>
                                         <!-- Permission table -->
                                         <div class="table-responsive">
 
-                                            <table id="dataTables_{{ $p->user_id }}" class="table table-hover" style="width:100%">
+                                            <table id="permissions-table" class="table table-hover" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>Dashboard Name</th>
@@ -717,14 +718,12 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($permissions as $per)
-                                                    @if($per->user_id == $p->user_id)
                                                     <tr>
-                                                        <td>{{ $per->dashboard_name }}</td>
+                                                        <td></td>
                                                         <td>
                                                             <div class="d-flex">
                                                                 <div class="form-check form-switch me-3 me-lg-5">
-                                                                    <input type="checkbox" class="form-check-input" name="permissions[]" value="{{ $per->dashboard_id }}" data-user-id="{{ $p->user_id }}" {{ $per->permission_type == 1 ? 'checked' : '' }}>
+                                                                    <input type="checkbox" class="form-check-input">
                                                                     <label class="form-check-label" id="">
                                                                         <!-- Label text or additional content -->
                                                                     </label>
@@ -732,8 +731,6 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    @endif
-                                                    @endforeach
                                                 </tbody>
                                             </table>
                                         </div>

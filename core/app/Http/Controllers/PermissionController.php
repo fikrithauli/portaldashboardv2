@@ -45,6 +45,7 @@ class PermissionController extends Controller
                 'permissions.*',
                 'permission_request.*',
                 'permissions.dashboard_id AS permission_type',
+                'permissions.user_id AS reff_user',
                 'users.*',
                 'users.name as user_name',
                 'dashboard.dashboard_name',
@@ -54,14 +55,26 @@ class PermissionController extends Controller
             ->get();
 
 
+        // $permissions = DB::table('permissions AS p')
+        //     ->join('users', 'p.user_id', '=', 'users.id')
+        //     ->join('permission_request', 'p.dashboard_id', '=', 'permission_request.dashboard_id')
+        //     ->join('dashboard', 'p.dashboard_id', '=', 'dashboard.dashboard_id')
+        //     ->select('p.*', 'p.permission_type', 'users.name as user_name', 'dashboard.dashboard_name')
+        //     ->whereIn('p.dashboard_id', function ($query) {
+        //         $query->select('dashboard_id')->distinct()->from('permissions');
+        //     })
+        //     ->get();
+
+        // Ambil user_id dari request
+        $selectedUserId = $request->input('selected_user_id');
+
         $permissions = DB::table('permissions AS p')
             ->join('users', 'p.user_id', '=', 'users.id')
             ->join('permission_request', 'p.dashboard_id', '=', 'permission_request.dashboard_id')
             ->join('dashboard', 'p.dashboard_id', '=', 'dashboard.dashboard_id')
-            ->select('p.*', 'p.permission_type', 'users.name as user_name', 'dashboard.dashboard_name')
-            ->whereIn('p.dashboard_id', function ($query) {
-                $query->select('dashboard_id')->distinct()->from('permissions');
-            })
+            ->select('p.user_id', 'p.dashboard_id', 'p.permission_type', 'dashboard.dashboard_name')
+            ->where('p.user_id', $selectedUserId)
+            ->distinct()
             ->get();
 
 
@@ -114,6 +127,21 @@ class PermissionController extends Controller
 
         return view('permission', compact('rejected', 'requests', 'totalUsersAdmins', 'totalUsers', 'admins', 'accounts', 'permission', 'permissions', 'user', 'users', 'dashboards', 'header', 'footer', 'categories', 'position'));
     }
+
+    public function getPermissions($selectedUserId)
+    {
+        $permissions = DB::table('permissions AS p')
+        ->join('users', 'p.user_id', '=', 'users.id')
+        ->join('permission_request', 'p.dashboard_id', '=', 'permission_request.dashboard_id')
+        ->join('dashboard', 'p.dashboard_id', '=', 'dashboard.dashboard_id')
+        ->select('p.user_id', 'p.dashboard_id', 'p.permission_type', 'dashboard.dashboard_name')
+        ->where('p.user_id', $selectedUserId)
+            ->distinct()
+            ->get();
+
+        return response()->json($permissions);
+    }
+
 
     public function store(Request $request)
     {

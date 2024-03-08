@@ -48,7 +48,7 @@ class HomeController extends Controller
         }
 
         $query->orderByDesc('dashboard.created_at');
-        $filteredData = $query->get();
+        $filteredData = $query->distinct()->get();
 
         // Add request_status to each dashboard in $filteredData
         foreach ($filteredData as $dashboard) {

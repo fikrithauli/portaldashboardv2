@@ -87,6 +87,8 @@ Route::post('/permission-request', [RequestController::class, 'storePermissionRe
 Route::get('/approve-permission-request/{requestId}', [PermissionController::class, 'approvePermissionRequest'])->name('approve.permission.request');
 Route::get('/approve/permission/reject/{requestId}', [PermissionController::class, 'rejectPermissionRequest'])->name('reject.permission.request');
 Route::get('/permissions/get-data-by-name/{name}', [PermissionController::class, 'getDataByName'])->name('permissions.get-data-by-name');
+Route::get('/get-permissions/{selectedUserId}', [PermissionController::class, 'getPermissions'])->name('get.permissions');
+
 
 
 // rute untuk recent login
