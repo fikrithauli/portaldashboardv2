@@ -407,7 +407,7 @@
                 </p>
 
                 <!-- Role cards -->
-                <div class="row">
+                <!-- <div class="row">
 
                     <div class="col-xl-4 col-lg-6 col-md-6">
                         <div class="card">
@@ -458,7 +458,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!--/ Role cards -->
 
                 <!-- table -->
@@ -482,13 +482,12 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="home" aria-labelledby="home-tab" role="tabpanel">
                                             <div class="card-datatable table-responsive pt-0">
-                                                <table id="example" class="table table-hover" style="width:100%">
+                                                <table id="request" class="table table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th>Name</th>
+                                                            <th>Applicant's Name</th>
                                                             <th>Permission Type</th>
                                                             <th>Departement</th>
-                                                            <th>Reason</th>
                                                             <th>Status</th>
                                                             <th>Actions</th>
                                                         </tr>
@@ -496,10 +495,13 @@
                                                     <tbody>
                                                         @foreach($requests as $r)
                                                         <tr>
-                                                            <td><span class="">{{ $r->name }}</span></td>
+                                                            <td>
+                                                                <span class="">{{ $r->name }}</span>
+                                                                <br>
+                                                                <small class="text-muted">#{{ $r->application_number }}</small>
+                                                            </td>
                                                             <td><span class="">{{ $r->dashboard_name }}</span></td>
                                                             <td><span class="">{{ $r->departement }}</span></td>
-                                                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#detailRequest_{{ $r->request_id }}">View</a></td>
                                                             <td>
                                                                 @if ($r->request_status == 0)
                                                                 <span class="badge badge-glow bg-warning">Pending</span>
@@ -510,7 +512,7 @@
                                                             <td>
                                                                 @if ($r->request_status == 0)
                                                                 <div class="btn-group">
-                                                                    <a href="{{ route('approve.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-sm btn-light">
+                                                                    <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#detailRequest_{{ $r->request_id }}">
                                                                         Approve
                                                                     </a>&nbsp;&nbsp;
                                                                     <a href="{{ route('reject.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-sm btn-dark">
@@ -526,6 +528,7 @@
                                                         <!-- Add more rows as needed -->
                                                     </tbody>
                                                 </table>
+
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="profile" aria-labelledby="profile-tab" role="tabpanel">
@@ -542,28 +545,28 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach($permission as $p)
+                                                        @foreach($permission as $perm)
                                                         <tr>
-                                                            <td><span class="">{{ $p->user_name }}</span></td>
-                                                            <td><span class="">{{ $p->job_title }}</span></td>
-                                                            <td>{{ $p->dashboard_count }} Dashboards</td>
+                                                            <td><span class="">{{ $perm->user_name }}</span></td>
+                                                            <td><span class="">{{ $perm->job_title }}</span></td>
+                                                            <td>{{ $perm->dashboard_count }} Dashboards</td>
                                                             <td>
-                                                                @if ($p->dashboard_count == 0)
+                                                                @if ($perm->dashboard_count == 0)
                                                                 <span class="badge badge-glow bg-danger">Not active</span>
                                                                 @else
                                                                 <span class="badge badge-glow bg-success">Active</span>
                                                                 @endif
                                                             </td>
-
                                                             <td>
                                                                 <div class="btn-group">
-                                                                    <button type="button" class="btn btn-sm btn-primary open-modal" data-bs-toggle="modal" data-bs-target="#listModal{{ $p->reff_user }}" data-selected-user-id="{{ $p->reff_user }}" data-url="{{ route('get.permissions', $p->reff_user) }}">
+                                                                    <a href="{{ route('get.permissions', ['id' => $perm->user_id]) }}" class="btn btn-sm btn-primary">
                                                                         <i data-feather='settings'></i>
-                                                                    </button>
+                                                                    </a>
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                         @endforeach
+
                                                         <!-- Add more rows as needed -->
                                                     </tbody>
                                                 </table>
@@ -686,70 +689,6 @@
                 </div>
                 <!--/ Add Role Modal -->
 
-
-                <!-- update modal -->
-                @foreach($permission as $p)
-                <div class="modal fade" id="listModal{{ $p->reff_user }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered modal-add-new-role">
-                        <div class="modal-content">
-                            <div class="modal-header bg-transparent">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body px-5 pb-5">
-                                <div class="text-center mb-2">
-                                    <h3 class="role-title">Set Role Permissions for <i><b>{{ $p->user_name }}</b></i></h3>
-                                </div>
-                                <!-- Edit role form -->
-                                <form class="row" action="{{ route('permissions.update', $p->user_id) }}" method="post">
-                                    @csrf
-                                    @method('put')
-                                    <input type="hidden" name="selected_user_id" value="{{ $p->reff_user }}">
-                                    <div class="col-12">
-                                        <h5 class="mt-3 pt-50"><i data-feather="alert-circle"></i>&nbsp; Dashboard Permissions</h5>
-                                        <hr>
-                                        <!-- Permission table -->
-                                        <div class="table-responsive">
-
-                                            <table id="permissions-table" class="table table-hover" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Dashboard Name</th>
-                                                        <th>View Permission</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="form-check form-switch me-3 me-lg-5">
-                                                                    <input type="checkbox" class="form-check-input">
-                                                                    <label class="form-check-label" id="">
-                                                                        <!-- Label text or additional content -->
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <!-- Permission table -->
-                                    </div>
-                                    <div class="col-12 text-center mt-2">
-                                        <button type="submit" class="btn btn-primary me-1">Update Permissions</button>
-                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">
-                                            Close
-                                        </button>
-                                    </div>
-                                </form>
-                                <!--/ Edit role form -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-
                 <!-- update modal -->
                 @foreach($requests as $r)
                 <div class="modal fade" id="detailRequest_{{ $r->request_id }}" tabindex="-1" aria-hidden="true">
@@ -762,41 +701,57 @@
                                 <h1 class="text-center mb-1" id="addNewCardTitle">Request Details</h1>
                                 <p class="text-center">Application details for opening dashboard permissions</p>
 
-                                <!-- form -->
-                                <form id="addNewCardValidation" class="row gy-1 gx-2 mt-75" onsubmit="return false">
-                                    <div class="col-6">
-                                        <label class="form-label" for="modalAddCardNumber">Permission Type</label>
-                                        <div class="input-group input-group-merge">
-                                            <input id="modalAddCardNumber" name="modalAddCard" class="form-control add-credit-card-mask" type="text" readonly value="{{ $r->dashboard_name }}" />
+                                <hr class="invoice-spacing pt-2" />
+
+                                <!-- Address and Contact starts -->
+                                <div class="card-body invoice-padding pt-2">
+                                    <div class="row invoice-spacing">
+                                        <div class="col-xl-8 p-0">
+                                            <h6 class="mb-25">{{ $r->name }}</h6>
+                                            <p class="card-text mb-25"><i>{{ $r->departement }}</i></p>
+                                            <p class="card-text mb-25">{{ $r->email }}</p>
+                                            <p class="card-text mb-0 mt-1"> <span class="badge badge-light-warning">Waiting for approval</span></p>
+                                        </div>
+                                        <div class="col-xl-4 p-0 mt-xl-0 mt-2">
+                                            <h4 class="invoice-title">
+                                                <span class="invoice-number">#{{ $r->application_number }}</span>
+                                            </h4>
+                                            <hr>
+                                            <div class="invoice-date-wrapper">
+                                                <p class="invoice-date-title"><b>Request Time :</b> <br><span class="invoice-date">{{ \Carbon\Carbon::parse($r->permission_date)->format('j M Y, H:i') }}</span></p>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="modalAddCardName">Submission Date</label>
-                                        <input type="text" id="modalAddCardName" class="form-control" readonly value="{{ $r->created_at }}" />
+                                </div>
+
+                                <div class="alert alert-dark mb-2" role="alert">
+                                    <h6 class="alert-heading">Reason for submission</h6>
+                                    <div class="alert-body fw-normal"> {{ $r->reason }}</div>
+                                </div>
+                                <!-- Invoice Description ends -->
+
+                                <hr class="invoice-spacing" />
+
+                                <!-- Invoice Note starts -->
+                                <div class="card-body invoice-padding pt-0">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span class="fw-bold">Note:</span>
+                                            <span>The following comments serve as a recorded explanation for the request to access the dashboard. Thank You!</span>
+                                        </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="modalAddCardName">Full Name</label>
-                                        <input type="text" id="modalAddCardName" class="form-control" readonly value="{{ $r->name }}" />
+                                    <!-- Button section starts -->
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-center">
+                                            <button type="button" class="btn btn-secondary me-1" data-bs-dismiss="modal">Close</button>
+                                            <a href="{{ route('approve.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-success">Approve</a>
+                                        </div>
                                     </div>
+                                    <!-- Button section ends -->
+                                </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="modalAddCardName">Departement</label>
-                                        <input type="text" id="modalAddCardName" class="form-control" readonly value="{{ $r->departement }}" />
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label class="form-label" for="modalAddCardName">Reason</label>
-                                        <textarea name="" class="form-control" readonly>{{ $r->reason }}</textarea>
-                                    </div>
-
-                                    <div class="col-12 text-center mt-2">
-                                        <button type="reset" class="btn btn-outline-secondary mt-1" data-bs-dismiss="modal" aria-label="Close">
-                                            Close
-                                        </button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>

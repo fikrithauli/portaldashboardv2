@@ -330,7 +330,7 @@
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
                             <form action="{{ route('search') }}" method="GET" class="input-group">
-                                <input type="text" class="form-control" name="keyword" placeholder="Dashboard name" autocomplete="off" />
+                                <input type="text" class="form-control" name="keyword" placeholder="Dashboard name" />
                                 <button type="submit" class="btn btn-primary"><i data-feather="search"></i></button>
                             </form>
 
@@ -376,241 +376,141 @@
                         <!-- Tempat untuk menampilkan data filter -->
                     </div>
                 </li>
+
+
+                <!-- @foreach($categories as $category)
+                <li class="nav-item mt-2">
+                    <a class="d-flex align-items-center" href="">
+                        <i data-feather="circle"></i><span class="menu-title text-truncate" data-i18n="{{ $category->category_name }}">{{ $category->category_name }}</span>
+                    </a>
+                </li>
+                @endforeach -->
+
+
             </ul>
         </div>
     </div>
     <!-- END: Main Menu-->
 
+    <!-- BEGIN: Content-->
     <div class="app-content content ">
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
         <div class="content-wrapper container-xxl p-0">
+            <div class="content-header row">
+            </div>
             <div class="content-body">
-                <!-- Examples -->
-                <div class="row match-height" id="dashboardContainer">
-                    @if(count($filteredData) > 0)
-                    @foreach($filteredData as $row)
-                    <div class="col-md-6 col-lg-4" id="dashboard{{ $row->dashboard_id }}">
-                        <div class="card text-center">
-                            <img class="card-img-top" src="{{ asset('core/uploads/' . $row->image) }}" alt="Card image cap" />
-                            <div class="card-body">
-                                <h4 class="card-title">{{ $row->dashboard_name }}</h4>
-                                <p class="card-text">{{ $row->description }}</p>
-
-                                @php
-                                $user = Auth::user();
-                                $permission = DB::table('permissions')
-                                ->where('dashboard_id', $row->dashboard_id)
-                                ->where('user_id', $user->id) // Assuming there's a 'user_id' column in your permissions table
-                                ->first();
-                                @endphp
-
-                                @if ($user->role_id == 1 || in_array($row->dashboard_id, $allowedDashboardIds))
-
-                                @if ($row->dashboard_status == 0)
-                                <a href="#" id="maintenance-link" class="btn btn-danger mt-2">Under Maintenance</a>
-                                @else
-                                @if ($permission && $permission->permission_type == 0)
-                                <button class="btn btn-danger mt-2">
-                                    Access revoked
-                                </button>
-                                @else
-                                <a href="{{ route('detail', ['dashboard_name' => str_replace(' ', '-', $row->dashboard_name)]) }}" class="btn btn-relief-primary mt-2">View Dashboard</a>
-                                @endif
-                                @endif
-
-                                @else
-
-                                <div class="not-allowed">
-                                    @if ($row->dashboard_status == 0)
-                                    <a href="#" id="maintenance-link" class="btn btn-danger mt-2">Under Maintenance</a>
-                                    @else
-                                    @if ($permission && $permission->permission_type == 0 && $user->role_id == 2)
-                                    <button class="btn btn-warning mt-2">
-                                        Suspend
-                                    </button>
-                                    @else
-                                    <!-- <button class="btn btn-primary mt-2" disabled>Detail Dashboard</button> -->
-                                    @endif
-
-                                    @if ($user->role_id == 1 || $row->dashboard_status != 0)
-
-                                    @php
-                                    $user = Auth::user();
-                                    $requestStatus = DB::table('permission_request')
-                                    ->where('dashboard_id', $row->dashboard_id)
-                                    ->where('name', $user->name) // Assuming there's a 'user_id' column in your permission_request table
-                                    ->pluck('request_status')
-                                    ->first();
-                                    @endphp
-
-                                    @if ($requestStatus === 0)
-                                    <button class="btn btn-warning mt-2">
-                                        Waiting for permit approval
-                                    </button>
-                                    @else
-                                    <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $row->dashboard_id }}">
-                                        Request access
-                                    </button>
-                                    @endif
-                                    @endif
-
-                                    @endif
-                                </div>
-
-                                @endif
-
-                            </div>
-                        </div>
-                    </div>
-
-                    @endforeach
-                    @else
-                    <div class="col-12 text-center">
-                        <center> <img src="{{ asset('no-data.svg') }}" width="600" alt="No Data" /><br><br><br>
-                            <span class="mt-4">
-                                <strong>
-                                    <h4>Oops, no dashboard available at this time.</h4>
-                                </strong>
-                            </span>
-                    </div>
-                    @endif
-                </div>
-
-            </div>
-        </div>
-    </div>
-    </div>
-
-
-    @foreach($filteredData as $row)
-    <!-- <div class="modal fade" id="editCategoryModal{{ $row->dashboard_id }}" tabindex="-1" aria-labelledby="editCategoryModalTitle{{ $row->dashboard_id }}" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
-            <div class="modal-content">
-                <div class="modal-header bg-transparent">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body pb-5 px-sm-5 pt-50">
-                    <div class="text-center mb-2">
-                        <h1 class="mb-1">Add Request Permission</h1>
-                        <p>Make requests for dashboard permissions</p>
-                    </div>
-                    <form id="editUserForm" class="row gy-1 pt-75" action="{{ route('permissions.request') }}" method="post">
-                        @csrf
-                        <div class="col-12 col-md-12">
-                            <label class="form-label" for="modalEditUserFirstName">Dashboard Name</label>
-                            <div class="input-group">
-                                <input type="hidden" name="dashboard_id" value="{{ $row->dashboard_id }}">
-                                <input type="hidden" name="application_number" value="REQ-{{ mt_rand(1000, 9999) }}">
-                                <input type="text" class="form-control" value="{{ $row->dashboard_name }}" readonly />
-                                <span class="input-group-text" id="basic-addon-search1"><i data-feather="alert-circle"></i></span>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="form-label" for="modalEditUserFirstName">Full Name <small class="text-danger">*</small></label>
-                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" class="form-control" />
-                            <input type="text" id="modalEditUserFirstName" name="name" value="{{ Auth::user()->name }}" class="form-control" readonly />
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="form-label" for="modalEditUserLastName">Departement <small class="text-danger">*</small></label>
-                            <input type="text" id="modalEditUserLastName" name="departement" class="form-control" value="{{ Auth::user()->job_title }}" readonly />
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label" for="modalEditUserName">Reason for submission <small class="text-danger">*</small></label>
-                            <textarea name="reason" class="form-control"></textarea>
-                        </div>
-                        <div class="col-12 text-center mt-2 pt-50">
-                            <button type="submit" class="btn btn-primary me-1">Submit</button>
-                            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">
-                                Discard
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <div class="modal fade" id="editCategoryModal{{ $row->dashboard_id }}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-transparent">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="editUserForm" class="row gy-1 pt-75" action="{{ route('permissions.request') }}" method="post">
-                    @csrf
-                    <div class="modal-body px-sm-5 mx-50 pb-5">
-                        <h1 class="text-center mb-1" id="requestAccessModalTitle">Request Dashboard Access</h1>
-                        <p class="text-center">Provide details and reasons for dashboard access request</p>
-
-                        <hr class="invoice-spacing pt-2" />
-
-                        <input type="hidden" name="dashboard_id" value="{{ $row->dashboard_id }}">
-                        <input type="hidden" name="application_number" value="REQ-{{ mt_rand(1000, 9999) }}">
-                        <input type="hidden" class="form-control" value="{{ $row->dashboard_name }}" />
-                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" class="form-control" />
-                        <input type="hidden" name="name" value="{{ Auth::user()->name }}" class="form-control" />
-                        <input type="hidden" name="departement" class="form-control" value="{{ Auth::user()->job_title }}" />
-
-                        <!-- Dashboard Image and User Details starts -->
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="{{ asset('core/uploads/' . $row->image) }}" alt="Dashboard Image" class="img-fluid rounded">
-                            </div>
-                            <div class="col-8">
-                                <div class="added-cards">
-                                    <div class="cardMaster rounded border p-2 mb-1">
-                                        <div class="row">
-                                            <div class="col-sm-12 d-flex justify-content-between">
-                                                <div class="text-muted"><strong><i>{{ $row->dashboard_name }}</i></strong></div>
-                                            </div>
-                                            <hr class="mt-1">
-                                            <div class="col-sm-12 d-flex justify-content-between">
-                                                <div><strong><i>Applicant Name</i></strong><br> {{ Auth::user()->name }}</div>
-                                                <div><strong><i>Departement / Job Title</i></strong><br> {{ Auth::user()->job_title }}</div>
+                <section class="app-user-view-security">
+                    <div class="row">
+                        <!-- User Sidebar -->
+                        <div class="col-xl-4 col-lg-5 col-md-5 order-1 order-md-0">
+                            <!-- User Card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="user-avatar-section">
+                                        <div class="d-flex align-items-center flex-column">
+                                            <img class="img-fluid rounded mt-1 mb-1" src="{{ asset('user.png') }}" height="110" width="110" alt="User avatar" />
+                                            <div class="user-info text-center">
+                                                <h4>{{ $permissions[0]->applicant_name }}</h4>
+                                                <span class="badge bg-light-secondary">{{ $permissions[0]->job_title }}</span>
                                             </div>
                                         </div>
-
+                                    </div>
+                                    <hr class="mt-2">
+                                    <div class="d-flex justify-content-around my-2 pt-75">
+                                        <div class="d-flex align-items-start me-2">
+                                            <span class="badge bg-light-success p-75 rounded">
+                                                <i data-feather="check-circle" class="font-medium-2"></i>
+                                            </span>
+                                            <div class="ms-75">
+                                                <h4 class="mb-0">{{ $dashboardCount }}</h4>
+                                                <small>Active</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-start">
+                                            <span class="badge bg-light-danger p-75 rounded">
+                                                <i data-feather="slash" class="font-medium-2"></i>
+                                            </span>
+                                            <div class="ms-75">
+                                                <h4 class="mb-0">{{ $dashboardInnactive }}</h4>
+                                                <small>Inactive</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-grid col-lg-12 col-md-12 mb-1 mb-lg-0 mt-2">
+                                            <a href="{{ route('permission') }}" class="btn btn-primary">Back to permission</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <!-- /User Card -->
                         </div>
+                        <!--/ User Sidebar -->
 
-                        <hr class="invoice-spacing" />
-                        <div class="card-body invoice-padding pt-1">
-                            <div class="row">
-                                <div class="col-12">
-                                    <label for="accessReason" class="form-label fw-bold"><strong>Reason for Access :</strong></label>
-                                    <textarea class="form-control" name="reason" rows="4" placeholder="Provide your reasons for requesting access to this dashboard"></textarea>
+                        <!-- User Content -->
+                        <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-50">Dashboard Access Management</h4>
+                                    <p class="mb-0">Modify permissions for user dashboard access</p>
+                                </div>
+                                <div class="table-responsive">
+                                    <!-- <table id="example" class="table text-nowrap text-center border-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-start">Dashboard Type</th>
+                                                <th class="text-center">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($permissions as $perm)
+                                            <tr>
+                                                <td class="text-start">{{ $perm->dashboard_name }}</td>
+                                                <td>
+                                                    <div class="form-check d-flex justify-content-center">
+                                                        <input class="form-check-input" type="checkbox" id="defaultCheck1" checked />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table> -->
+
+                                    <!-- Add this inside your HTML body where you want to display the checkboxes -->
+                                    <table id="example" class="table text-nowrap text-center border-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-start">Dashboard Type</th>
+                                                <th class="text-center">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($permissions as $perm)
+                                            <tr>
+                                                <td class="text-start">{{ $perm->dashboard_name }}</td>
+                                                <td>
+                                                    <div class="form-check d-flex justify-content-center">
+                                                        <input class="form-check-input" type="checkbox" data-user-id="{{ $perm->user_id }}" data-dashboard-id="{{ $perm->dashboard_id }}" {{ $perm->permission_type ? 'checked' : '' }} />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
+
+                            <!--/ notifications -->
                         </div>
-                        <hr class="invoice-spacing" />
-                        <div class="card-body invoice-padding pt-0">
-                            <div class="row">
-                                <div class="col-12">
-                                    <span class="fw-bold">Note:</span>
-                                    <span>The following comments serve as a recorded explanation for the request to access the dashboard. Thank You!</span>
-                                </div>
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col-12 text-center">
-                                    <button type="button" class="btn btn-secondary me-1" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-success">Submit</button>
-                                </div>
-                            </div>
-                        </div>
+                        <!--/ User Content -->
                     </div>
-                </form>
+                </section>
+
             </div>
         </div>
     </div>
-
-    @endforeach
-
-    <div class="sidenav-overlay"></div>
-    <div class="drag-target"></div>
-
+    <!-- END: Content-->
 
     <div>
         {!! $footer !!}

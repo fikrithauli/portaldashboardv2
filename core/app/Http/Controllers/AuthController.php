@@ -12,6 +12,11 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['showLoginForm', 'login', 'logout']]);
+    }
+
     public function showLoginForm()
     {
         return view('login');

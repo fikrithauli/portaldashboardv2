@@ -82,12 +82,12 @@ Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])-
 Route::get('/permission', [PermissionController::class, 'index'])->name('permission');
 Route::post('/permission', [PermissionController::class, 'store'])->name('permissions.submit');
 Route::get('/permissions/{id}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
-Route::put('/permissions/{id}', [PermissionController::class, 'update'])->name('permissions.update');
+Route::post('/permissions/{id}', [PermissionController::class, 'update'])->name('permissions.update');
 Route::post('/permission-request', [RequestController::class, 'storePermissionRequest'])->name('permissions.request');
 Route::get('/approve-permission-request/{requestId}', [PermissionController::class, 'approvePermissionRequest'])->name('approve.permission.request');
 Route::get('/approve/permission/reject/{requestId}', [PermissionController::class, 'rejectPermissionRequest'])->name('reject.permission.request');
 Route::get('/permissions/get-data-by-name/{name}', [PermissionController::class, 'getDataByName'])->name('permissions.get-data-by-name');
-Route::get('/get-permissions/{selectedUserId}', [PermissionController::class, 'getPermissions'])->name('get.permissions');
+Route::get('/get-permissions/{id}', [PermissionController::class, 'getPermissions'])->name('get.permissions');
 
 
 

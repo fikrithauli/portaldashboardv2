@@ -45,71 +45,25 @@
   <script src="{{ asset('app-assets/js/scripts/pages/page-account-settings-account.js') }}"></script>
   <script src="{{ asset('app-assets/js/scripts/pages/modal-share-project.js') }}"></script>
   <script src="{{ asset('app-assets/js/scripts/components/components-dropdowns.js') }}"></script>
-
-
-
-  <!-- <script>
-      $(document).ready(function() {
-          // Tangani klik tombol untuk membuka modal
-          $('.open-modal').on('click', function() {
-              var selectedUserId = $(this).data('selected-user-id');
-              var url = $(this).data('url');
-
-              // Kirim permintaan AJAX untuk mendapatkan data izin
-              $.ajax({
-                  url: url,
-                  type: 'GET',
-                  success: function(response) {
-                      // Perbarui modal dengan data yang diterima
-                      response
-                  },
-                  error: function(error) {
-                      console.error(error);
-                  }
-              });
-          });
-      });
-  </script> -->
+  <script src="{{ asset('app-assets/js/scripts/pages/modal-edit-user.js') }}"></script>
+  <script src="{{ asset('app-assets/js/scripts/pages/app-user-view.js') }}"></script>
+  <script src="{{ asset('app-assets/js/scripts/pages/app-invoice.js') }}"></script>
+  <script src="{{ asset('app-assets/js/scripts/pages/app-user-view-billing.js') }}"></script>
 
   <script>
       $(document).ready(function() {
-          $('.open-modal').on('click', function() {
-              var selectedUserId = $(this).data('selected-user-id');
-              var url = $(this).data('url');
+          $('#example').DataTable({
 
-              $.ajax({
-                  url: url,
-                  type: 'GET',
-                  success: function(response) {
-                      $('#permissions-table tbody').empty();
-
-                      $.each(response, function(index, permission) {
-                          var newRow = $('<tr>');
-                          newRow.append('<td>' + permission.dashboard_name + '</td>');
-
-                          var checkboxColumn = $('<td>');
-                          var checkbox = $('<input type="checkbox" class="form-check-input">');
-                          var label = $('<label class="form-check-label"></label>');
-
-                          checkboxColumn.append(checkbox);
-                          checkboxColumn.append(label);
-                          newRow.append(checkboxColumn);
-
-                          $('#permissions-table tbody').append(newRow);
-                      });
-                  },
-                  error: function(error) {
-                      console.error(error);
-                  }
-              });
           });
       });
   </script>
 
   <script>
       $(document).ready(function() {
-          $('#example').DataTable({
-
+          $('#request').DataTable({
+              "order": [
+                  [4, "desc"]
+              ], // assuming "created_at" is the fifth column (index 4)
           });
       });
   </script>
@@ -249,64 +203,210 @@
 
               if (data.length === 0) {
                   var noDataHtml = `
-          <center><img src="{{ asset('no-data.svg') }}" width="600" alt="Card image cap" /><br><br><br>
-          <span class="mt-4">
-            <strong>
-              <h4>Oops, the data you were looking for was not found.</h4>
-            </strong>
-          </span>
-        `;
+                <center><img src="{{ asset('no-data.svg') }}" width="600" alt="Card image cap" /><br><br><br>
+                <span class="mt-4">
+                    <strong>
+                        <h4>Oops, the data you were looking for was not found.</h4>
+                    </strong>
+                </span>
+            `;
                   dashboardContainer.append(noDataHtml);
               } else {
                   $.each(data, function(index, row) {
                       var dashboardNameSlug = encodeURIComponent(row.dashboard_name.replace(/\s+/g, '-'));
                       var detailButton = '';
+                      var userRoleId = "{{ Auth::user()->role_id }}";
+                      var sessionUserId = "{{ Auth::user()->id }}"; // Assuming you have access to Auth::id()
 
                       if (row.dashboard_status === 0) {
                           detailButton = `<a href="#" class="btn btn-danger mt-2 btn-under-maintenance">Under Maintenance</a>`;
-                      } else if (row.is_allowed) {
-                          if (row.permission_type === 0) {
-                              // If permission_type is 0, display "Suspend" button
-                              detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
-                          } else {
-                              // Otherwise, display "Detail Dashboard" button
-                              detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
-                          }
                       } else {
-                          var permissionType = row.permission_type || 0; // default to 0 if permission_type is null
-                          if (row.request_status === 0) {
-                              detailButton = `<button class="btn btn-warning mt-2">Waiting for permit approval</button>`;
+                          if (userRoleId == 1) {
+                              detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
                           } else {
-                              if (permissionType === 0) {
-                                  detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
+                              if (row.is_allowed) {
+                                  if (row.permission_type === 0) {
+                                      // If permission_type is 0, display "Suspend" button
+                                      detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
+                                  } else {
+                                      // Otherwise, display "Detail Dashboard" button
+                                      detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
+                                  }
                               } else {
-                                  detailButton = `
-                  <div class="not-allowed">
-                    <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal${row.dashboard_id}">
-                      Request access
-                    </button>
-                  </div>`;
+                                  var permissionType = row.permission_type // default to 0 if permission_type is null
+                                  if (row.request_status === 0 || (sessionUserId && row.user_id == sessionUserId)) {
+                                      detailButton = `<button class="btn btn-warning mt-2">Waiting for permit approval</button>`;
+                                  } else {
+                                      if (permissionType === 0) {
+                                          detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
+                                      } else {
+                                          detailButton = `
+                                            <div class="not-allowed">
+                                                <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal${row.dashboard_id}">
+                                                    Request access
+                                                </button>
+                                            </div>`;
+                                      }
+                                  }
                               }
                           }
                       }
 
                       var cardHtml = `
-            <div class="col-md-6 col-lg-4" id="dashboard${row.dashboard_id}">
-              <div class="card text-center">
-                <img class="card-img-top" src="{{ asset('core/uploads/') }}/${row.image}" alt="Card image cap" />
-                <div class="card-body">
-                  <h4 class="card-title">${row.dashboard_name}</h4>
-                  <p class="card-text">${row.description}</p>
-                  ${detailButton}
-                </div>
-              </div>
-            </div>
-          `;
+                    <div class="col-md-6 col-lg-4" id="dashboard${row.dashboard_id}">
+                        <div class="card text-center">
+                            <img class="card-img-top" src="{{ asset('core/uploads/') }}/${row.image}" alt="Card image cap" />
+                            <div class="card-body">
+                                <h4 class="card-title">${row.dashboard_name}</h4>
+                                <p class="card-text">${row.description}</p>
+                                ${detailButton}
+                            </div>
+                        </div>
+                    </div>`;
 
                       dashboardContainer.append(cardHtml);
                   });
               }
           }
+      });
+  </script>
+
+  <!-- <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const checkboxes = document.querySelectorAll('.form-check-input');
+
+          checkboxes.forEach(function(checkbox) {
+              checkbox.addEventListener('change', function() {
+                  const userId = checkbox.dataset.userId;
+                  const dashboardId = checkbox.dataset.dashboardId;
+
+                  if (!userId || !dashboardId) {
+                      console.error('User ID or Dashboard ID is missing.');
+                      return;
+                  }
+
+                  const isChecked = checkbox.checked;
+
+                  // Show loading toastr
+                  toastr.info('Loading...', {
+                      timeOut: 3000,
+                      extendedTimeOut: 0
+                  });
+
+                  // Simulate a delay using setTimeout (replace this with your actual AJAX request)
+                  setTimeout(function() {
+                      $.ajax({
+                          url: `/portaldashboardv2/permissions/${userId}`,
+                          type: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                          },
+                          data: JSON.stringify({
+                              permissions: [{
+                                  user_id: userId,
+                                  dashboard_id: dashboardId,
+                                  permission_type: isChecked ? 1 : 0,
+                              }],
+                          }),
+                          beforeSend: function() {
+                              // Hide loading toastr before sending the request
+                              toastr.clear();
+                          },
+                          success: function(response) {
+                              // Show success toastr
+                              toastr.success('Success!', {
+                                  timeOut: 5000
+                              });
+
+                              // Refresh the page after success (you can customize this behavior)
+                              window.location.reload();
+                              console.log(response);
+                          },
+                          error: function(error) {
+                              // Show error toastr
+                              toastr.error('Error:', error.responseText || 'Unknown error');
+                              console.error('Error:', error);
+                          },
+                      });
+                  }, 3000); // 3 seconds delay
+              });
+          });
+      });
+  </script> -->
+
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const checkboxes = document.querySelectorAll('.form-check-input');
+
+          checkboxes.forEach(function(checkbox) {
+              checkbox.addEventListener('change', function() {
+                  const userId = checkbox.dataset.userId;
+                  const dashboardId = checkbox.dataset.dashboardId;
+
+                  if (!userId || !dashboardId) {
+                      console.error('User ID or Dashboard ID is missing.');
+                      return;
+                  }
+
+                  const isChecked = checkbox.checked;
+
+                  // Show loading Swal
+                  Swal.fire({
+                      title: 'Please Wait',
+                      allowOutsideClick: false,
+                      showCancelButton: false,
+                      showConfirmButton: false,
+                      timerProgressBar: true,
+                      onBeforeOpen: () => {
+                          Swal.showLoading();
+                      }
+                  });
+
+                  // Simulate a delay using setTimeout (replace this with your actual AJAX request)
+                  setTimeout(function() {
+                      $.ajax({
+                          url: `/portaldashboardv2/permissions/${userId}`,
+                          type: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                          },
+                          data: JSON.stringify({
+                              permissions: [{
+                                  user_id: userId,
+                                  dashboard_id: dashboardId,
+                                  permission_type: isChecked ? 1 : 0,
+                              }],
+                          }),
+                          success: function(response) {
+                              // Close loading Swal
+                              Swal.close();
+
+                              // Show success toastr
+                              toastr.success('Access updated successfully!', {
+                                  timeOut: 5000
+                              });
+
+                              // Reload the page after 2 seconds
+                              setTimeout(function() {
+                                  location.reload();
+                              }, 2000);
+
+                              console.log(response);
+                          },
+                          error: function(error) {
+                              // Close loading Swal
+                              Swal.close();
+
+                              // Show error toastr
+                              toastr.error('Error:', error.responseText || 'Unknown error');
+                              console.error('Error:', error);
+                          },
+                      });
+                  }, 3000); // 3 seconds delay
+              });
+          });
       });
   </script>
 

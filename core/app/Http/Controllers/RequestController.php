@@ -29,6 +29,7 @@ class RequestController extends Controller
     {
         // Validasi input
         $validatedData = $request->validate([
+            'application_number' => 'required',
             'dashboard_id' => 'required',
             'user_id' => 'required',
             'name' => 'required',
@@ -50,6 +51,7 @@ class RequestController extends Controller
 
         // If no existing request with request_status=0 is found, insert the new entry into the database
         DB::table('permission_request')->insert([
+            'application_number' => $validatedData['application_number'],
             'dashboard_id' => $validatedData['dashboard_id'],
             'user_id' => $validatedData['user_id'],
             'name' => $validatedData['name'],

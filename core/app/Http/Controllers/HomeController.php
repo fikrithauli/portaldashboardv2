@@ -31,24 +31,24 @@ class HomeController extends Controller
         $user = Auth::user();
         $categories = Category::all();
         $position = $request->input('position', 'Home');
-
         $footer = view('partials.footer', compact('position'));
 
-        $query = DB::table('dashboard')
+        $filteredData = DB::table('dashboard')
             ->join('categories', 'dashboard.category_id', '=', 'categories.category_id')
             ->leftJoin('permissions', 'dashboard.dashboard_id', '=', 'permissions.dashboard_id')
-            ->select('dashboard.*', 'categories.*', 'permissions.permission_type');
+            ->select('dashboard.*', 'categories.*')
+            ->addSelect(DB::raw('(SELECT COUNT(*) FROM permissions WHERE permissions.dashboard_id = dashboard.dashboard_id AND permissions.permission_type = 1) AS dashboard_count'))
+            ->orderByDesc('dashboard.created_at');
 
         $selectedCategoryIds = $request->input('category_id');
 
         if ($selectedCategoryIds && in_array('all', $selectedCategoryIds)) {
             // Do nothing, show all dashboards.
         } elseif ($selectedCategoryIds) {
-            $query->whereIn('dashboard.category_id', $selectedCategoryIds);
+            $filteredData->whereIn('dashboard.category_id', $selectedCategoryIds);
         }
 
-        $query->orderByDesc('dashboard.created_at');
-        $filteredData = $query->distinct()->get();
+        $filteredData = $filteredData->distinct()->get();
 
         // Add request_status to each dashboard in $filteredData
         foreach ($filteredData as $dashboard) {
@@ -76,6 +76,7 @@ class HomeController extends Controller
 
         return view('home', compact('user', 'footer', 'filteredData', 'categories', 'position', 'allowedDashboardIds'));
     }
+
 
     public function showDetail($dashboard_name)
     {
