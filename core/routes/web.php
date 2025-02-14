@@ -12,6 +12,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\DetailLoginController;
+use App\Http\Controllers\MicrosoftController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,9 @@ use App\Http\Controllers\DetailLoginController;
 Route::group(['middleware' => 'web'], function () {
     // Rute-rute Anda di sini
 });
+
+Route::get('/microsoft/login', [MicrosoftController::class, 'index'])->name('microsoft.login');
+Route::get('/microsoft/authorized', [MicrosoftController::class, 'authorized'])->name('microsoft.authorized');
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 
@@ -50,8 +54,8 @@ Route::get('/login/google', [AuthController::class, 'redirectToGoogle'])->name('
 Route::get('/login/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 // Rute untuk login dan register microsoft
-Route::get('/login/microsoft', [MicrosoftAuthController::class, 'redirectToMicrosoft'])->name('microsoft.login');
-Route::get('/login/microsoft/callback', [MicrosoftAuthController::class, 'handleMicrosoftCallback']);
+// Route::get('/login/microsoft', [MicrosoftAuthController::class, 'redirectToMicrosoft'])->name('microsoft.login');
+// Route::get('/login/microsoft/callback', [MicrosoftAuthController::class, 'handleMicrosoftCallback']);
 
 // Rute untuk home dan filter
 Route::get('/home', [HomeController::class, 'index'])->name('home');

@@ -765,10 +765,12 @@
                             formData.append('image', file);
                             formData.append('question', questionText);
 
-                            fetch('https://192.168.105.67:8000/api/vision?question=' + encodeURIComponent(questionText), {
+                            // Tambahkan opsi mode: 'cors' dan header Content-Type ke dalam objek konfigurasi fetch
+                            fetch('http://192.168.231.67:8443/api/vision?question=' + encodeURIComponent(questionText), {
                                     method: 'POST',
                                     body: formData,
                                 })
+
                                 .then(response => {
                                     if (response.ok) {
                                         return response.json();
@@ -791,6 +793,7 @@
                                     spinner.style.display = 'none';
                                     buttonText.innerText = 'Submit';
                                 });
+
                         })
                         .catch(error => {
                             console.error('Error fetching image:', error);
@@ -858,7 +861,7 @@
                             // Hapus daftar pertanyaan sebelum fetching pertanyaan baru
                             document.getElementById('questionsContainer').innerText = '';
 
-                            fetch('https://192.168.105.67:8000/api/vision?question=' + encodeURIComponent(questText), {
+                            fetch('http://192.168.231.67:8443/api/vision?question=' + encodeURIComponent(questText), {
                                     method: 'POST',
                                     body: formData,
                                 })
@@ -977,7 +980,7 @@
                     formData.append('question', questText);
 
                     // Fetch pertanyaan dari API
-                    const visionResponse = await fetch('https://192.168.105.67:8000/api/vision?question=' + encodeURIComponent(questText), {
+                    const visionResponse = await fetch('http://192.168.231.67:8443/api/vision?question=' + encodeURIComponent(questText), {
                         method: 'POST',
                         body: formData,
                     });

@@ -102,7 +102,7 @@
                                 <div class="divider my-2">
                                     <div class="divider-text">OR</div>
                                 </div>
-                                <a href="https://10.251.94.223:5000/login" class="btn btn-outline-secondary w-100" tabindex="4">
+                                <a href="{{ route('microsoft.login') }}" class="btn btn-outline-secondary w-100" tabindex="4">
                                     <img src="{{ asset('assets/microsoft.png') }}" width="20" alt="" style="margin-right: 10px;">&nbsp;
                                     <span style="font-size: 14px;" class="text-black">Login with Microsoft</span>
                                 </a>
