@@ -75,18 +75,16 @@
                 <div class="auth-wrapper auth-cover">
                     <div class="auth-inner row m-0">
                         <!-- Left Text-->
-                        <div class="d-none d-lg-flex col-lg-8 align-items-center p-5">
+                        <div class="d-none d-lg-flex col-lg-7 align-items-center p-5">
                             <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid" src="{{ asset('app-assets/images/pages/login-v2.svg') }}" alt="Login V2" /></div>
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->
-                        <div class="d-flex col-lg-4 align-items-center auth-bg px-2 p-lg-5">
+                        <div class="d-flex col-lg-5 align-items-center auth-bg px-2 p-lg-5">
                             <div class="col-12 col-sm-8 col-md-6 col-lg-12 px-xl-2 mx-auto">
-                                <h3 class="card-title fw-bold mb-1"><strong class="text-primary">Portal Analytics Dashboard</strong><br> <span class="text-muted">Advanced Analytics and Growth Marketing</span></h3>
+                                <h3 class="card-title fw-bold mb-1"><strong class="text-primary">Portal Analytics Dashboard</strong><br> <span style="font-size: 18px;" class="text-muted">Advanced Analytics and Growth Marketing</span></h3>
                                 <hr>
-                                <p class="card-text mb-2">Welcome Back! Please enter your details</p>
-
-                                <form class="auth-login-form mt-2" action="{{ route('login.submit') }}" method="post">
+                                <form class="auth-login-form " action="{{ route('login.submit') }}" method="post">
                                     @csrf
                                     <br>
                                     <div class="mb-1">

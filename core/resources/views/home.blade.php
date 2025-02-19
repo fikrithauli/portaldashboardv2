@@ -450,7 +450,7 @@
                                     @endphp
 
                                     @if ($requestStatus === 0)
-                                    <button class="btn btn-warning mt-2">
+                                    <button class="btn btn-warning mt-2" onclick="showWaitingAlert()">
                                         Waiting for permit approval
                                     </button>
                                     @else

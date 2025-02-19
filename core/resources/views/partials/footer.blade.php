@@ -425,7 +425,7 @@
                   // Setelah 1 detik, tampilkan SweetAlert "Under Maintenance"
                   setTimeout(() => {
                       Swal.fire({
-                          title: 'Under Maintenance',
+                          title: 'Sorry...',
                           text: 'This dashboard is currently under maintenance.',
                           icon: 'warning',
                           confirmButtonText: 'Close',
@@ -627,7 +627,7 @@
                   // Setelah 1 detik, munculkan pemberitahuan
                   setTimeout(() => {
                       Swal.fire({
-                          title: 'Under Maintenance',
+                          title: 'Sorry...',
                           text: 'This dashboard is currently under maintenance.',
                           icon: 'warning',
                           confirmButtonText: 'Close',
@@ -674,9 +674,30 @@
       });
   </script>
 
-
-
-
+  <script>
+      function showWaitingAlert() {
+          Swal.fire({
+              title: 'Please wait',
+              text: 'Process requests...',
+              icon: 'info',
+              showConfirmButton: false,
+              timer: 1000, // 1 detik
+              timerProgressBar: true,
+              didOpen: () => {
+                  Swal.showLoading();
+                  // Setelah 1 detik, munculkan pemberitahuan
+                  setTimeout(() => {
+                      Swal.fire({
+                          title: 'Oopss...',
+                          text: 'You have submitted a request, and currently being reviewed by the relevant team.',
+                          icon: 'warning',
+                          confirmButtonText: 'Close',
+                      });
+                  }, 1000);
+              }
+          });
+      }
+  </script>
 
   </body>
   <!-- END: Body-->
