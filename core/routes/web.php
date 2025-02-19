@@ -14,17 +14,6 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\DetailLoginController;
 use App\Http\Controllers\MicrosoftController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::group(['middleware' => 'web'], function () {
     // Rute-rute Anda di sini
 });
@@ -52,10 +41,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Rute untuk login dan register google
 Route::get('/login/google', [AuthController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/login/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
-
-// Rute untuk login dan register microsoft
-// Route::get('/login/microsoft', [MicrosoftAuthController::class, 'redirectToMicrosoft'])->name('microsoft.login');
-// Route::get('/login/microsoft/callback', [MicrosoftAuthController::class, 'handleMicrosoftCallback']);
 
 // Rute untuk home dan filter
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -93,8 +78,6 @@ Route::get('/approve/permission/reject/{requestId}', [PermissionController::clas
 Route::get('/permissions/get-data-by-name/{name}', [PermissionController::class, 'getDataByName'])->name('permissions.get-data-by-name');
 Route::get('/get-permissions/{id}', [PermissionController::class, 'getPermissions'])->name('get.permissions');
 
-
-
 // rute untuk recent login
 Route::get('/settings', [DetailLoginController::class, 'index'])->name('settings');
 
@@ -112,5 +95,4 @@ Route::get('/add-dashboards', [UserController::class, 'add_dashboards'])->name('
 Route::post('/create-dashboards', [UserController::class, 'storeDashboards'])->name('create-dashboards');
 Route::post('/change-statuss/{id}', [UserController::class, 'changeStatus'])->name('change-statuss');
 Route::post('/update-status/{dashboardId}/{recipientsId}', [UserController::class, 'updateStatus'])->name('update-status');
-
 Route::get('/callback', [MicrosoftAuthController::class, 'handleCallback'])->name('callback');
