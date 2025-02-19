@@ -699,6 +699,31 @@
       }
   </script>
 
+  <script>
+      function showRevokedAlert() {
+          Swal.fire({
+              title: 'Please wait',
+              text: 'Process requests...',
+              icon: 'info',
+              showConfirmButton: false,
+              timer: 1000, // 1 detik
+              timerProgressBar: true,
+              didOpen: () => {
+                  Swal.showLoading();
+                  // Setelah 1 detik, munculkan pemberitahuan
+                  setTimeout(() => {
+                      Swal.fire({
+                          title: 'Oopss...',
+                          text: 'Access to this dashboard has been revoked.',
+                          icon: 'error',
+                          confirmButtonText: 'Close',
+                      });
+                  }, 1000);
+              }
+          });
+      }
+  </script>
+
   </body>
   <!-- END: Body-->
 

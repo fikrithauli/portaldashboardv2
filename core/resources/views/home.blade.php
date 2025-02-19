@@ -416,7 +416,7 @@
                                 <a href="#" id="maintenance-link" class="btn btn-danger mt-2">Under Maintenance</a>
                                 @else
                                 @if ($permission && $permission->permission_type == 0)
-                                <button class="btn btn-danger mt-2">
+                                <button class="btn btn-danger mt-2" onclick="showRevokedAlert()">
                                     Access revoked
                                 </button>
                                 @else
