@@ -349,24 +349,23 @@
                     <div class="row">
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
-                            <form action="{{ route('filter.category') }}" method="POST" class="input-group" id="filterForm">
-                                @csrf <!-- Add the CSRF token field for POST requests -->
+                            <form action="{{ route('filterByCategoryView') }}" method="GET" class="input-group" id="filterForm">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="category_id[]" id="allCategories" checked value="all">
+                                            <input class="form-check-input category-filter" type="radio" name="category_id"
+                                                id="allCategories" value="all" {{ request('category_id') == 'all' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="allCategories">All Categories</label>
                                         </div>
                                         @foreach($categories as $category)
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="category_id[]" id="category{{ $category->category_id }}" value="{{ $category->category_id }}">
+                                            <input class="form-check-input category-filter" type="radio" name="category_id"
+                                                id="category{{ $category->category_id }}" value="{{ $category->category_id }}"
+                                                {{ request('category_id') == $category->category_id ? 'checked' : '' }}>
                                             <label class="form-check-label" for="category{{ $category->category_id }}">{{ $category->category_name }}</label>
                                         </div>
                                         @endforeach
                                     </div>
-                                </div>
-                                <div class="d-grid col-lg-12 col-md-12 mb-1 mb-lg-0">
-                                    <button type="button" id="filterBtn" class="btn btn-primary mt-1">Apply</button>
                                 </div>
                             </form>
                         </div>
@@ -455,3 +454,16 @@
     <div>
         {!! $footer !!}
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const categoryRadios = document.querySelectorAll(".category-filter");
+            const categoryForm = document.getElementById("filterForm");
+
+            categoryRadios.forEach((radio) => {
+                radio.addEventListener("change", function() {
+                    categoryForm.submit();
+                });
+            });
+        });
+    </script>

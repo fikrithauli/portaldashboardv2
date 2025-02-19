@@ -160,7 +160,8 @@
       });
   </script>
 
-  <script>
+  <!-- kode filter multiple -->
+  <!-- <script>
       $(document).ready(function() {
           $('#filterBtn').on('click', function() {
               Swal.fire({
@@ -269,71 +270,124 @@
               }
           }
       });
-  </script>
+  </script> -->
 
-  <!-- <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          const checkboxes = document.querySelectorAll('.form-check-input');
-
-          checkboxes.forEach(function(checkbox) {
-              checkbox.addEventListener('change', function() {
-                  const userId = checkbox.dataset.userId;
-                  const dashboardId = checkbox.dataset.dashboardId;
-
-                  if (!userId || !dashboardId) {
-                      console.error('User ID or Dashboard ID is missing.');
-                      return;
+  <!-- kode filter single -->
+  <script>
+      $(document).ready(function() {
+          function applyFilter() {
+              Swal.fire({
+                  title: 'Please Wait',
+                  allowOutsideClick: false,
+                  showCancelButton: false,
+                  showConfirmButton: false,
+                  timerProgressBar: true,
+                  onBeforeOpen: () => {
+                      Swal.showLoading();
                   }
-
-                  const isChecked = checkbox.checked;
-
-                  // Show loading toastr
-                  toastr.info('Loading...', {
-                      timeOut: 3000,
-                      extendedTimeOut: 0
-                  });
-
-                  // Simulate a delay using setTimeout (replace this with your actual AJAX request)
-                  setTimeout(function() {
-                      $.ajax({
-                          url: `/portaldashboardv2/permissions/${userId}`,
-                          type: 'POST',
-                          headers: {
-                              'Content-Type': 'application/json',
-                              'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                          },
-                          data: JSON.stringify({
-                              permissions: [{
-                                  user_id: userId,
-                                  dashboard_id: dashboardId,
-                                  permission_type: isChecked ? 1 : 0,
-                              }],
-                          }),
-                          beforeSend: function() {
-                              // Hide loading toastr before sending the request
-                              toastr.clear();
-                          },
-                          success: function(response) {
-                              // Show success toastr
-                              toastr.success('Success!', {
-                                  timeOut: 5000
-                              });
-
-                              // Refresh the page after success (you can customize this behavior)
-                              window.location.reload();
-                              console.log(response);
-                          },
-                          error: function(error) {
-                              // Show error toastr
-                              toastr.error('Error:', error.responseText || 'Unknown error');
-                              console.error('Error:', error);
-                          },
-                      });
-                  }, 3000); // 3 seconds delay
               });
+
+              var formData = $('#filterForm').serialize();
+
+              $.ajax({
+                  url: "{{ route('filter.category') }}",
+                  type: "POST",
+                  data: formData,
+                  success: function(response) {
+                      updateCards(response);
+                      setTimeout(function() {
+                          Swal.close();
+                      }, 1000);
+                  },
+                  error: function(error) {
+                      console.error('Error:', error);
+                      setTimeout(function() {
+                          Swal.close();
+                      }, 1000);
+                  }
+              });
+          }
+
+          function updateCards(data) {
+              var dashboardContainer = $('#dashboardContainer');
+              dashboardContainer.empty();
+
+              if (data.length === 0) {
+                  var noDataHtml = `
+                <center><img src="{{ asset('no-data.svg') }}" width="600" alt="Card image cap" /><br><br><br>
+                <span class="mt-4">
+                    <strong>
+                        <h4>Oops, the data you were looking for was not found.</h4>
+                    </strong>
+                </span>
+                `;
+                  dashboardContainer.append(noDataHtml);
+              } else {
+                  $.each(data, function(index, row) {
+                      var dashboardNameSlug = encodeURIComponent(row.dashboard_name.replace(/\s+/g, '-'));
+                      var detailButton = '';
+                      var userRoleId = "{{ Auth::user()->role_id }}";
+                      var sessionUserId = "{{ Auth::user()->id }}";
+
+                      if (row.dashboard_status === 0) {
+                          detailButton = `<a href="#" class="btn btn-danger mt-2 btn-under-maintenance">Under Maintenance</a>`;
+                      } else {
+                          if (userRoleId == 1) {
+                              detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
+                          } else {
+                              if (row.is_allowed) {
+                                  if (row.permission_type === 0) {
+                                      detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
+                                  } else {
+                                      detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
+                                  }
+                              } else {
+                                  var permissionType = row.permission_type;
+                                  if (row.request_status === 0 || (sessionUserId && row.user_id == sessionUserId)) {
+                                      detailButton = `<button class="btn btn-warning mt-2">Waiting for permit approval</button>`;
+                                  } else {
+                                      if (permissionType === 0) {
+                                          detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
+                                      } else {
+                                          detailButton = `
+                                        <div class="not-allowed">
+                                            <button class="btn btn-success mt-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal${row.dashboard_id}">
+                                                Request access
+                                            </button>
+                                        </div>`;
+                                      }
+                                  }
+                              }
+                          }
+                      }
+
+                      var truncatedDescription = row.description.length > 100 ? row.description.substring(0, 100) + '...' : row.description;
+
+                      var cardHtml = `
+    <div class="col-md-6 col-lg-4" id="dashboard${row.dashboard_id}">
+        <div class="card text-center">
+            <img class="card-img-top" style="height: 200px; object-fit: cover; width: 100%;" src="{{ asset('core/uploads/') }}/${row.image}" alt="Card image cap" />
+            <div class="card-body">
+                <h4 class="card-title">${row.dashboard_name}</h4>
+                <p class="card-text">${truncatedDescription}</p>
+                ${detailButton}
+            </div>
+        </div>
+    </div>`;
+
+                      dashboardContainer.append(cardHtml);
+
+                  });
+              }
+          }
+
+          // Panggil filter otomatis hanya saat ada perubahan di radio button
+          $('#filterForm input[type="radio"]').on('change', function() {
+              applyFilter();
           });
       });
-  </script> -->
+  </script>
+
 
   <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -723,6 +777,8 @@
           });
       }
   </script>
+
+
 
   </body>
   <!-- END: Body-->

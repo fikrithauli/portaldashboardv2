@@ -411,7 +411,7 @@
                             @foreach ($results as $row)
                             <div class="col-md-6 col-lg-4">
                                 <div class="card text-center">
-                                    <img class="card-img-top" src="{{ asset('core/uploads/' . $row->image) }}" alt="Card image cap" />
+                                    <img class="card-img-top" src="{{ asset('core/uploads/' . $row->image) }}" alt="Card image cap" style="height: 200px; object-fit: cover; width: 100%;" />
                                     <!-- <div class="card-body">
                                         <h4 class="card-title">{{ $row->dashboard_name }}</h4>
                                         <p class="card-text">{{ $row->description }}</p>

@@ -47,6 +47,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('detail/{dashboard_name}', [HomeController::class, 'showDetail'])->name('detail');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::post('/filter/category', [SearchController::class, 'filterByCategory'])->name('filter.category');
+Route::get('/filter-category', [SearchController::class, 'filterByCategoryView'])->name('filterByCategoryView');
 
 // Rute untuk content management
 Route::get('/content-dashboard', [ContentController::class, 'dashboard'])->name('content-dashboard');

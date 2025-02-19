@@ -58,25 +58,23 @@ class SearchController extends Controller
             ->with('categories', $categories);
     }
 
+    // kode filter single
     public function filterByCategory(Request $request)
     {
         $userId = Auth::id();
         $allowedDashboardIds = [];
 
-        $selectedCategoryIds = $request->input('category_id');
+        $selectedCategoryId = $request->input('category_id');
 
         $query = DB::table('dashboard')
-            ->select('dashboard.*', 'permission_request.request_status', 'permission_request.user_id') // tambahkan 'permission_request.user_id' di sini
+            ->select('dashboard.*', 'permission_request.request_status', 'permission_request.user_id')
             ->leftJoin('permission_request', function ($join) use ($userId) {
                 $join->on('dashboard.dashboard_id', '=', 'permission_request.dashboard_id')
                     ->where('permission_request.user_id', '=', $userId);
             });
 
-
-        if ($selectedCategoryIds && in_array('all', $selectedCategoryIds)) {
-            // Do nothing, show all dashboards.
-        } elseif ($selectedCategoryIds) {
-            $query->whereIn('dashboard.category_id', $selectedCategoryIds);
+        if ($selectedCategoryId && $selectedCategoryId !== 'all') {
+            $query->where('dashboard.category_id', $selectedCategoryId);
         }
 
         if (Auth::user()->role_id == 2) {
@@ -110,7 +108,60 @@ class SearchController extends Controller
             return $dashboard;
         });
 
-
         return response()->json($filteredData);
+    }
+
+    // public function filterByCategoryView(Request $request)
+    // {
+    //     $userId = Auth::id();
+    //     $selectedCategoryId = $request->input('category_id', 'all');
+    //     $categories = Category::all();
+
+    //     $query = DB::table('dashboard')
+    //         ->select('dashboard.*', 'permission_request.request_status', 'permission_request.user_id')
+    //         ->leftJoin('permission_request', function ($join) use ($userId) {
+    //             $join->on('dashboard.dashboard_id', '=', 'permission_request.dashboard_id')
+    //                 ->where('permission_request.user_id', '=', $userId);
+    //         });
+
+    //     if ($selectedCategoryId !== 'all') {
+    //         $query->where('dashboard.category_id', $selectedCategoryId);
+    //     }
+
+    //     $query->orderByDesc('dashboard.created_at');
+    //     $query->groupBy('dashboard.dashboard_id');
+
+    //     $results = $query->get();
+
+    //     return view('result', compact('results', 'selectedCategoryId', 'categories'));
+    // }
+
+    public function filterByCategoryView(Request $request)
+    {
+        $userId = Auth::id();
+        $selectedCategoryId = $request->input('category_id', 'all');
+        $categories = Category::all();
+
+        $query = DB::table('dashboard')
+            ->select('dashboard.*', 'permission_request.request_status', 'permission_request.user_id')
+            ->leftJoin('permission_request', function ($join) use ($userId) {
+                $join->on('dashboard.dashboard_id', '=', 'permission_request.dashboard_id')
+                    ->where('permission_request.user_id', '=', $userId);
+            });
+
+        if ($selectedCategoryId !== 'all') {
+            $query->where('dashboard.category_id', $selectedCategoryId);
+        }
+
+        $query->orderByDesc('dashboard.created_at');
+        $query->groupBy('dashboard.dashboard_id');
+
+        $results = $query->get();
+
+        // Memuat header dan footer dari partials
+        $header = view('partials.header', compact('categories'))->render();
+        $footer = view('partials.footer')->render();
+
+        return view('result', compact('results', 'selectedCategoryId', 'categories', 'header', 'footer'));
     }
 }
