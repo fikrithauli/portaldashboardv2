@@ -91,6 +91,7 @@ class HomeController extends Controller
             // Get the ticket from the API
             $response = Http::get('http://10.2.114.197:8000/ticket');
             $ticket = $response->json();
+            dd($ticket);
 
             // Get the view_name from the detailData
             $viewName = $detailData->view_name;
