@@ -118,43 +118,31 @@ class HomeController extends Controller
             ->where('dashboard_name', $dashboard_name)
             ->first();
 
-        // Check if the visualization_type is tableau
+        // Jika tipe visualisasi adalah Tableau
         if ($detailData->visualization_type === 'Tableau') {
-            // Menggunakan cURL untuk mengambil ticket
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "http://10.2.114.197:8000/ticket");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout 10 detik
-            curl_setopt($ch, CURLOPT_FAILONERROR, true);
+            // Ambil data tiket dari API
+            $response = file_get_contents('http://10.2.114.197:8000/ticket');
 
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            // Ubah data dari JSON ke PHP
+            $ticket = json_decode($response, true);
 
-            if ($response === false || $httpCode !== 200) {
-                \Log::error("Gagal mendapatkan ticket dari API, HTTP Code: {$httpCode}");
-                $ticket = null; // Set null jika gagal
-            } else {
-                $ticket = json_decode($response, true);
-            }
-
-            // Get the view_name from the detailData
+            // Ambil nama tampilan dari database
             $viewName = $detailData->view_name;
 
-            // Combine embed_url, 'trusted', ticket, and view_name to form the final URL
+            // Gabungkan URL dengan tiket dan nama tampilan
             $url = "https://tabfire.telkomsel.co.id/trusted/{$ticket}/views/{$viewName}";
         } else {
-            // Use embed_url if visualization_type is not tableau
+            // Jika bukan Tableau, gunakan embed_url
             $url = $detailData->embed_url;
         }
 
-        $data = [
+        // Kirim data ke tampilan
+        return view('summarize', [
             'url' => $url,
             'detailData' => $detailData,
-        ];
-
-        return view('summarize', $data);
+        ]);
     }
+
 
 
     //     public function showDetail($dashboard_name)
