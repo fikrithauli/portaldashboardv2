@@ -78,6 +78,38 @@ class HomeController extends Controller
     }
 
 
+    // public function showDetail($dashboard_name)
+    // {
+    //     $dashboard_name = str_replace('-', ' ', $dashboard_name);
+
+    //     $detailData = DB::table('dashboard')
+    //         ->where('dashboard_name', $dashboard_name)
+    //         ->first();
+
+    //     // Check if the visualization_type is tableau
+    //     if ($detailData->visualization_type === 'Tableau') {
+    //         // Get the ticket from the API
+    //         $response = Http::get('http://10.2.114.197:8000/ticket');
+    //         $ticket = $response->json();
+
+    //         // Get the view_name from the detailData
+    //         $viewName = $detailData->view_name;
+
+    //         // Combine embed_url, 'trusted', ticket, and view_name to form the final URL
+    //         $url = "https://tabfire.telkomsel.co.id/trusted/{$ticket}/views/{$viewName}";
+    //     } else {
+    //         // Use embed_url if visualization_type is not tableau
+    //         $url = $detailData->embed_url;
+    //     }
+
+    //     $data = [
+    //         'url' => $url,
+    //         'detailData' => $detailData,
+    //     ];
+
+    //     return view('summarize', $data);
+    // }
+
     public function showDetail($dashboard_name)
     {
         $dashboard_name = str_replace('-', ' ', $dashboard_name);
@@ -86,30 +118,40 @@ class HomeController extends Controller
             ->where('dashboard_name', $dashboard_name)
             ->first();
 
-        // Check if the visualization_type is tableau
+        $url = $detailData->embed_url; // Default ke embed_url
+
         if ($detailData->visualization_type === 'Tableau') {
-            // Get the ticket from the API
-            $response = Http::get('http://10.2.114.197:8000/ticket');
-            $ticket = $response->json();
-            dd($ticket);
+            // Menggunakan cURL untuk mengambil ticket
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "http://10.2.114.197:8000/ticket");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout 10 detik
+            curl_setopt($ch, CURLOPT_FAILONERROR, true);
 
-            // Get the view_name from the detailData
-            $viewName = $detailData->view_name;
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
 
-            // Combine embed_url, 'trusted', ticket, and view_name to form the final URL
-            $url = "https://tabfire.telkomsel.co.id/trusted/{$ticket}/views/{$viewName}";
-        } else {
-            // Use embed_url if visualization_type is not tableau
-            $url = $detailData->embed_url;
+            if ($response === false || $httpCode !== 200) {
+                \Log::error("Gagal mendapatkan ticket dari API, HTTP Code: {$httpCode}");
+            } else {
+                $ticket = json_decode($response, true);
+
+                if (!empty($ticket)) {
+                    $viewName = $detailData->view_name;
+                    $url = "https://tabfire.telkomsel.co.id/trusted/{$ticket}/views/{$viewName}";
+                } else {
+                    \Log::error("Ticket kosong atau tidak valid.");
+                }
+            }
         }
 
-        $data = [
+        return view('summarize', [
             'url' => $url,
             'detailData' => $detailData,
-        ];
-
-        return view('summarize', $data);
+        ]);
     }
+
 
     //     public function showDetail($dashboard_name)
     // {
