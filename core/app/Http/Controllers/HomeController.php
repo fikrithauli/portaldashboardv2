@@ -145,6 +145,7 @@ class HomeController extends Controller
 
 
 
+
     //     public function showDetail($dashboard_name)
     // {
     //     $dashboard_name = str_replace('-', ' ', $dashboard_name);
