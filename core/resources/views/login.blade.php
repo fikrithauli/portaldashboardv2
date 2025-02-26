@@ -88,7 +88,7 @@
                                     @csrf
                                     <br>
                                     <div class="mb-1">
-                                        <input class="form-control" id="login-email" type="text" name="email" placeholder="Email" aria-describedby="login-email" autofocus="" tabindex="1" />
+                                        <input class="form-control" id="login-email" type="text" name="email" placeholder="Email" aria-describedby="login-email" autofocus="" tabindex="1" value="{{ old('email') }}" />
                                     </div>
                                     <div class="mb-1">
                                         <div class="input-group input-group-merge form-password-toggle">

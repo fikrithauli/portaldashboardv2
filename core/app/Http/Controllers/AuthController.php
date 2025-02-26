@@ -47,12 +47,8 @@ class AuthController extends Controller
             return redirect()->route('home')->with('success', "$greeting");
         }
 
-        return redirect()->route('login')->with('error', 'Incorrect email or password');
+        return redirect()->route('login')->with('error', 'Incorrect email or password')->withInput();
     }
-
-
-
-
 
 
     public function showRegistrationForm()
