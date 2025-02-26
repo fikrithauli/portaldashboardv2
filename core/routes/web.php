@@ -13,6 +13,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\DetailLoginController;
 use App\Http\Controllers\MicrosoftController;
+use App\Http\Controllers\ForgotController;
 
 Route::group(['middleware' => 'web'], function () {
     // Rute-rute Anda di sini
@@ -41,6 +42,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Rute untuk login dan register google
 Route::get('/login/google', [AuthController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/login/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+
+// fitur forgot password
+Route::get('/forgot-password', [ForgotController::class, 'showForgotPasswordForm'])->name('forgot.password.form');
+Route::get('/forgot-password/check-email', [ForgotController::class, 'checkEmail'])->name('forgot.password.check');
+Route::post('/forgot-password/reset', [ForgotController::class, 'resetPassword'])->name('forgot.password.reset');
 
 // Rute untuk home dan filter
 Route::get('/home', [HomeController::class, 'index'])->name('home');

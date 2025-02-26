@@ -9,7 +9,7 @@
     <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
     <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Login</title>
+    <title>Forgot Password</title>
     <link rel="apple-touch-icon" href="{{ asset('app-assets/images/ico/apple-icon-120.png') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/tsel_ico.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
@@ -76,37 +76,52 @@
                     <div class="auth-inner row m-0">
                         <!-- Left Text-->
                         <div class="d-none d-lg-flex col-lg-7 align-items-center p-5">
-                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid" src="{{ asset('app-assets/images/pages/login-v2.svg') }}" alt="Login V2" /></div>
+                            @if(!isset($email))
+                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid" src="{{ asset('app-assets/images/pages/forgot-password-v2.svg') }}" alt="Login V2" /></div>
+                            @else
+                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid" src="{{ asset('app-assets/images/pages/reset-password-v2.svg') }}" alt="Login V2" /></div>
+                            @endif
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->
                         <div class="d-flex col-lg-5 align-items-center auth-bg px-2 p-lg-5">
                             <div class="col-12 col-sm-8 col-md-6 col-lg-12 px-xl-2 mx-auto">
-                                <h3 class="card-title fw-bold mb-1"><strong class="text-primary">Portal Analytics Dashboard</strong><br> <span style="font-size: 18px;" class="text-muted">Advanced Analytics and Growth Marketing</span></h3>
+                                @if(!isset($email))
+                                <h2 class="card-title font-weight-bold mb-1">Forgot Password</h2>
+                                <p class="card-text mb-2">Enter your email and we'll send you instructions to reset your password</p>
+                                @else
+                                <h2 class="card-title font-weight-bold mb-1">Reset Password</h2>
+                                <p class="card-text mb-2">Your new password must be different from previously used passwords</p>
+                                @endif
                                 <hr>
-                                <form class="auth-login-form " action="{{ route('login.submit') }}" method="post">
+
+                                @if(!isset($email))
+                                <!-- Form cek email -->
+                                <form action="{{ route('forgot.password.check') }}" method="GET">
                                     @csrf
                                     <br>
                                     <div class="mb-1">
-                                        <input class="form-control" id="login-email" type="text" name="email" placeholder="Email" aria-describedby="login-email" autofocus="" tabindex="1" value="{{ old('email') }}" />
+                                        <input class="form-control" id="login-email" type="email" name="email" placeholder="Enter your email address" aria-describedby="login-email" autofocus="" tabindex="1" value="{{ old('email') }}" />
                                     </div>
-                                    <div class="mb-1">
-                                        <div class="input-group input-group-merge form-password-toggle">
-                                            <input class="form-control form-control-merge" id="login-password" type="password" name="password" placeholder="Password" aria-describedby="login-password" tabindex="2" /><span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
-                                        </div>
-                                        <div style="float: right;">
-                                            <a href="{{ route('forgot.password.form') }}" style="font-size: 13px;" class="text-link">Forgot Password?</a>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary w-100 mt-1" tabindex="4">Login</button>
+                                    <button type="submit" class="btn btn-primary w-100 mt-1" tabindex="4">Submit</button>
                                 </form>
-                                <div class="divider my-2">
-                                    <div class="divider-text">OR</div>
-                                </div>
-                                <a href="{{ route('microsoft.login') }}" class="btn btn-outline-secondary w-100" tabindex="4">
-                                    <img src="{{ asset('assets/microsoft.png') }}" width="20" alt="" style="margin-right: 10px;">&nbsp;
-                                    <span style="font-size: 14px;" class="text-black">Login with Microsoft</span>
-                                </a>
+                                @else
+                                <!-- Form reset password -->
+                                <form action="{{ route('forgot.password.reset') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="email" value="{{ $email }}">
+
+                                    <div class="mb-1">
+                                        <input class="form-control" type="password" name="password" placeholder="Enter your new password" aria-describedby="login-email" autofocus="" tabindex="1" value="{{ old('email') }}" />
+                                    </div>
+
+                                    <div class="mb-1">
+                                        <input class="form-control" type="password" name="password_confirmation" placeholder="Repeat your new password" aria-describedby="login-email" autofocus="" tabindex="1" value="{{ old('email') }}" />
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success w-100 mt-1" tabindex="4">Reset Password</button>
+                                </form>
+                                @endif
                             </div>
                         </div>
                         <!-- /Login-->
