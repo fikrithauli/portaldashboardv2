@@ -17,6 +17,10 @@ class PermissionController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
+            if (!Auth::check()) {
+                return redirect()->route('login')->with('error', 'Session expired, please login again.');
+            }
+
             if (Auth::user()->role_id != 1) {
                 abort(403, 'Unauthorized');
             }
@@ -24,6 +28,7 @@ class PermissionController extends Controller
             return $next($request);
         });
     }
+
 
     public function index(Request $request)
     {
@@ -36,19 +41,45 @@ class PermissionController extends Controller
             ->groupBy('dashboard_id')
             ->get();
 
+        // $permission = DB::table('permissions')
+        //     ->join('users', 'permissions.user_id', '=', 'users.id')
+        //     ->join('permission_request', 'permissions.dashboard_id', '=', 'permission_request.dashboard_id')
+        //     ->join('dashboard', 'permissions.dashboard_id', '=', 'dashboard.dashboard_id')
+        //     ->select(
+        //         'users.name as user_name',
+        //         'users.job_title',
+        //         'users.id as user_id',
+        //         'permissions.user_id AS reff_user',
+        //         DB::raw('(SELECT COUNT(DISTINCT dashboard_id) FROM permissions WHERE user_id = users.id AND permission_type = 1) AS dashboard_count')
+        //     )
+        //     ->groupBy('permissions.user_id', 'users.name', 'users.job_title', 'users.id', 'permissions.user_id')
+        //     ->get();
+
         $permission = DB::table('permissions')
             ->join('users', 'permissions.user_id', '=', 'users.id')
-            ->join('permission_request', 'permissions.dashboard_id', '=', 'permission_request.dashboard_id')
-            ->join('dashboard', 'permissions.dashboard_id', '=', 'dashboard.dashboard_id')
+            ->leftJoin('permission_request', function ($join) {
+                $join->on(DB::raw('FIND_IN_SET(permission_request.dashboard_id, permissions.dashboard_id)'), '>', DB::raw('0'));
+            })
+            ->join('dashboard', function ($join) {
+                $join->on(DB::raw('FIND_IN_SET(dashboard.dashboard_id, permissions.dashboard_id)'), '>', DB::raw('0'));
+            })
             ->select(
                 'users.name as user_name',
                 'users.job_title',
                 'users.id as user_id',
                 'permissions.user_id AS reff_user',
-                DB::raw('(SELECT COUNT(DISTINCT dashboard_id) FROM permissions WHERE user_id = users.id AND permission_type = 1) AS dashboard_count')
+                DB::raw('(SELECT COUNT(DISTINCT dashboard.dashboard_id) 
+                  FROM permissions 
+                  LEFT JOIN dashboard 
+                  ON FIND_IN_SET(dashboard.dashboard_id, permissions.dashboard_id)
+                  WHERE permissions.user_id = users.id 
+                  AND permissions.permission_type = 1) AS dashboard_count')
             )
+            ->where('users.role_id', '<>', 1)
             ->groupBy('permissions.user_id', 'users.name', 'users.job_title', 'users.id', 'permissions.user_id')
             ->get();
+
+
 
         // Ambil user_id dari request
         $selectedUserId = $request->input('selected_user_id');
@@ -122,55 +153,46 @@ class PermissionController extends Controller
         return view('permission', compact('rejected', 'requests', 'totalUsersAdmins', 'totalUsers', 'admins', 'accounts', 'permission', 'permissions', 'user', 'users', 'dashboards', 'header', 'footer', 'categories', 'position'));
     }
 
-    // public function getPermissions(Request $request, $id)
-    // {
-    //     $user = Auth::user();
-    //     $categories = Category::all();
-
-    //     $permissions = DB::table('permissions AS p')
-    //         ->join('users', 'p.user_id', '=', 'users.id')
-    //         ->join('permission_request', 'p.dashboard_id', '=', 'permission_request.dashboard_id')
-    //         ->join('dashboard', 'p.dashboard_id', '=', 'dashboard.dashboard_id')
-    //         ->select('p.user_id', 'p.dashboard_id', 'p.permission_type', 'users.name as applicant_name', 'users.job_title', 'dashboard.dashboard_name')
-    //         ->where('p.user_id', $id)
-    //         ->distinct()
-    //         ->get();
-
-    //     $position = $request->input('position', 'Permission');
-
-    //     $header = view('partials.header', compact('categories', 'position'));
-    //     $footer = view('partials.footer', compact('position'));
-
-    //     return view('permission_list', compact('permissions', 'user', 'header', 'footer', 'categories', 'position'));
-    // }
-
     public function getPermissions(Request $request, $id)
     {
         $user = Auth::user();
         $categories = Category::all();
 
-        // Count dashboards with permission_type = 1 for the specified user
-        $dashboardCount = DB::table('permissions AS p')
+        $dashboardCount = DB::table('dashboard AS d')
+            ->join('permissions AS p', DB::raw("FIND_IN_SET(d.dashboard_id, p.dashboard_id)"), ">", DB::raw("0"))
             ->where('p.user_id', $id)
             ->where('p.permission_type', 1)
             ->distinct()
-            ->count();
+            ->count('d.dashboard_id');
 
-        $dashboardInnactive = DB::table('permissions AS p')
+        $dashboardInnactive = DB::table('dashboard AS d')
+            ->join('permissions AS p', DB::raw("FIND_IN_SET(d.dashboard_id, p.dashboard_id)"), ">", DB::raw("0"))
             ->where('p.user_id', $id)
             ->where('p.permission_type', 0)
             ->distinct()
-            ->count();
+            ->count('d.dashboard_id');
 
-        // Fetch other permissions
         $permissions = DB::table('permissions AS p')
             ->join('users', 'p.user_id', '=', 'users.id')
-            ->join('permission_request', 'p.dashboard_id', '=', 'permission_request.dashboard_id')
-            ->join('dashboard', 'p.dashboard_id', '=', 'dashboard.dashboard_id')
-            ->select('p.user_id', 'p.dashboard_id', 'p.permission_type', 'users.name as applicant_name', 'users.job_title', 'dashboard.dashboard_name')
+            ->leftJoin('permission_request', function ($join) {
+                $join->on(DB::raw("FIND_IN_SET(permission_request.dashboard_id, p.dashboard_id)"), ">", DB::raw("0"));
+            })
+            ->join('dashboard', function ($join) {
+                $join->on(DB::raw("FIND_IN_SET(dashboard.dashboard_id, p.dashboard_id)"), ">", DB::raw("0"));
+            })
+            ->select(
+                'p.user_id',
+                'p.dashboard_id',
+                'p.permission_type',
+                'users.name as applicant_name',
+                'users.job_title',
+                'dashboard.dashboard_name'
+            )
             ->where('p.user_id', $id)
             ->distinct()
             ->get();
+
+
 
         $position = $request->input('position', 'Permission');
 
@@ -190,7 +212,7 @@ class PermissionController extends Controller
         $dashboard_ids = implode(',', $permissions);
 
         // Periksa apakah user_id sudah ada di tabel permissions
-        $existingPermission = DB::table('permissions')->where('user_id', $user_id)->first();
+        $existingPermission = DB::table('permissions')->where('dashboard_id', $dashboard_ids)->first();
 
         if ($existingPermission) {
             // Jika user_id sudah ada di database, tampilkan pesan alert
@@ -202,6 +224,7 @@ class PermissionController extends Controller
         DB::table('permissions')->insert([
             'user_id' => $user_id,
             'dashboard_id' => $dashboard_ids,
+            'permission_type' => 1,
             'created_at' => $now,
             'updated_at' => $now,
             // Anda bisa menambahkan field lain di sini sesuai kebutuhan

@@ -401,64 +401,8 @@
             <div class="content-body">
                 <h3>Manage Permission</h3>
                 <p class="mb-2">
-                    A role provided access to predefined menus and features so that depending
-                    on assigned role an administrator can have access to what he need.
+                    Manage user access permissions for dashboard access.
                 </p>
-
-                <!-- Role cards -->
-                <!-- <div class="row">
-
-                    <div class="col-xl-4 col-lg-6 col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <div>
-                                    <h2 class="fw-bolder mb-0">{{ $totalUsersAdmins }}</h2><br>
-                                    <p class="card-text"><strong>ALLOWED</strong></p>
-                                </div>
-                                <div class="avatar bg-light-success p-50 m-0">
-                                    <div class="avatar-content">
-                                        <i data-feather="check-circle" class="font-medium-5"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-6 col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <div>
-                                    <h2 class="fw-bolder mb-0">{{ $totalUsers }}</h2><br>
-                                    <p class="card-text"><strong>REJECTED</strong></p>
-                                </div>
-                                <div class="avatar bg-light-danger p-50 m-0">
-                                    <div class="avatar-content">
-                                        <i data-feather="minus-circle" class="font-medium-5"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-6 col-md-6">
-                        <div class="card">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="d-flex align-items-end justify-content-center h-100">
-                                        <img src="{{ asset('app-assets/images/illustration/faq-illustrations.svg') }}" class="img-fluid" alt="Image" width="75" />
-                                    </div>
-                                </div>
-                                <div class="col-sm-8">
-                                    <div class="card-body text-sm-end text-center ps-sm-0">
-                                        <a href="javascript:void(0)" data-bs-target="#addRoleModal" data-bs-toggle="modal" class="stretched-link text-nowrap add-new-role">
-                                            <span class="btn btn-primary mb-1">Add Permissions</span>
-                                        </a>
-                                        <p class="mb-0">Add role provided access</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <!--/ Role cards -->
 
                 <!-- table -->
                 <section id="basic-tabs-components">
@@ -467,17 +411,21 @@
                         <div class="col-xl-12 col-lg-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <ul class="nav nav-tabs" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" aria-controls="home" role="tab" aria-selected="true">Recent Request</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" aria-controls="profile" role="tab" aria-selected="false">Permissions Allowed</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#rejected" aria-controls="rejected" role="tab" aria-selected="false">Permissions Rejected</a>
-                                        </li>
-                                    </ul>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" aria-controls="home" role="tab" aria-selected="true">Recent Request</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" aria-controls="profile" role="tab" aria-selected="false">Permissions Allowed</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="rejected-tab" data-bs-toggle="tab" href="#rejected" aria-controls="rejected" role="tab" aria-selected="false">Permissions Rejected</a>
+                                            </li>
+                                        </ul>
+                                        <button class="btn btn-sm btn-primary" data-bs-target="#addRoleModal" data-bs-toggle="modal"><i data-feather='plus'></i>&nbsp; Dashboard Access</button>
+                                    </div>
+
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="home" aria-labelledby="home-tab" role="tabpanel">
                                             <div class="card-datatable table-responsive pt-0">
@@ -495,7 +443,7 @@
                                                         @foreach($requests as $r)
                                                         <tr>
                                                             <td>
-                                                                <span class="">{{ $r->name }}</span>
+                                                                <span class=""> {{ ucwords(strtolower($r->name)) }}</span>
                                                                 <br>
                                                                 <small class="text-muted">#{{ $r->application_number }}</small>
                                                             </td>
@@ -538,7 +486,7 @@
                                                         <tr>
                                                             <th>Applicant Name</th>
                                                             <th>Departement</th>
-                                                            <th>Dashboard Activity</th>
+                                                            <th>Dashboard</th>
                                                             <th>Status</th>
                                                             <th>Actions</th>
                                                         </tr>
@@ -546,9 +494,9 @@
                                                     <tbody>
                                                         @foreach($permission as $perm)
                                                         <tr>
-                                                            <td><span class="">{{ $perm->user_name }}</span></td>
+                                                            <td><span class="">{{ ucwords(strtolower($perm->user_name)) }}</span></td>
                                                             <td><span class="">{{ $perm->job_title }}</span></td>
-                                                            <td>{{ $perm->dashboard_count }} Dashboards</td>
+                                                            <td>{{ $perm->dashboard_count }} Dashboard</td>
                                                             <td>
                                                                 @if ($perm->dashboard_count == 0)
                                                                 <span class="badge badge-glow bg-danger">Not active</span>
@@ -587,7 +535,7 @@
                                                     <tbody>
                                                         @foreach($rejected as $p)
                                                         <tr>
-                                                            <td><span class="">{{ $p->name }}</span></td>
+                                                            <td><span class=""> {{ ucwords(strtolower($p->name)) }}</span></td>
                                                             <td><span class="">{{ $p->departement }}</span></td>
                                                             <td>
                                                                 @foreach (explode(',', $p->dashboard_id) as $dashboardId)
@@ -630,21 +578,22 @@
                             </div>
                             <div class="modal-body px-5 pb-5">
                                 <div class="text-center mb-4">
-                                    <h1 class="role-title">Set Role Permissions</h1>
+                                    <h1 class="role-title">Manage Dashboard Access</h1>
                                 </div>
                                 <!-- Add role form -->
                                 <form id="addRoleForm" class="row" action="{{ route('permissions.submit') }}" method="post">
                                     @csrf
                                     <div class="col-12">
-                                        <label class="form-label" for="modalRoleName">Role Name</label>
+                                        <label class="form-label" for="modalRoleName">Username</label>
                                         <select name="user_id" class="select2 form-select" id="select2-basic">
+                                            <option hidden>-- Please Select --</option>
                                             @foreach($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-12">
-                                        <h5 class="mt-3 pt-50"><i data-feather="alert-circle"></i>&nbsp; Dashboard Permissions</h5>
+                                        <h5 class="mt-2 pt-50"><i data-feather="alert-circle"></i>&nbsp; Dashboard List</h5>
                                         <hr>
                                         <!-- Permission table -->
                                         <div class="table-responsive">

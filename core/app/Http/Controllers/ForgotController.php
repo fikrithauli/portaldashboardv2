@@ -34,21 +34,23 @@ class ForgotController extends Controller
         return view('forgot_password', ['email' => $request->email]);
     }
 
-
-
     // Memproses reset password
     public function resetPassword(Request $request)
     {
         $request->validate([
             'email' => 'required|email|exists:users,email',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|confirmed',
         ]);
 
-        // Update password menggunakan MD5 dengan Query Builder
-        DB::table('users')->where('email', $request->email)->update([
+        // Update password dengan MD5
+        $updated = DB::table('users')->where('email', $request->email)->update([
             'password' => md5($request->password),
         ]);
 
-        return redirect()->route('login')->with('success', 'Your password has been successfully reset.');
+        if ($updated) {
+            return redirect()->route('login')->with('success', 'Your password has been successfully reset.');
+        } else {
+            return redirect()->route('forgot.password.form')->with('error', 'Failed to reset password. Please try again.');
+        }
     }
 }
