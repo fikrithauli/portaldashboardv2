@@ -464,6 +464,54 @@
       });
   </script>
 
+  <script>
+      $(document).ready(function() {
+          $('#approveAllRequestsBtn').on('click', function() {
+              // Show loading Swal
+              Swal.fire({
+                  title: 'Please Wait',
+                  allowOutsideClick: false,
+                  showCancelButton: false,
+                  showConfirmButton: false,
+                  timerProgressBar: true,
+                  onBeforeOpen: () => {
+                      Swal.showLoading();
+                  }
+              });
+
+              $.ajax({
+                  url: "{{ route('approving') }}",
+                  type: 'POST',
+                  headers: {
+                      'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                  },
+                  success: function(response) {
+                      // Hide loading Swal
+                      Swal.close();
+
+                      // Show success toastr
+                      toastr.success('Access updated successfully!', {
+                          timeOut: 5000
+                      });
+
+                      // Reload or update tampilan jika perlu
+                      location.reload();
+                  },
+                  error: function(xhr) {
+                      // Hide loading Swal
+                      Swal.close();
+
+                      // Show error Swal
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Error: ' + xhr.responseText
+                      });
+                  }
+              });
+          });
+      });
+  </script>
 
   <script>
       function showPleaseWaitAlertAndMaintenance() {

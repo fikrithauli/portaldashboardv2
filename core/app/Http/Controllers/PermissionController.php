@@ -130,13 +130,17 @@ class PermissionController extends Controller
         // Mengambil hanya pengguna dengan role_id 2 dari tabel users
         $users = User::where('role_id', 2)->get();
 
+        $pendingRequests = DB::table('permission_request')
+            ->where('request_status', 0)
+            ->get();
+
 
         $position = $request->input('position', 'Permission');
 
         $header = view('partials.header', compact('categories', 'position')); // Pass the categories to the header view
         $footer = view('partials.footer', compact('position'));
 
-        return view('permission', compact('rejected', 'requests', 'totalUsersAdmins', 'totalUsers', 'admins', 'accounts', 'permission', 'permissions', 'user', 'users', 'dashboards', 'header', 'footer', 'categories', 'position'));
+        return view('permission', compact('rejected', 'requests', 'totalUsersAdmins', 'totalUsers', 'admins', 'accounts', 'permission', 'permissions', 'user', 'users', 'dashboards', 'header', 'footer', 'categories', 'pendingRequests', 'position'));
     }
 
     public function getPermissions(Request $request, $id)
@@ -321,8 +325,6 @@ class PermissionController extends Controller
         return response()->json(['success' => true, 'message' => 'Permissions updated successfully']);
     }
 
-
-
     public function approvePermissionRequest($requestId)
     {
         // Check if the request with the specified request_id exists
@@ -412,5 +414,48 @@ class PermissionController extends Controller
             // If the request_status is not 0 or 1 (in review or rejected), show a message or take any other action
             return back()->with('error', 'Request is already rejected.');
         }
+    }
+
+    public function approveAllRequests(Request $request)
+    {
+        // Ambil semua permintaan dengan request_status == 0
+        $requests = DB::table('permission_request')->where('request_status', 0)->get();
+
+        foreach ($requests as $requestItem) {
+            // Update status permintaan menjadi 1 (approve)
+            DB::table('permission_request')->where('request_id', $requestItem->request_id)->update([
+                'request_status' => 1,
+                'updated_at' => now(), // Update timestamp
+            ]);
+
+            // Ambil data pengguna berdasarkan nama
+            $user = DB::table('users')->where('name', $requestItem->name)->first();
+
+            if (!$user) {
+                // Jika pengguna tidak ditemukan, lanjutkan ke permintaan berikutnya
+                continue; // Atau Anda bisa mengembalikan error
+            }
+
+            // Cek apakah izin sudah ada untuk pengguna dan dashboard
+            $existingPermission = DB::table('permissions')
+                ->where('user_id', $user->id)
+                ->where('dashboard_id', $requestItem->dashboard_id) // Pastikan untuk memeriksa dashboard_id
+                ->first();
+
+            // Jika izin sudah ada, Anda bisa memutuskan untuk tidak melakukan apa-apa atau memperbarui
+            if (!$existingPermission) {
+                // Masukkan data izin baru ke tabel permissions
+                DB::table('permissions')->insert([
+                    'user_id' => $user->id,
+                    'dashboard_id' => $requestItem->dashboard_id,
+                    'permission_type' => 1,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+        }
+
+        // Kembalikan respons sukses
+        return response()->json(['message' => 'All requests approved successfully!']);
     }
 }

@@ -423,8 +423,18 @@
                                                 <a class="nav-link" id="rejected-tab" data-bs-toggle="tab" href="#rejected" aria-controls="rejected" role="tab" aria-selected="false">Permissions Rejected</a>
                                             </li>
                                         </ul>
-                                        <button class="btn btn-sm btn-primary" data-bs-target="#addRoleModal" data-bs-toggle="modal"><i data-feather='plus'></i>&nbsp; Dashboard Access</button>
+                                        <div>
+                                            <button class="btn btn-sm btn-primary" data-bs-target="#addRoleModal" data-bs-toggle="modal">
+                                                <i data-feather='plus'></i>&nbsp; Add Permission
+                                            </button>
+                                            @if ($pendingRequests->isNotEmpty())
+                                            <button class="btn btn-sm btn-light ms-2" id="approveAllRequestsBtn">
+                                                Bulk Approval
+                                            </button>
+                                            @endif
+                                        </div>
                                     </div>
+
 
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="home" aria-labelledby="home-tab" role="tabpanel">
@@ -731,3 +741,27 @@
             });
         });
     </script>
+
+    <!-- <script>
+        $(document).ready(function() {
+            $('#approveAllRequestsBtn').on('click', function() {
+                $.ajax({
+                    url: "{{ route('approving') }}",
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        // Tampilkan pesan sukses
+                        alert(response.message);
+                        // Reload atau update tampilan jika perlu
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        // Tampilkan pesan error
+                        alert('Error: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script> -->
