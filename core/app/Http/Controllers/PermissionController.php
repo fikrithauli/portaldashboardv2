@@ -41,20 +41,6 @@ class PermissionController extends Controller
             ->groupBy('dashboard_id')
             ->get();
 
-        // $permission = DB::table('permissions')
-        //     ->join('users', 'permissions.user_id', '=', 'users.id')
-        //     ->join('permission_request', 'permissions.dashboard_id', '=', 'permission_request.dashboard_id')
-        //     ->join('dashboard', 'permissions.dashboard_id', '=', 'dashboard.dashboard_id')
-        //     ->select(
-        //         'users.name as user_name',
-        //         'users.job_title',
-        //         'users.id as user_id',
-        //         'permissions.user_id AS reff_user',
-        //         DB::raw('(SELECT COUNT(DISTINCT dashboard_id) FROM permissions WHERE user_id = users.id AND permission_type = 1) AS dashboard_count')
-        //     )
-        //     ->groupBy('permissions.user_id', 'users.name', 'users.job_title', 'users.id', 'permissions.user_id')
-        //     ->get();
-
         $permission = DB::table('permissions')
             ->join('users', 'permissions.user_id', '=', 'users.id')
             ->leftJoin('permission_request', function ($join) {
@@ -192,8 +178,6 @@ class PermissionController extends Controller
             ->distinct()
             ->get();
 
-
-
         $position = $request->input('position', 'Permission');
 
         $header = view('partials.header', compact('categories', 'position'));
@@ -203,35 +187,72 @@ class PermissionController extends Controller
     }
 
 
+    // public function store(Request $request)
+    // {
+    //     $user_id = $request->input('user_id');
+    //     $permissions = $request->input('permissions', []);
+
+    //     // Konversi array $permissions menjadi string
+    //     $dashboard_ids = implode(',', $permissions);
+
+    //     // Periksa apakah user_id sudah ada di tabel permissions
+    //     $existingPermission = DB::table('permissions')->where('dashboard_id', $dashboard_ids)->first();
+
+    //     if ($existingPermission) {
+    //         // Jika user_id sudah ada di database, tampilkan pesan alert
+    //         return redirect()->route('permission')->with('error', 'User permissions already exist!');
+    //     }
+
+    //     // Jika user_id belum ada, tambahkan data baru dengan created_at dan updated_at
+    //     $now = Carbon::now(); // Ambil tanggal dan waktu saat ini
+    //     DB::table('permissions')->insert([
+    //         'user_id' => $user_id,
+    //         'dashboard_id' => $dashboard_ids,
+    //         'permission_type' => 1,
+    //         'created_at' => $now,
+    //         'updated_at' => $now,
+    //         // Anda bisa menambahkan field lain di sini sesuai kebutuhan
+    //     ]);
+
+    //     return redirect()->route('permission')->with('success', 'Permissions added successfully!');
+    // }
+
     public function store(Request $request)
     {
         $user_id = $request->input('user_id');
         $permissions = $request->input('permissions', []);
+        $now = Carbon::now(); // Ambil tanggal dan waktu saat ini
 
-        // Konversi array $permissions menjadi string
-        $dashboard_ids = implode(',', $permissions);
+        foreach ($permissions as $dashboard_id) {
+            // Periksa apakah user_id dan dashboard_id sudah ada di tabel permissions
+            $existingPermission = DB::table('permissions')
+                ->where('user_id', $user_id)
+                ->where('dashboard_id', $dashboard_id)
+                ->first();
 
-        // Periksa apakah user_id sudah ada di tabel permissions
-        $existingPermission = DB::table('permissions')->where('dashboard_id', $dashboard_ids)->first();
-
-        if ($existingPermission) {
-            // Jika user_id sudah ada di database, tampilkan pesan alert
-            return redirect()->route('permission')->with('error', 'User permissions already exist!');
+            if ($existingPermission) {
+                // Jika permission sudah ada, update updated_at
+                DB::table('permissions')
+                    ->where('user_id', $user_id)
+                    ->where('dashboard_id', $dashboard_id)
+                    ->update([
+                        'updated_at' => $now,
+                    ]);
+            } else {
+                // Jika permission belum ada, tambahkan data baru dengan created_at dan updated_at
+                DB::table('permissions')->insert([
+                    'user_id' => $user_id,
+                    'dashboard_id' => $dashboard_id,
+                    'permission_type' => 1,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]);
+            }
         }
 
-        // Jika user_id belum ada, tambahkan data baru dengan created_at dan updated_at
-        $now = Carbon::now(); // Ambil tanggal dan waktu saat ini
-        DB::table('permissions')->insert([
-            'user_id' => $user_id,
-            'dashboard_id' => $dashboard_ids,
-            'permission_type' => 1,
-            'created_at' => $now,
-            'updated_at' => $now,
-            // Anda bisa menambahkan field lain di sini sesuai kebutuhan
-        ]);
-
-        return redirect()->route('permission')->with('success', 'Permissions added successfully!');
+        return redirect()->route('permission')->with('success', 'Permissions added or updated successfully!');
     }
+
 
     public function edit($id)
     {

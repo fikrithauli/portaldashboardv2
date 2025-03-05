@@ -586,7 +586,6 @@
                                     <div class="col-12">
                                         <label class="form-label" for="modalRoleName">Username</label>
                                         <select name="user_id" class="select2 form-select" id="select2-basic">
-                                            <option hidden>-- Please Select --</option>
                                             @foreach($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                             @endforeach
@@ -610,9 +609,14 @@
                                                         <td>{{ $dashboard->dashboard_name }}</td>
                                                         <td>
                                                             <div class="d-flex">
-                                                                <div class="form-check form-switch me-3 me-lg-5">
-                                                                    <input type="checkbox" class="form-check-input" name="permissions[]" value="{{ $dashboard->dashboard_id }}" />
-                                                                    <label class="form-check-label" id="checkboxLabelView{{ $dashboard->dashboard_id }}">Close</label>
+                                                                <div class="form-check me-3 me-lg-5">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        class="form-check-input"
+                                                                        name="permissions[]"
+                                                                        value="{{ $dashboard->dashboard_id }}"
+                                                                        {{ $permissions->contains('dashboard_id', $dashboard->dashboard_id) ? 'checked' : '' }} />
+                                                                    <label class="form-check-label" for="checkboxView{{ $dashboard->dashboard_id }}">View</label>
                                                                 </div>
                                                             </div>
                                                         </td>
