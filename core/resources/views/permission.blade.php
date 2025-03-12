@@ -399,7 +399,7 @@
             <div class="content-header row">
             </div>
             <div class="content-body">
-                <h3>Manage Permission</h3>
+                <h3>Manage Request</h3>
                 <p class="mb-2">
                     Manage user access permissions for dashboard access.
                 </p>
@@ -598,7 +598,7 @@
                             </div>
                             <div class="modal-body px-5 pb-5">
                                 <div class="text-center mb-4">
-                                    <h1 class="role-title">Manage Dashboard Access</h1>
+                                    <h1 class="role-title">Add Dashboard Access</h1>
                                 </div>
                                 <!-- Add role form -->
                                 <form id="addRoleForm" class="row" action="{{ route('permissions.submit') }}" method="post">
