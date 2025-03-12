@@ -29,7 +29,6 @@ class PermissionController extends Controller
         });
     }
 
-
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -52,6 +51,7 @@ class PermissionController extends Controller
             ->select(
                 'users.name as user_name',
                 'users.job_title',
+                'users.email',
                 'users.id as user_id',
                 'permissions.user_id AS reff_user',
                 DB::raw('(SELECT COUNT(DISTINCT dashboard.dashboard_id) 
@@ -65,8 +65,6 @@ class PermissionController extends Controller
             ->groupBy('permissions.user_id', 'users.name', 'users.job_title', 'users.id', 'permissions.user_id')
             ->get();
 
-
-
         // Ambil user_id dari request
         $selectedUserId = $request->input('selected_user_id');
 
@@ -78,7 +76,6 @@ class PermissionController extends Controller
             ->where('p.user_id', $selectedUserId)
             ->distinct()
             ->get();
-
 
         $accounts = DB::table('users')
             ->select('users.*')
@@ -108,8 +105,6 @@ class PermissionController extends Controller
             ->orderByDesc('permission_request.created_at') // Updated orderByDesc
             ->get();
 
-
-
         // Melakukan join antara tabel permissions dan users berdasarkan user_id
         $rejected = DB::table('permission_request')
             ->select('*', 'permission_request.dashboard_id AS permission_type', 'permission_request.created_at AS request_date')
@@ -133,7 +128,6 @@ class PermissionController extends Controller
         $pendingRequests = DB::table('permission_request')
             ->where('request_status', 0)
             ->get();
-
 
         $position = $request->input('position', 'Permission');
 
@@ -190,43 +184,32 @@ class PermissionController extends Controller
         return view('permission_list', compact('permissions', 'dashboardCount', 'dashboardInnactive', 'user', 'header', 'footer', 'categories', 'position'));
     }
 
-
-    // public function store(Request $request)
-    // {
-    //     $user_id = $request->input('user_id');
-    //     $permissions = $request->input('permissions', []);
-
-    //     // Konversi array $permissions menjadi string
-    //     $dashboard_ids = implode(',', $permissions);
-
-    //     // Periksa apakah user_id sudah ada di tabel permissions
-    //     $existingPermission = DB::table('permissions')->where('dashboard_id', $dashboard_ids)->first();
-
-    //     if ($existingPermission) {
-    //         // Jika user_id sudah ada di database, tampilkan pesan alert
-    //         return redirect()->route('permission')->with('error', 'User permissions already exist!');
-    //     }
-
-    //     // Jika user_id belum ada, tambahkan data baru dengan created_at dan updated_at
-    //     $now = Carbon::now(); // Ambil tanggal dan waktu saat ini
-    //     DB::table('permissions')->insert([
-    //         'user_id' => $user_id,
-    //         'dashboard_id' => $dashboard_ids,
-    //         'permission_type' => 1,
-    //         'created_at' => $now,
-    //         'updated_at' => $now,
-    //         // Anda bisa menambahkan field lain di sini sesuai kebutuhan
-    //     ]);
-
-    //     return redirect()->route('permission')->with('success', 'Permissions added successfully!');
-    // }
-
     public function store(Request $request)
     {
-        $user_id = $request->input('user_id');
+        // Ambil data dari request
+        $email = $request->input('recipient_email');
+        $name = $request->input('recipient_name'); // Pastikan Anda mendapatkan nama dari form
         $permissions = $request->input('permissions', []);
         $now = Carbon::now(); // Ambil tanggal dan waktu saat ini
 
+        // Cek apakah pengguna sudah ada
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            // Jika pengguna belum ada, tambahkan pengguna baru
+            $user = User::create([
+                'email' => $email,
+                'name' => $name,
+                'role_id' => 2,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
+
+        // Ambil user_id dari pengguna yang ada atau baru dibuat
+        $user_id = $user->id;
+
+        // Proses izin
         foreach ($permissions as $dashboard_id) {
             // Periksa apakah user_id dan dashboard_id sudah ada di tabel permissions
             $existingPermission = DB::table('permissions')
@@ -256,7 +239,6 @@ class PermissionController extends Controller
 
         return redirect()->route('permission')->with('success', 'Permissions added or updated successfully!');
     }
-
 
     public function edit($id)
     {
@@ -457,5 +439,36 @@ class PermissionController extends Controller
 
         // Kembalikan respons sukses
         return response()->json(['message' => 'All requests approved successfully!']);
+    }
+
+    public function getEmails()
+    {
+        try {
+            $emails = DB::table('recipients')->select('email')->get();
+            return response()->json(['success' => true, 'emails' => $emails]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()]);
+        }
+    }
+
+    public function getRecipientDetails(Request $request)
+    {
+        $email = $request->input('email');
+
+        if (!$email) {
+            return response()->json(['success' => false, 'message' => 'Email is required.']);
+        }
+
+        try {
+            $recipient = DB::table('recipients')->where('email', $email)->first();
+
+            if ($recipient) {
+                return response()->json(['success' => true, 'name' => $recipient->name, 'job_title' => $recipient->job_title]);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Recipient not found.']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()]);
+        }
     }
 }
