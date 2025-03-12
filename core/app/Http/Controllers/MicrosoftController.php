@@ -46,6 +46,74 @@ class MicrosoftController extends Controller
         return redirect($authUrl);
     }
 
+    // public function authorized(Request $request)
+    // {
+    //     $code = $request->query('code');
+    //     $state = $request->query('state');
+
+    //     if ($state !== Session::get('auth_state')) {
+    //         return redirect('/login')->with('error', 'Invalid state parameter');
+    //     }
+
+    //     try {
+    //         $response = Http::asForm()->post($this->authorityUrl . '/oauth2/v2.0/token', [
+    //             'client_id' => $this->clientId,
+    //             'client_secret' => $this->clientSecret,
+    //             'grant_type' => 'authorization_code',
+    //             'redirect_uri' => $this->redirectUri,
+    //             'code' => $code,
+    //         ]);
+
+    //         $tokenData = $response->json();
+
+    //         $userResponse = Http::withHeaders([
+    //             'Authorization' => 'Bearer ' . $tokenData['access_token'],
+    //         ])->get($this->resource . 'v1.0/me');
+
+    //         $userData = $userResponse->json();
+
+    //         $givenName = $userData['givenName'] ?? null;
+    //         $microsoftID = $userData['id'] ?? null;
+    //         $jobTitle = $userData['jobTitle'] ?? null;
+    //         $mail = $userData['mail'] ?? null;
+
+    //         // Cek apakah user sudah ada di database
+    //         $user = User::where('microsoft_id', $microsoftID)->first();
+
+    //         if (!$user) {
+    //             // Jika belum ada, buat user baru dengan password MD5
+    //             $user = User::create([
+    //                 'name' => $givenName,
+    //                 'email' => $mail,
+    //                 'password' => md5('123'), // Gunakan MD5
+    //                 'microsoft_id' => $microsoftID,
+    //                 'job_title' => $jobTitle,
+    //                 'role_id' => 2, // Default role
+    //             ]);
+    //         } else {
+    //             // Jika user sudah ada, hanya update updated_at
+    //             $user->touch();
+    //         }
+
+    //         // Catat setiap login ke tabel detail_logins
+    //         DB::table('detail_logins')->insert([
+    //             'user_id' => $user->id,
+    //             'last_login_ip' => $request->ip(),
+    //             'last_login_browser' => 'Chrome on Windows', // Bisa diambil dari User-Agent jika perlu
+    //             'last_login_location' => 'Indonesia', // Bisa pakai API geolocation jika perlu
+    //             'created_at' => Carbon::now(),
+    //             'updated_at' => Carbon::now(),
+    //         ]);
+
+    //         // Login user dengan Laravel Authentication
+    //         Auth::login($user);
+
+    //         return redirect('/home')->with('success', "Welcome, {$givenName}!");
+    //     } catch (Exception $e) {
+    //         return redirect('/login')->with('error', 'Error while fetching access token or user data');
+    //     }
+    // }
+
     public function authorized(Request $request)
     {
         $code = $request->query('code');
@@ -77,35 +145,46 @@ class MicrosoftController extends Controller
             $jobTitle = $userData['jobTitle'] ?? null;
             $mail = $userData['mail'] ?? null;
 
-            // Cek apakah user sudah ada di database
-            $user = User::where('microsoft_id', $microsoftID)->first();
+            // Check if user already exists with the same email and null microsoft_id
+            $userWithNullMicrosoftID = User::where('email', $mail)->whereNull('microsoft_id')->first();
 
-            if (!$user) {
-                // Jika belum ada, buat user baru dengan password MD5
-                $user = User::create([
-                    'name' => $givenName,
-                    'email' => $mail,
-                    'password' => md5('123'), // Gunakan MD5
+            if ($userWithNullMicrosoftID) {
+                // Update the microsoft_id field
+                $userWithNullMicrosoftID->update([
                     'microsoft_id' => $microsoftID,
-                    'job_title' => $jobTitle,
-                    'role_id' => 2, // Default role
                 ]);
+                $user = $userWithNullMicrosoftID;
             } else {
-                // Jika user sudah ada, hanya update updated_at
-                $user->touch();
+                // Check if user already exists in the database with microsoft_id
+                $user = User::where('microsoft_id', $microsoftID)->first();
+
+                if (!$user) {
+                    // If not, create a new user with MD5 password
+                    $user = User::create([
+                        'name' => $givenName,
+                        'email' => $mail,
+                        'password' => md5('123'), // Use MD5
+                        'microsoft_id' => $microsoftID,
+                        'job_title' => $jobTitle,
+                        'role_id' => 2, // Default role
+                    ]);
+                } else {
+                    // If user already exists, just update updated_at
+                    $user->touch();
+                }
             }
 
-            // Catat setiap login ke tabel detail_logins
+            // Log each login to the detail_logins table
             DB::table('detail_logins')->insert([
                 'user_id' => $user->id,
                 'last_login_ip' => $request->ip(),
-                'last_login_browser' => 'Chrome on Windows', // Bisa diambil dari User-Agent jika perlu
-                'last_login_location' => 'Indonesia', // Bisa pakai API geolocation jika perlu
+                'last_login_browser' => 'Chrome on Windows', // Can be taken from User-Agent if needed
+                'last_login_location' => 'Indonesia', // Can use geolocation API if needed
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
 
-            // Login user dengan Laravel Authentication
+            // Log in the user with Laravel Authentication
             Auth::login($user);
 
             return redirect('/home')->with('success', "Welcome, {$givenName}!");

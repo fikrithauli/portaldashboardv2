@@ -414,24 +414,24 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <ul class="nav nav-tabs" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" aria-controls="home" role="tab" aria-selected="true">Recent Request</a>
+                                                <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" aria-controls="home" role="tab" aria-selected="true">Recent</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" aria-controls="profile" role="tab" aria-selected="false">Permissions Allowed</a>
+                                                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" aria-controls="profile" role="tab" aria-selected="false">Granted</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="rejected-tab" data-bs-toggle="tab" href="#rejected" aria-controls="rejected" role="tab" aria-selected="false">Permissions Rejected</a>
+                                                <a class="nav-link" id="rejected-tab" data-bs-toggle="tab" href="#rejected" aria-controls="rejected" role="tab" aria-selected="false">Denied</a>
                                             </li>
                                         </ul>
                                         <div>
+                                            @if ($pendingRequests->isNotEmpty())
+                                            <button class="btn btn-sm btn-outline-primary ms-2" id="approveAllRequestsBtn">
+                                                Bulk Approval
+                                            </button>&nbsp;
+                                            @endif
                                             <button class="btn btn-sm btn-primary" data-bs-target="#addRoleModal" data-bs-toggle="modal">
                                                 <i data-feather='plus'></i>&nbsp; Add Permission
                                             </button>
-                                            @if ($pendingRequests->isNotEmpty())
-                                            <button class="btn btn-sm btn-light ms-2" id="approveAllRequestsBtn">
-                                                Bulk Approval
-                                            </button>
-                                            @endif
                                         </div>
                                     </div>
 
@@ -442,9 +442,9 @@
                                                 <table id="request" class="table table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th>Applicant's Name</th>
+                                                            <th>Recipient Name</th>
                                                             <th>Permission Type</th>
-                                                            <th>Departement</th>
+                                                            <th>Job Title</th>
                                                             <th>Status</th>
                                                             <th>Actions</th>
                                                         </tr>
@@ -494,8 +494,8 @@
                                                 <table id="examples" class="table table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th>Applicant Name</th>
-                                                            <th>Departement</th>
+                                                            <th>Recipient Name</th>
+                                                            <th>Job Title</th>
                                                             <th>Dashboard</th>
                                                             <th>Status</th>
                                                             <th>Actions</th>
@@ -504,8 +504,18 @@
                                                     <tbody>
                                                         @foreach($permission as $perm)
                                                         <tr>
-                                                            <td><span class="">{{ ucwords(strtolower($perm->user_name)) }}</span></td>
-                                                            <td><span class="">{{ $perm->job_title }}</span></td>
+                                                            <td>
+                                                                <span class=""> {{ ucwords(strtolower($perm->user_name)) }}</span>
+                                                                <br>
+                                                                <small class="text-muted">{{ $perm->email }}</small>
+                                                            </td>
+                                                            <td>
+                                                                @if (is_null($perm->job_title) || $perm->job_title === '')
+                                                                <span class="text-danger">Unavailable</span>
+                                                                @else
+                                                                <span class="">{{ $perm->job_title }}</span>
+                                                                @endif
+                                                            </td>
                                                             <td>{{ $perm->dashboard_count }} Dashboard</td>
                                                             <td>
                                                                 @if ($perm->dashboard_count == 0)
@@ -535,8 +545,8 @@
                                                 <table id="reject" class="table table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th>Name</th>
-                                                            <th>Departement</th>
+                                                            <th>Recipient Name</th>
+                                                            <th>Job title</th>
                                                             <th>Permission Type</th>
                                                             <th>Status</th>
                                                             <th>Request Time</th>
@@ -594,23 +604,26 @@
                                 <form id="addRoleForm" class="row" action="{{ route('permissions.submit') }}" method="post">
                                     @csrf
                                     <div class="col-12">
-                                        <label class="form-label" for="modalRoleName">Username</label>
-                                        <select name="user_id" class="select2 form-select" id="select2-basic">
-                                            @foreach($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                            @endforeach
+                                        <label class="form-label" for="modalRoleName">Recipient email <small class="text-danger">*</small></label>
+
+                                        <select name="recipient_email" class="select2 form-select" id="select2-basic">
+                                            <option value="">Select an email</option>
                                         </select>
                                     </div>
+                                    <div class="col-12 mt-1">
+                                        <label class="form-label">Recipient name</label>
+                                        <input type="text" id="recipient-name" name="recipient_name" class="form-control" placeholder="Automated recipient name" readonly>
+                                    </div>
                                     <div class="col-12">
-                                        <h5 class="mt-2 pt-50"><i data-feather="alert-circle"></i>&nbsp; Dashboard List</h5>
+                                        <h5 class="mt-2 pt-50"><i data-feather="lock"></i>&nbsp; Permission</h5>
                                         <hr>
                                         <!-- Permission table -->
                                         <div class="table-responsive">
                                             <table id="exampless" class="table table-hover" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Dashboard Name</th>
-                                                        <th>View Permission</th>
+                                                        <th>Dashboard</th>
+                                                        <th>Permission</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -626,7 +639,7 @@
                                                                         name="permissions[]"
                                                                         value="{{ $dashboard->dashboard_id }}"
                                                                         {{ $permissions->contains('dashboard_id', $dashboard->dashboard_id) ? 'checked' : '' }} />
-                                                                    <label class="form-check-label" for="checkboxView{{ $dashboard->dashboard_id }}">View</label>
+                                                                    <label class="form-check-label" for="checkboxView{{ $dashboard->dashboard_id }}"></label>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -725,9 +738,86 @@
     </div>
     <!-- END: Content-->
 
-    <div>
-        {!! $footer !!}
-    </div>
+    <script>
+        $(document).ready(function() {
+            $('#select2-basic').select2();
+
+            // Function to show loading Swal
+            function showLoading() {
+                Swal.fire({
+                    title: 'Please Wait',
+                    allowOutsideClick: false,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                    onBeforeOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            }
+
+            // Function to close Swal
+            function closeLoading() {
+                Swal.close();
+            }
+
+            // Fetch emails and populate the dropdown
+            $.ajax({
+                url: "{{ route('recipient-emails') }}", // Define a route to fetch emails
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        // Clear existing options
+                        $('#select2-basic').empty();
+                        $('#select2-basic').append('<option value="">Select an email</option>'); // Placeholder option
+
+                        // Populate the dropdown with emails
+                        $.each(response.emails, function(index, email) {
+                            $('#select2-basic').append('<option value="' + email.email + '">' + email.email + '</option>');
+                        });
+                    } else {
+                        Swal.fire('Error', 'Error: ' + response.message, 'error');
+                    }
+                },
+                error: function() {
+                    Swal.fire('Error', 'An error occurred while fetching emails.', 'error');
+                }
+            });
+
+            // Handle email selection change
+            $('#select2-basic').on('change', function() {
+                var selectedEmail = $(this).val();
+                if (selectedEmail) {
+                    showLoading(); // Show loading indicator when an email is selected
+                    $.ajax({
+                        url: "{{ route('recipient-details') }}", // Use the named route here
+                        type: 'GET',
+                        data: {
+                            email: selectedEmail
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                $('#recipient-name').val(response.name);
+                                $('#recipient-job-title').val(response.job_title);
+                            } else {
+                                Swal.fire('Error', 'Error: ' + response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Error', 'An error occurred while fetching recipient details.', 'error');
+                        },
+                        complete: function() {
+                            closeLoading(); // Close loading indicator after the request completes
+                        }
+                    });
+                } else {
+                    $('#recipient-name').val('');
+                    $('#recipient-job-title').val('');
+                }
+            });
+        });
+    </script>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -742,26 +832,6 @@
         });
     </script>
 
-    <!-- <script>
-        $(document).ready(function() {
-            $('#approveAllRequestsBtn').on('click', function() {
-                $.ajax({
-                    url: "{{ route('approving') }}",
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        // Tampilkan pesan sukses
-                        alert(response.message);
-                        // Reload atau update tampilan jika perlu
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        // Tampilkan pesan error
-                        alert('Error: ' + xhr.responseText);
-                    }
-                });
-            });
-        });
-    </script> -->
+    <div>
+        {!! $footer !!}
+    </div>

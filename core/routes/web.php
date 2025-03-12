@@ -104,3 +104,6 @@ Route::post('/create-dashboards', [UserController::class, 'storeDashboards'])->n
 Route::post('/change-statuss/{id}', [UserController::class, 'changeStatus'])->name('change-statuss');
 Route::post('/update-status/{dashboardId}/{recipientsId}', [UserController::class, 'updateStatus'])->name('update-status');
 Route::get('/callback', [MicrosoftAuthController::class, 'handleCallback'])->name('callback');
+
+Route::get('/recipient-emails', [PermissionController::class, 'getEmails'])->name('recipient-emails');
+Route::get('/recipient-details', [PermissionController::class, 'getRecipientDetails'])->name('recipient-details');
