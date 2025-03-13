@@ -442,9 +442,11 @@
                                                 <table id="request" class="table table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
+                                                            @if ($pendingRequests->isNotEmpty())
                                                             <th>
                                                                 <input type="checkbox" id="selectAllCheckbox"> <!-- Checkbox di header -->
                                                             </th>
+                                                            @endif
                                                             <th>Recipient Name</th>
                                                             <th>Permission Type</th>
                                                             <th>Job Title</th>
@@ -455,16 +457,18 @@
                                                     <tbody>
                                                         @foreach($requests as $r)
                                                         <tr>
+                                                            @if ($pendingRequests->isNotEmpty())
                                                             <td>
                                                                 <input type="checkbox" class="row-checkbox" data-request-id="{{ $r->request_id }}">
                                                             </td>
+                                                            @endif
                                                             <td>
                                                                 <span class=""> {{ ucwords(strtolower($r->name)) }}</span>
                                                                 <br>
-                                                                <small class="text-muted">#{{ $r->application_number }}</small>
+                                                                <small class="text-muted">{{ $r->email }}</small>
                                                             </td>
                                                             <td><span class="">{{ $r->dashboard_name }}</span></td>
-                                                            <td><span class="">{{ $r->departement }}</span></td>
+                                                            <td><span class="text-primary">{{ $r->departement }}</span></td>
                                                             <td>
                                                                 @if ($r->request_status == 0)
                                                                 <span class="badge badge-glow bg-warning">Pending</span>
@@ -518,7 +522,7 @@
                                                                 @if (is_null($perm->job_title) || $perm->job_title === '')
                                                                 <span class="text-danger">Unavailable</span>
                                                                 @else
-                                                                <span class="">{{ $perm->job_title }}</span>
+                                                                <span class="text-primary">{{ $perm->job_title }}</span>
                                                                 @endif
                                                             </td>
                                                             <td>{{ $perm->dashboard_count }} Dashboard</td>
