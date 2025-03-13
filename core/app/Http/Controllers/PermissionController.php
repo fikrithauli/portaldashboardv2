@@ -400,15 +400,24 @@ class PermissionController extends Controller
 
     public function approveAllRequests(Request $request)
     {
-        // Ambil semua permintaan dengan request_status == 0
-        $requests = DB::table('permission_request')->where('request_status', 0)->get();
+        // Get the list of request IDs from the request data
+        $requestIds = $request->input('requestIds', []);
 
-        foreach ($requests as $requestItem) {
+        // Loop through each request ID and update the corresponding request
+        foreach ($requestIds as $requestId) {
             // Update status permintaan menjadi 1 (approve)
-            DB::table('permission_request')->where('request_id', $requestItem->request_id)->update([
+            DB::table('permission_request')->where('request_id', $requestId)->update([
                 'request_status' => 1,
                 'updated_at' => now(), // Update timestamp
             ]);
+
+            // Get the request details
+            $requestItem = DB::table('permission_request')->where('request_id', $requestId)->first();
+
+            if (!$requestItem) {
+                // If request item not found, continue to the next request
+                continue;
+            }
 
             // Ambil data pengguna berdasarkan nama
             $user = DB::table('users')->where('name', $requestItem->name)->first();
@@ -438,8 +447,9 @@ class PermissionController extends Controller
         }
 
         // Kembalikan respons sukses
-        return response()->json(['message' => 'All requests approved successfully!']);
+        return response()->json(['message' => 'Selected requests approved successfully!']);
     }
+
 
     public function getEmails()
     {

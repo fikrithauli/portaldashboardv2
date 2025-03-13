@@ -442,6 +442,9 @@
                                                 <table id="request" class="table table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
+                                                            <th>
+                                                                <input type="checkbox" id="selectAllCheckbox"> <!-- Checkbox di header -->
+                                                            </th>
                                                             <th>Recipient Name</th>
                                                             <th>Permission Type</th>
                                                             <th>Job Title</th>
@@ -452,6 +455,9 @@
                                                     <tbody>
                                                         @foreach($requests as $r)
                                                         <tr>
+                                                            <td>
+                                                                <input type="checkbox" class="row-checkbox" data-request-id="{{ $r->request_id }}">
+                                                            </td>
                                                             <td>
                                                                 <span class=""> {{ ucwords(strtolower($r->name)) }}</span>
                                                                 <br>
@@ -485,7 +491,6 @@
                                                         <!-- Add more rows as needed -->
                                                     </tbody>
                                                 </table>
-
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="profile" aria-labelledby="profile-tab" role="tabpanel">

@@ -464,7 +464,7 @@
       });
   </script>
 
-  <script>
+  <!-- <script>
       $(document).ready(function() {
           $('#approveAllRequestsBtn').on('click', function() {
               // Show loading Swal
@@ -484,6 +484,81 @@
                   type: 'POST',
                   headers: {
                       'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                  },
+                  success: function(response) {
+                      // Hide loading Swal
+                      Swal.close();
+
+                      // Show success toastr
+                      toastr.success('Access updated successfully!', {
+                          timeOut: 5000
+                      });
+
+                      // Reload or update tampilan jika perlu
+                      location.reload();
+                  },
+                  error: function(xhr) {
+                      // Hide loading Swal
+                      Swal.close();
+
+                      // Show error Swal
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Error: ' + xhr.responseText
+                      });
+                  }
+              });
+          });
+      });
+  </script> -->
+
+  <script>
+      $(document).ready(function() {
+          // Event listener for the "Select All" checkbox
+          $('#selectAllCheckbox').on('change', function() {
+              // Check or uncheck all checkboxes in the tbody
+              $('.row-checkbox').prop('checked', $(this).is(':checked'));
+          });
+
+          // Event listener for the "Bulk Approval" button
+          $('#approveAllRequestsBtn').on('click', function() {
+              // Collect all checked request IDs
+              var checkedRequestIds = [];
+              $('.row-checkbox:checked').each(function() {
+                  checkedRequestIds.push($(this).data('request-id'));
+              });
+
+              // If no requests are checked, show an alert and return
+              if (checkedRequestIds.length === 0) {
+                  Swal.fire({
+                      icon: 'warning',
+                      title: 'No Requests Selected',
+                      text: 'Please select at least one request to approve.'
+                  });
+                  return; // Prevent further execution
+              }
+
+              // Show loading Swal
+              Swal.fire({
+                  title: 'Please Wait',
+                  allowOutsideClick: false,
+                  showCancelButton: false,
+                  showConfirmButton: false,
+                  timerProgressBar: true,
+                  onBeforeOpen: () => {
+                      Swal.showLoading();
+                  }
+              });
+
+              $.ajax({
+                  url: "{{ route('approving') }}",
+                  type: 'POST',
+                  headers: {
+                      'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                  },
+                  data: {
+                      requestIds: checkedRequestIds
                   },
                   success: function(response) {
                       // Hide loading Swal
