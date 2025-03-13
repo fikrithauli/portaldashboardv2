@@ -169,6 +169,7 @@ class PermissionController extends Controller
                 'p.dashboard_id',
                 'p.permission_type',
                 'users.name as applicant_name',
+                'users.email',
                 'users.job_title',
                 'dashboard.dashboard_name'
             )

@@ -375,17 +375,6 @@
                         <!-- Tempat untuk menampilkan data filter -->
                     </div>
                 </li>
-
-
-                <!-- @foreach($categories as $category)
-                <li class="nav-item mt-2">
-                    <a class="d-flex align-items-center" href="">
-                        <i data-feather="circle"></i><span class="menu-title text-truncate" data-i18n="{{ $category->category_name }}">{{ $category->category_name }}</span>
-                    </a>
-                </li>
-                @endforeach -->
-
-
             </ul>
         </div>
     </div>
@@ -408,10 +397,10 @@
                                 <div class="card-body">
                                     <div class="user-avatar-section">
                                         <div class="d-flex align-items-center flex-column">
-                                            <img class="img-fluid rounded mt-1 mb-1" src="{{ asset('user.png') }}" height="110" width="110" alt="User avatar" />
+                                            <img class="img-fluid rounded mt-1 mb-1" src="{{ asset('profile-picture.png') }}" height="110" width="110" alt="User avatar" />
                                             <div class="user-info text-center">
                                                 <h4>{{ $permissions[0]->applicant_name }}</h4>
-                                                <span class="badge bg-light-secondary">{{ $permissions[0]->job_title }}</span>
+                                                <span class="badge bg-light-secondary">{{ $permissions[0]->email }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -436,11 +425,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="d-grid col-lg-12 col-md-12 mb-1 mb-lg-0 mt-2">
-                                            <a href="{{ route('permission') }}" class="btn btn-primary">Back to permission</a>
+                                            <a href="{{ route('permission') }}" class="btn btn-danger"><i data-feather='arrow-left-circle'></i> Back</a>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                             <!-- /User Card -->
@@ -450,33 +439,12 @@
                         <!-- User Content -->
                         <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-body" style="position: relative;">
                                     <h4 class="card-title mb-50">Dashboard Access Management</h4>
                                     <p class="mb-0">Modify permissions for user dashboard access</p>
+                                    <a href="{{ route('permission') }}" class="btn btn-danger" style="position: absolute; top: 20px; right: 30px; padding: 8px 16px;"><i data-feather='arrow-left'></i> Back</a>
                                 </div>
                                 <div class="table-responsive">
-                                    <!-- <table id="example" class="table text-nowrap text-center border-bottom">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-start">Dashboard Type</th>
-                                                <th class="text-center">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($permissions as $perm)
-                                            <tr>
-                                                <td class="text-start">{{ $perm->dashboard_name }}</td>
-                                                <td>
-                                                    <div class="form-check d-flex justify-content-center">
-                                                        <input class="form-check-input" type="checkbox" id="defaultCheck1" checked />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table> -->
-
-                                    <!-- Add this inside your HTML body where you want to display the checkboxes -->
                                     <table id="example" class="table text-nowrap text-center border-bottom">
                                         <thead>
                                             <tr>
@@ -511,10 +479,6 @@
     </div>
     <!-- END: Content-->
 
-    <div>
-        {!! $footer !!}
-    </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const categoryRadios = document.querySelectorAll(".category-filter");
@@ -527,3 +491,7 @@
             });
         });
     </script>
+
+    <div>
+        {!! $footer !!}
+    </div>
