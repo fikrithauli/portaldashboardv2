@@ -253,37 +253,29 @@ class PermissionController extends Controller
         return view('edit_permission', compact('user', 'dashboards', 'permissions'));
     }
 
-    // public function update(Request $request, $id)
-    // {
-    //     $user_id = $id;
-    //     $permissions = $request->input('permissions', []);
+    public function updatePermission(Request $request)
+    {
+        // Validate the incoming request
+        $validatedData = $request->validate([
+            'user_id' => 'required|integer',
+            'dashboard_id' => 'required|integer',
+            'permission_type' => 'required|boolean',
+        ]);
 
-    //     $now = now(); // Ambil tanggal dan waktu saat ini
+        // Use query builder to update the permission status
+        $updated = DB::table('permissions')
+            ->where('user_id', $validatedData['user_id'])
+            ->where('dashboard_id', $validatedData['dashboard_id'])
+            ->update([
+                'permission_type' => $validatedData['permission_type'],
+            ]);
 
-    //     // Dapatkan semua data permissions untuk user tersebut
-    //     $existingPermissions = DB::table('permissions')
-    //         ->where('user_id', $user_id)
-    //         ->get();
-
-    //     // Perbarui permission_type berdasarkan user_id dan dashboard_id
-    //     foreach ($existingPermissions as $existingPermission) {
-    //         $dashboard_id = $existingPermission->dashboard_id;
-
-    //         // Periksa apakah dashboard_id ada dalam array permissions yang baru
-    //         $isChecked = in_array($dashboard_id, $permissions);
-
-    //         // Update permission_type sesuai dengan kondisi
-    //         DB::table('permissions')
-    //             ->where('user_id', $user_id)
-    //             ->where('dashboard_id', $dashboard_id)
-    //             ->update([
-    //                 'permission_type' => $isChecked ? 1 : 0,
-    //                 'updated_at' => $now,
-    //             ]);
-    //     }
-
-    //     return redirect()->route('permission')->with('success', 'Permissions updated successfully!');
-    // }
+        if ($updated) {
+            return response()->json(['message' => 'Permission updated successfully'], 200);
+        } else {
+            return response()->json(['message' => 'Permission not found or no changes made'], 404);
+        }
+    }
 
     public function update(Request $request, $id)
     {

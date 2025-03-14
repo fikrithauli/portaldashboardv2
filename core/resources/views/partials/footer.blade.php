@@ -388,8 +388,7 @@
       });
   </script>
 
-
-  <script>
+  <!-- <script>
       document.addEventListener('DOMContentLoaded', function() {
           const checkboxes = document.querySelectorAll('.form-check-input');
 
@@ -462,56 +461,73 @@
               });
           });
       });
-  </script>
+  </script> -->
 
-  <!-- <script>
-      $(document).ready(function() {
-          $('#approveAllRequestsBtn').on('click', function() {
-              // Show loading Swal
-              Swal.fire({
-                  title: 'Please Wait',
-                  allowOutsideClick: false,
-                  showCancelButton: false,
-                  showConfirmButton: false,
-                  timerProgressBar: true,
-                  onBeforeOpen: () => {
-                      Swal.showLoading();
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const checkboxes = document.querySelectorAll('.form-check-input');
+
+          checkboxes.forEach(function(checkbox) {
+              checkbox.addEventListener('change', function() {
+                  const userId = checkbox.dataset.userId;
+                  const dashboardId = checkbox.dataset.dashboardId;
+
+                  if (!userId || !dashboardId) {
+                      console.error('User or Dashboard is missing.');
+                      return;
                   }
-              });
 
-              $.ajax({
-                  url: "{{ route('approving') }}",
-                  type: 'POST',
-                  headers: {
-                      'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                  },
-                  success: function(response) {
-                      // Hide loading Swal
-                      Swal.close();
+                  const isChecked = checkbox.checked;
 
-                      // Show success toastr
-                      toastr.success('Access updated successfully!', {
-                          timeOut: 5000
-                      });
+                  // Show loading Swal
+                  Swal.fire({
+                      title: 'Please Wait',
+                      allowOutsideClick: false,
+                      showCancelButton: false,
+                      showConfirmButton: false,
+                      timerProgressBar: true,
+                      onBeforeOpen: () => {
+                          Swal.showLoading();
+                      }
+                  });
 
-                      // Reload or update tampilan jika perlu
-                      location.reload();
-                  },
-                  error: function(xhr) {
-                      // Hide loading Swal
-                      Swal.close();
+                  $.ajax({
+                      url: '{{ route("updatePermission") }}',
+                      type: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                      },
+                      data: JSON.stringify({
+                          user_id: userId,
+                          dashboard_id: dashboardId,
+                          permission_type: isChecked ? 1 : 0,
+                      }),
+                      success: function(response) {
+                          // Close loading Swal
+                          Swal.close();
 
-                      // Show error Swal
-                      Swal.fire({
-                          icon: 'error',
-                          title: 'Oops...',
-                          text: 'Error: ' + xhr.responseText
-                      });
-                  }
+                          // Show success toastr
+                          toastr.success('Access updated successfully!', {
+                              timeOut: 5000
+                          });
+
+                          // Optionally, update the UI without reloading the page
+                          console.log(response);
+                      },
+                      error: function(error) {
+                          // Close loading Swal
+                          Swal.close();
+
+                          // Show error toastr
+                          toastr.error('Error:', error.responseText || 'Unknown error');
+                          console.error('Error:', error);
+                      },
+                  });
               });
           });
       });
-  </script> -->
+  </script>
 
   <script>
       $(document).ready(function() {
