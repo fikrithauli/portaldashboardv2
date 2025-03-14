@@ -479,11 +479,8 @@
                                                             <td>
                                                                 @if ($r->request_status == 0)
                                                                 <div class="btn-group">
-                                                                    <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#detailRequest_{{ $r->request_id }}">
-                                                                        Approve
-                                                                    </a>&nbsp;&nbsp;
-                                                                    <a href="{{ route('reject.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-sm btn-dark">
-                                                                        Reject
+                                                                    <a href="#" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#detailRequest_{{ $r->request_id }}">
+                                                                        View
                                                                     </a>
                                                                 </div>
                                                                 @else
@@ -692,8 +689,8 @@
                                     <div class="row invoice-spacing">
                                         <div class="col-xl-8 p-0">
                                             <h6 class="mb-25">{{ $r->name }}</h6>
-                                            <p class="card-text mb-25"><i>{{ $r->departement }}</i></p>
-                                            <p class="card-text mb-25">{{ $r->email }}</p>
+                                            <p class="text-muted mb-25">{{ $r->email }}</p>
+                                            <p class="card-text text-primary mb-25 mt-1"><i>{{ $r->departement }}</i></p>
                                             <p class="card-text mb-0 mt-1"> <span class="badge badge-light-warning">Waiting for approval</span></p>
                                         </div>
                                         <div class="col-xl-4 p-0 mt-xl-0 mt-2">
@@ -729,8 +726,10 @@
                                     <!-- Button section starts -->
                                     <div class="row mt-4">
                                         <div class="col-12 text-center">
-                                            <button type="button" class="btn btn-secondary me-1" data-bs-dismiss="modal">Close</button>
-                                            <a href="{{ route('approve.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-success">Approve</a>
+                                            <a href="{{ route('approve.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-success">Approve</a>&nbsp;
+                                            <a href="{{ route('reject.permission.request', ['requestId' => $r->request_id]) }}" class="btn btn-danger">
+                                                Reject
+                                            </a>
                                         </div>
                                     </div>
                                     <!-- Button section ends -->
