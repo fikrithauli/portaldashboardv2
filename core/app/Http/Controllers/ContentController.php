@@ -62,27 +62,32 @@ class ContentController extends Controller
     public function dashboardStore(Request $request)
     {
         try {
-            // Memastikan bahwa semua field yang diperlukan diisi
+            // Define required fields
             $requiredFields = ['category_id', 'dashboard_name', 'description', 'visualization_type', 'embed_url'];
+
+            // Validate required fields for null and empty strings
             foreach ($requiredFields as $field) {
-                if (!$request->filled($field)) {
-                    // Redirect dengan pesan kesalahan jika ada field yang tidak diisi
+                if (is_null($request->input($field)) || $request->input($field) === '') {
                     return redirect()->route('content-dashboard')->with('error', 'All fields are required');
                 }
             }
 
-            // Mengunggah gambar jika ada
+            // Handle file upload with exception handling
             $imagePath = null;
             if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_' . $image->getClientOriginalName();
+                try {
+                    $image = $request->file('image');
+                    $imageName = time() . '_' . $image->getClientOriginalName();
 
-                $image->move(base_path('uploads'), $imageName);
+                    $image->move(base_path('uploads'), $imageName);
 
-                $imagePath = $imageName;
+                    $imagePath = $imageName;
+                } catch (\Exception $e) {
+                    return redirect()->route('content-dashboard')->with('error', 'Failed to upload image');
+                }
             }
 
-            // Menggunakan Query Builder untuk menyimpan data ke dalam tabel dashboard
+            // Insert data into the database only if all validations pass
             DB::table('dashboard')->insert([
                 'category_id' => $request->input('category_id'),
                 'dashboard_name' => $request->input('dashboard_name'),
@@ -95,15 +100,17 @@ class ContentController extends Controller
                 'created_at' => now(),
             ]);
 
-            // Redirect atau berikan respons sesuai kebutuhan
+            // Redirect with success message
             return redirect()->route('content-dashboard')->with('success', 'Dashboard added successfully');
         } catch (\Exception $e) {
-            // Tampilkan pesan kesalahan dan redirect dengan pesan kesalahan
-            dd($e->getMessage());
-            // Atau bisa juga ditangani dengan cara lain, seperti me-redirect kembali dengan pesan error
-            // return redirect()->route('content-dashboard')->with('error', 'Error: ' . $e->getMessage());
+            // Log the error for debugging purposes
+            Log::error('Error in dashboardStore: ' . $e->getMessage());
+
+            // Redirect with a generic error message
+            return redirect()->route('content-dashboard')->with('error', 'An error occurred while processing your request');
         }
     }
+
 
     public function dashboardEdit($id)
     {
