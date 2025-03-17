@@ -15,6 +15,10 @@ class ContentController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
+            if (!Auth::check()) {
+                return redirect()->route('login')->with('error', 'Session expired, please login again.');
+            }
+
             if (Auth::user()->role_id != 1) {
                 abort(403, 'Unauthorized');
             }
