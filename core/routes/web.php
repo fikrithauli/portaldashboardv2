@@ -77,7 +77,6 @@ Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])-
 // Rute untuk permission management
 Route::get('/permission', [PermissionController::class, 'index'])->name('permission');
 Route::post('/permission', [PermissionController::class, 'store'])->name('permissions.submit');
-Route::get('/send-email', [PermissionController::class, 'sendEmailNotification']);
 Route::get('/permissions/{id}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
 Route::post('/permissions/{id}', [PermissionController::class, 'update'])->name('permissions.update');
 Route::post('/permission-request', [RequestController::class, 'storePermissionRequest'])->name('permissions.request');

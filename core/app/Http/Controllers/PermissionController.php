@@ -141,24 +141,6 @@ class PermissionController extends Controller
         return view('permission', compact('rejected', 'requests', 'totalUsersAdmins', 'totalUsers', 'admins', 'accounts', 'permission', 'permissions', 'user', 'users', 'dashboards', 'header', 'footer', 'categories', 'pendingRequests', 'position'));
     }
 
-    public function sendEmailNotification()
-    {
-        // Configure SMTP settings dynamically
-        Config::set('mail.mailers.smtp.host', 'relay.telkomsel.co.id'); // Hapus 'http://'
-        Config::set('mail.mailers.smtp.port', 25); // Pastikan port yang benar
-        Config::set('mail.mailers.smtp.username', 'your-email@domain.com'); // Ganti dengan email Anda
-        Config::set('mail.mailers.smtp.password', 'your-email-password'); // Ganti dengan password Anda
-        Config::set('mail.mailers.smtp.encryption', null); // Atur ke null jika tidak menggunakan enkripsi
-
-        // Kirim email menggunakan Mail facade
-        Mail::raw('Ini adalah pesan email dari Laravel.', function (Message $message) {
-            $message->to('abieza.eresha@gmail.com')
-                ->subject('Pengujian Email dari Laravel');
-        });
-
-        return "Email berhasil dikirim!";
-    }
-
     public function getPermissions(Request $request, $id)
     {
         $user = Auth::user();
@@ -210,18 +192,18 @@ class PermissionController extends Controller
     // public function store(Request $request)
     // {
     //     // Ambil data dari request
-    //     $email = $request->input('recipient_email');
+    //     $recipient_email = $request->input('recipient_email');
     //     $name = $request->input('recipient_name'); // Pastikan Anda mendapatkan nama dari form
     //     $permissions = $request->input('permissions', []);
     //     $now = Carbon::now(); // Ambil tanggal dan waktu saat ini
 
     //     // Cek apakah pengguna sudah ada
-    //     $user = User::where('email', $email)->first();
+    //     $user = User::where('email', $recipient_email)->first();
 
     //     if (!$user) {
     //         // Jika pengguna belum ada, tambahkan pengguna baru
     //         $user = User::create([
-    //             'email' => $email,
+    //             'email' => $recipient_email,
     //             'name' => $name,
     //             'role_id' => 2,
     //             'created_at' => $now,
@@ -258,6 +240,28 @@ class PermissionController extends Controller
     //                 'updated_at' => $now,
     //             ]);
     //         }
+    //     }
+
+    //     // Configure SMTP settings dynamically
+    //     Config::set('mail.mailers.smtp.host', 'relay.telkomsel.co.id');
+    //     Config::set('mail.mailers.smtp.port', 25);
+    //     Config::set('mail.mailers.smtp.encryption', null);
+    //     Config::set('mail.mailers.smtp.username', null);
+    //     Config::set('mail.mailers.smtp.password', null);
+    //     Config::set('mail.from.address', 'aagm@telkomsel.co.id');
+    //     Config::set('mail.from.name', 'Portal Analytics Dashboard');
+
+    //     // Create and send the email
+    //     try {
+    //         $permissionsList = implode(", ", $permissions); // Convert permissions array to a string
+    //         $messageContent = "Hello, $name!\n\nYour permissions have been updated:\n$permissionsList\n\nThank you for using our service.";
+
+    //         Mail::raw($messageContent, function (Message $message) use ($recipient_email, $name) {
+    //             $message->to($recipient_email, $name)
+    //                 ->subject('Your Permissions Have Been Updated');
+    //         });
+    //     } catch (\Exception $e) {
+    //         return redirect()->route('permission')->with('error', 'Failed to send email notification: ' . $e->getMessage());
     //     }
 
     //     return redirect()->route('permission')->with('success', 'Permissions added or updated successfully!');
@@ -316,6 +320,12 @@ class PermissionController extends Controller
             }
         }
 
+        // Fetch dashboard names based on permission IDs
+        $dashboardNames = DB::table('dashboards')
+            ->whereIn('id', $permissions)
+            ->pluck('name') // Assuming 'name' is the column for dashboard names
+            ->toArray();
+
         // Configure SMTP settings dynamically
         Config::set('mail.mailers.smtp.host', 'relay.telkomsel.co.id');
         Config::set('mail.mailers.smtp.port', 25);
@@ -327,10 +337,14 @@ class PermissionController extends Controller
 
         // Create and send the email
         try {
-            $permissionsList = implode(", ", $permissions); // Convert permissions array to a string
-            $messageContent = "Hello, $name!\n\nYour permissions have been updated:\n$permissionsList\n\nThank you for using our service.";
+            $blockUrl = route('block_permission', ['user_id' => $user_id]); // Generate the block URL dynamically
 
-            Mail::raw($messageContent, function (Message $message) use ($recipient_email, $name) {
+            // Send the email using Mail::send() with an HTML view
+            Mail::send('emails.permission_updated', [
+                'name' => $name,
+                'dashboardNames' => $dashboardNames, // Pass the dashboard names to the view
+                'blockUrl' => $blockUrl,
+            ], function ($message) use ($recipient_email, $name) {
                 $message->to($recipient_email, $name)
                     ->subject('Your Permissions Have Been Updated');
             });
@@ -340,6 +354,7 @@ class PermissionController extends Controller
 
         return redirect()->route('permission')->with('success', 'Permissions added or updated successfully!');
     }
+
 
 
     public function edit($id)
