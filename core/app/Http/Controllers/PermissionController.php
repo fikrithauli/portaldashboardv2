@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Config;
+use App\Mail\YourMailableClass;
 
 use App\Models\Dashboard;
 use App\Models\Category;
@@ -138,6 +139,24 @@ class PermissionController extends Controller
         $footer = view('partials.footer', compact('position'));
 
         return view('permission', compact('rejected', 'requests', 'totalUsersAdmins', 'totalUsers', 'admins', 'accounts', 'permission', 'permissions', 'user', 'users', 'dashboards', 'header', 'footer', 'categories', 'pendingRequests', 'position'));
+    }
+
+    public function sendEmailNotification()
+    {
+        // Configure SMTP settings dynamically
+        Config::set('mail.mailers.smtp.host', 'relay.telkomsel.co.id'); // Hapus 'http://'
+        Config::set('mail.mailers.smtp.port', 25); // Pastikan port yang benar
+        Config::set('mail.mailers.smtp.username', 'your-email@domain.com'); // Ganti dengan email Anda
+        Config::set('mail.mailers.smtp.password', 'your-email-password'); // Ganti dengan password Anda
+        Config::set('mail.mailers.smtp.encryption', null); // Atur ke null jika tidak menggunakan enkripsi
+
+        // Kirim email menggunakan Mail facade
+        Mail::raw('Ini adalah pesan email dari Laravel.', function (Message $message) {
+            $message->to('abieza.eresha@gmail.com')
+                ->subject('Pengujian Email dari Laravel');
+        });
+
+        return "Email berhasil dikirim!";
     }
 
     public function getPermissions(Request $request, $id)
@@ -298,7 +317,7 @@ class PermissionController extends Controller
         }
 
         // Configure SMTP settings dynamically
-        Config::set('mail.mailers.smtp.host', 'http://relay.telkomsel.co.id');
+        Config::set('mail.mailers.smtp.host', 'relay.telkomsel.co.id');
         Config::set('mail.mailers.smtp.port', 25);
         Config::set('mail.mailers.smtp.encryption', null);
         Config::set('mail.mailers.smtp.username', null);
