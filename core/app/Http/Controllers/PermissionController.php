@@ -337,13 +337,10 @@ class PermissionController extends Controller
 
         // Create and send the email
         try {
-            $blockUrl = route('block_permission', ['user_id' => $user_id]); // Generate the block URL dynamically
-
             // Send the email using Mail::send() with an HTML view
             Mail::send('emails.permission_updated', [
                 'name' => $name,
-                'dashboardNames' => $dashboardNames, // Pass the dashboard names to the view
-                'blockUrl' => $blockUrl,
+                'dashboardNames' => $dashboardNames,
             ], function ($message) use ($recipient_email, $name) {
                 $message->to($recipient_email, $name)
                     ->subject('Your Permissions Have Been Updated');
