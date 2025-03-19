@@ -303,7 +303,7 @@ class PermissionController extends Controller
         Config::set('mail.mailers.smtp.encryption', null);
         Config::set('mail.mailers.smtp.username', null);
         Config::set('mail.mailers.smtp.password', null);
-        Config::set('mail.from.address', 'your-email@example.com');
+        Config::set('mail.from.address', 'aagm@telkomsel.co.id');
         Config::set('mail.from.name', 'Portal Analytics Dashboard');
 
         // Create and send the email
