@@ -189,84 +189,6 @@ class PermissionController extends Controller
         return view('permission_list', compact('permissions', 'dashboardCount', 'dashboardInnactive', 'user', 'header', 'footer', 'categories', 'position'));
     }
 
-    // public function store(Request $request)
-    // {
-    //     // Ambil data dari request
-    //     $recipient_email = $request->input('recipient_email');
-    //     $name = $request->input('recipient_name'); // Pastikan Anda mendapatkan nama dari form
-    //     $permissions = $request->input('permissions', []);
-    //     $now = Carbon::now(); // Ambil tanggal dan waktu saat ini
-
-    //     // Cek apakah pengguna sudah ada
-    //     $user = User::where('email', $recipient_email)->first();
-
-    //     if (!$user) {
-    //         // Jika pengguna belum ada, tambahkan pengguna baru
-    //         $user = User::create([
-    //             'email' => $recipient_email,
-    //             'name' => $name,
-    //             'role_id' => 2,
-    //             'created_at' => $now,
-    //             'updated_at' => $now,
-    //         ]);
-    //     }
-
-    //     // Ambil user_id dari pengguna yang ada atau baru dibuat
-    //     $user_id = $user->id;
-
-    //     // Proses izin
-    //     foreach ($permissions as $dashboard_id) {
-    //         // Periksa apakah user_id dan dashboard_id sudah ada di tabel permissions
-    //         $existingPermission = DB::table('permissions')
-    //             ->where('user_id', $user_id)
-    //             ->where('dashboard_id', $dashboard_id)
-    //             ->first();
-
-    //         if ($existingPermission) {
-    //             // Jika permission sudah ada, update updated_at
-    //             DB::table('permissions')
-    //                 ->where('user_id', $user_id)
-    //                 ->where('dashboard_id', $dashboard_id)
-    //                 ->update([
-    //                     'updated_at' => $now,
-    //                 ]);
-    //         } else {
-    //             // Jika permission belum ada, tambahkan data baru dengan created_at dan updated_at
-    //             DB::table('permissions')->insert([
-    //                 'user_id' => $user_id,
-    //                 'dashboard_id' => $dashboard_id,
-    //                 'permission_type' => 1,
-    //                 'created_at' => $now,
-    //                 'updated_at' => $now,
-    //             ]);
-    //         }
-    //     }
-
-    //     // Configure SMTP settings dynamically
-    //     Config::set('mail.mailers.smtp.host', 'relay.telkomsel.co.id');
-    //     Config::set('mail.mailers.smtp.port', 25);
-    //     Config::set('mail.mailers.smtp.encryption', null);
-    //     Config::set('mail.mailers.smtp.username', null);
-    //     Config::set('mail.mailers.smtp.password', null);
-    //     Config::set('mail.from.address', 'aagm@telkomsel.co.id');
-    //     Config::set('mail.from.name', 'Portal Analytics Dashboard');
-
-    //     // Create and send the email
-    //     try {
-    //         $permissionsList = implode(", ", $permissions); // Convert permissions array to a string
-    //         $messageContent = "Hello, $name!\n\nYour permissions have been updated:\n$permissionsList\n\nThank you for using our service.";
-
-    //         Mail::raw($messageContent, function (Message $message) use ($recipient_email, $name) {
-    //             $message->to($recipient_email, $name)
-    //                 ->subject('Your Permissions Have Been Updated');
-    //         });
-    //     } catch (\Exception $e) {
-    //         return redirect()->route('permission')->with('error', 'Failed to send email notification: ' . $e->getMessage());
-    //     }
-
-    //     return redirect()->route('permission')->with('success', 'Permissions added or updated successfully!');
-    // }
-
     public function store(Request $request)
     {
         // Ambil data dari request
@@ -291,6 +213,9 @@ class PermissionController extends Controller
 
         // Ambil user_id dari pengguna yang ada atau baru dibuat
         $user_id = $user->id;
+
+        // Variabel untuk menandai apakah ada izin baru
+        $newPermissionAdded = false;
 
         // Proses izin
         foreach ($permissions as $dashboard_id) {
@@ -317,6 +242,8 @@ class PermissionController extends Controller
                     'created_at' => $now,
                     'updated_at' => $now,
                 ]);
+                // Tandai bahwa izin baru telah ditambahkan
+                $newPermissionAdded = true;
             }
         }
 
@@ -335,22 +262,25 @@ class PermissionController extends Controller
         Config::set('mail.from.address', 'aagm@telkomsel.co.id');
         Config::set('mail.from.name', 'Portal Analytics Dashboard');
 
-        // Create and send the email
-        try {
-            // Send the email using Mail::send() with an HTML view
-            Mail::send('emails.permission_updated', [
-                'name' => $name,
-                'dashboardNames' => $dashboardNames,
-            ], function ($message) use ($recipient_email, $name) {
-                $message->to($recipient_email, $name)
-                    ->subject('Your Permissions Have Been Updated');
-            });
-        } catch (\Exception $e) {
-            return redirect()->route('permission')->with('error', 'Failed to send email notification: ' . $e->getMessage());
+        // Kirim email hanya jika ada izin baru yang ditambahkan
+        if ($newPermissionAdded) {
+            try {
+                // Send the email using Mail::send() with an HTML view
+                Mail::send('emails.permission_updated', [
+                    'name' => $name,
+                    'dashboardNames' => $dashboardNames,
+                ], function ($message) use ($recipient_email, $name) {
+                    $message->to($recipient_email, $name)
+                        ->subject('Your Permissions Have Been Updated');
+                });
+            } catch (\Exception $e) {
+                return redirect()->route('permission')->with('error', 'Failed to send email notification: ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('permission')->with('success', 'Permissions added or updated successfully!');
     }
+
 
     public function edit($id)
     {
