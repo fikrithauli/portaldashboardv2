@@ -250,7 +250,7 @@ class PermissionController extends Controller
         // Fetch dashboard names based on permission IDs
         $dashboardNames = DB::table('dashboard')
             ->whereIn('id', $permissions)
-            ->pluck('name') // Assuming 'name' is the column for dashboard names
+            ->pluck('dashboard_name') // Assuming 'name' is the column for dashboard names
             ->toArray();
 
         // Configure SMTP settings dynamically
