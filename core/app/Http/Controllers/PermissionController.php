@@ -321,7 +321,7 @@ class PermissionController extends Controller
         }
 
         // Fetch dashboard names based on permission IDs
-        $dashboardNames = DB::table('dashboards')
+        $dashboardNames = DB::table('dashboard')
             ->whereIn('id', $permissions)
             ->pluck('name') // Assuming 'name' is the column for dashboard names
             ->toArray();
@@ -351,8 +351,6 @@ class PermissionController extends Controller
 
         return redirect()->route('permission')->with('success', 'Permissions added or updated successfully!');
     }
-
-
 
     public function edit($id)
     {
