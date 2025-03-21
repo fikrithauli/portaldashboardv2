@@ -271,7 +271,7 @@ class PermissionController extends Controller
                     'dashboardNames' => $dashboardNames,
                 ], function ($message) use ($recipient_email, $name) {
                     $message->to($recipient_email, $name)
-                        ->subject('Your Permissions Have Been Updated');
+                        ->subject('Portal Analytics Dashboard - Final Approved');
                 });
             } catch (\Exception $e) {
                 return redirect()->route('permission')->with('error', 'Failed to send email notification: ' . $e->getMessage());
@@ -341,10 +341,125 @@ class PermissionController extends Controller
         return response()->json(['success' => true, 'message' => 'Permissions updated successfully']);
     }
 
+    // public function approvePermissionRequest($requestId)
+    // {
+    //     // Check if the request with the specified request_id exists
+    //     $request = DB::table('permission_request')
+    //         ->where('request_id', $requestId)
+    //         ->first();
+
+    //     if (!$request) {
+    //         // If the request does not exist, show an error message or redirect back with an error
+    //         return back()->with('error', 'Request not found.');
+    //     }
+
+    //     if ($request->request_status == 0) {
+    //         // If the request_status is 0, update it to 1 (approve)
+    //         DB::table('permission_request')
+    //             ->where('request_id', $requestId)
+    //             ->update([
+    //                 'request_status' => 1,
+    //                 'updated_at' => now(), // Update the 'updated_at' timestamp
+    //             ]);
+
+    //         // Get user data from permission list based on the requested name
+    //         $user = DB::table('users')
+    //             ->where('name', $request->name)
+    //             ->first();
+
+    //         if (!$user) {
+    //             // If user not found, show an error message or take appropriate action
+    //             return back()->with('error', 'User not found in permission list.');
+    //         }
+
+    //         // Check if permission already exists for the user and dashboard
+    //         $existingPermission = DB::table('permissions')
+    //             ->where('user_id', $user->id)
+    //             ->first();
+
+    //         if ($existingPermission) {
+    //             // If permission already exists, add a new row to permissions table
+    //             $now = Carbon::now();
+    //             DB::table('permissions')->insert([
+    //                 'user_id' => $user->id,
+    //                 'dashboard_id' => $request->dashboard_id,
+    //                 'permission_type' => 1,
+    //                 'created_at' => $now,
+    //                 'updated_at' => $now,
+    //                 // You can add other fields here as needed
+    //             ]);
+    //         } else {
+    //             // Insert permission data into permissions table
+    //             $now = Carbon::now();
+    //             DB::table('permissions')->insert([
+    //                 'user_id' => $user->id,
+    //                 'dashboard_id' => $request->dashboard_id,
+    //                 'permission_type' => 1,
+    //                 'created_at' => $now,
+    //                 'updated_at' => $now,
+    //                 // You can add other fields here as needed
+    //             ]);
+    //         }
+
+    //         // Get dashboard name by joining with the dashboard table
+    //         $dashboard = DB::table('dashboard')
+    //             ->where('dashboard_id', $request->dashboard_id)
+    //             ->first();
+
+    //         if (!$dashboard) {
+    //             // If dashboard not found, show an error message or take appropriate action
+    //             return back()->with('error', 'Dashboard not found.');
+    //         }
+
+    //         // Prepare email data
+    //         $emailData = [
+    //             'name' => $user->name,
+    //             'email' => $user->email,
+    //             'dashboard_id' => $request->dashboard_id,
+    //             'dashboard_name' => $dashboard->dashboard_name, // Add dashboard name
+    //             'created_at' => \Carbon\Carbon::parse($request->created_at)->format('j M Y, H:i'),
+    //             'reason' => $request->reason,
+    //             'application_number' => $request->application_number, // Add application_number
+    //             // Add other data you want to pass to the email template
+    //         ];
+
+    //         // Return JSON response with pretty print for debugging
+    //         return response()->json($emailData, 200, [], JSON_PRETTY_PRINT);
+
+    //         // Uncomment the following block to send email after testing
+    //         // try {
+    //         //     // Configure SMTP settings dynamically
+    //         //     Config::set('mail.mailers.smtp.host', 'relay.telkomsel.co.id');
+    //         //     Config::set('mail.mailers.smtp.port', 25);
+    //         //     Config::set('mail.mailers.smtp.encryption', null);
+    //         //     Config::set('mail.mailers.smtp.username', null);
+    //         //     Config::set('mail.mailers.smtp.password', null);
+    //         //     Config::set('mail.from.address', 'aagm@telkomsel.co.id');
+    //         //     Config::set('mail.from.name', 'Portal Analytics Dashboard');
+
+    //         //     // Send email notification
+    //         //     Mail::send('emails.notofied_request', $emailData, function ($message) use ($user) {
+    //         //         $message->to($user->email, $user->name)
+    //         //             ->subject('Your Permissions Have Been Updated');
+    //         //     });
+
+    //         //     // Redirect or give a response as needed
+    //         //     return redirect()->route('permission')->with('success', 'Request approved successfully.');
+    //         // } catch (\Exception $e) {
+    //         //     return redirect()->route('permission')->with('error', 'Failed to send email notification: ' . $e->getMessage());
+    //         // }
+    //     } else {
+    //         // If the request_status is not 0 (already approved or in review), show a message or take any other action
+    //         return back()->with('error', 'Request is already approved or in review.');
+    //     }
+    // }
+
     public function approvePermissionRequest($requestId)
     {
         // Check if the request with the specified request_id exists
-        $request = DB::table('permission_request')->where('request_id', $requestId)->first();
+        $request = DB::table('permission_request')
+            ->where('request_id', $requestId)
+            ->first();
 
         if (!$request) {
             // If the request does not exist, show an error message or redirect back with an error
@@ -353,13 +468,17 @@ class PermissionController extends Controller
 
         if ($request->request_status == 0) {
             // If the request_status is 0, update it to 1 (approve)
-            DB::table('permission_request')->where('request_id', $requestId)->update([
-                'request_status' => 1,
-                'updated_at' => now(), // Update the 'updated_at' timestamp
-            ]);
+            DB::table('permission_request')
+                ->where('request_id', $requestId)
+                ->update([
+                    'request_status' => 1,
+                    'updated_at' => now(), // Update the 'updated_at' timestamp
+                ]);
 
             // Get user data from permission list based on the requested name
-            $user = DB::table('users')->where('name', $request->name)->first();
+            $user = DB::table('users')
+                ->where('name', $request->name)
+                ->first();
 
             if (!$user) {
                 // If user not found, show an error message or take appropriate action
@@ -395,8 +514,49 @@ class PermissionController extends Controller
                 ]);
             }
 
-            // Redirect or give a response as needed
-            return redirect()->route('permission')->with('success', 'Request approved successfully.');
+            // Get dashboard name by joining with the dashboard table
+            $dashboard = DB::table('dashboard')
+                ->where('id', $request->dashboard_id)
+                ->first();
+
+            if (!$dashboard) {
+                // If dashboard not found, show an error message or take appropriate action
+                return back()->with('error', 'Dashboard not found.');
+            }
+
+            // Prepare email data
+            $emailData = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'dashboard_id' => $request->dashboard_id,
+                'dashboard_name' => $dashboard->dashboard_name, // Add dashboard name
+                'created_at' => \Carbon\Carbon::parse($request->created_at)->format('j M Y, H:i'),
+                'reason' => $request->reason,
+                'application_number' => $request->application_number, // Add application_number
+                // Add other data you want to pass to the email template
+            ];
+
+            // Configure SMTP settings dynamically
+            Config::set('mail.mailers.smtp.host', 'relay.telkomsel.co.id');
+            Config::set('mail.mailers.smtp.port', 25);
+            Config::set('mail.mailers.smtp.encryption', null);
+            Config::set('mail.mailers.smtp.username', null);
+            Config::set('mail.mailers.smtp.password', null);
+            Config::set('mail.from.address', 'aagm@telkomsel.co.id');
+            Config::set('mail.from.name', 'Portal Analytics Dashboard');
+
+            try {
+                // Send email notification
+                Mail::send('emails.notified_request', $emailData, function ($message) use ($user, $emailData) {
+                    $message->to($user->email, $user->name)
+                        ->subject('Portal Analytics Dashboard - Request Number: ' . $emailData['application_number'] . ' Final Approved'); // Corrected subject
+                });
+
+                // Redirect or give a response as needed
+                return redirect()->route('permission')->with('success', 'Request approved successfully.');
+            } catch (\Exception $e) {
+                return redirect()->route('permission')->with('error', 'Failed to send email notification: ' . $e->getMessage());
+            }
         } else {
             // If the request_status is not 0 (already approved or in review), show a message or take any other action
             return back()->with('error', 'Request is already approved or in review.');
