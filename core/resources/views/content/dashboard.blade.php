@@ -439,6 +439,7 @@
                                     <th>Name</th>
                                     <th>Categories</th>
                                     <th>Description</th>
+                                    <th>Type</th>
                                     <th>Image</th>
                                     <th>Action</th>
                                 </tr>
@@ -449,7 +450,16 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td><span class="text-primary">{{ $row->dashboard_name }}</span></td>
                                     <td>{{ $row->category_name }}</td>
-                                    <td>{{ $row->description }}</td>
+                                    <td>{{ \Illuminate\Support\str::limit($row->description, 100) }}</td>
+                                    <td>
+                                        @if ($row->visualization_type == 'Tableau')
+                                        <span class="badge badge-glow bg-primary">Tableau</span>
+                                        @elseif ($row->visualization_type === null)
+                                        -
+                                        @else
+                                        <span class="badge badge-glow bg-warning">PowerBI</span>
+                                        @endif
+                                    </td>
                                     <td><img class="card-img-top" src="{{ asset('core/uploads/' . $row->image) }}" width="30" alt="Card image cap" /></td>
                                     <td>
                                         <div class="btn-group">
