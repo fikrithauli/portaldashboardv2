@@ -321,7 +321,7 @@
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
                 <li class="navigation-header mt-3">
-                    <span data-i18n="Search">Search</span>
+                    <span data-i18n="Pencarian">Pencarian</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -330,8 +330,8 @@
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
                             <form action="{{ route('search') }}" method="GET" class="input-group">
-                                <input type="text" class="form-control" name="keyword" placeholder="Dashboard name" autocomplete="off" />
-                                <button type="submit" class="btn btn-primary"><i data-feather="search"></i></button>
+                                <input type="text" class="form-control" name="keyword" placeholder="Berdasarkan nama" />
+                                <button type="submit" class="btn btn-danger"><i data-feather="search"></i></button>
                             </form>
 
                         </div>
@@ -339,11 +339,9 @@
                 </li>
 
                 <li class="navigation-header mt-2">
-                    <span data-i18n="Categories">Categories</span>
+                    <span data-i18n="Kategori">Kategori</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
-
-
 
                 <li class="nav-item mt-2">
                     <div class="row">
@@ -355,7 +353,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input category-filter" type="radio" name="category_id"
                                                 id="allCategories" value="all" {{ request('category_id') == 'all' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="allCategories">All Categories</label>
+                                            <label class="form-check-label" for="allCategories">Semua Kategori</label>
                                         </div>
                                         @foreach($categories as $category)
                                         <div class="form-check">
@@ -375,17 +373,6 @@
                         <!-- Tempat untuk menampilkan data filter -->
                     </div>
                 </li>
-
-
-                <!-- @foreach($categories as $category)
-                <li class="nav-item mt-2">
-                    <a class="d-flex align-items-center" href="">
-                        <i data-feather="circle"></i><span class="menu-title text-truncate" data-i18n="{{ $category->category_name }}">{{ $category->category_name }}</span>
-                    </a>
-                </li>
-                @endforeach -->
-
-
             </ul>
         </div>
     </div>
@@ -544,11 +531,6 @@
     <div class="sidenav-overlay"></div>
     <div class="drag-target"></div>
 
-
-    <div>
-        {!! $footer !!}
-    </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const categoryRadios = document.querySelectorAll(".category-filter");
@@ -561,3 +543,8 @@
             });
         });
     </script>
+
+
+    <div>
+        {!! $footer !!}
+    </div>

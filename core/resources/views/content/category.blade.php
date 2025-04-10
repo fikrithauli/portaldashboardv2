@@ -239,12 +239,12 @@
                     @if(Auth::user()->role_id == 1)
                     <li class="nav-item dropdown d-none d-lg-block">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="ficon" data-feather="package"></i>&nbsp; Content Management
+                            <i class="ficon" data-feather="package"></i>&nbsp; Kelola Konten
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ url('/categories') }}">Categories List</a>
-                            <a class="dropdown-item" href="{{ url('/content-dashboard') }}">Dashboard List</a>
-                            <a class="dropdown-item" href="{{ url('/service-interruption') }}">Under Maintenance</a>
+                            <a class="dropdown-item" href="{{ url('/content-dashboard') }}">Dashboard</a>
+                            <a class="dropdown-item" href="{{ url('/categories') }}">Kategori</a>
+                            <a class="dropdown-item" href="{{ url('/service-interruption') }}">Pemeliharaan</a>
                             <!-- Tambahkan menu-item lainnya jika diperlukan -->
                         </div>
                     </li>&nbsp;&nbsp;
@@ -256,19 +256,19 @@
                         <a class="nav-link" href="{{ url('/permission') }}">
                             <div class="d-flex align-items-center">
                                 <div class="position-relative">
-                                    <i class="ficon" data-feather="shield"></i>&nbsp;&nbsp;
+                                    <i class="ficon" data-feather="check-circle"></i>&nbsp;&nbsp;
                                     @if ($pendingRequestsCount > 0)
                                     <span class="badge rounded-pill bg-danger badge-up small-badge">{{ $pendingRequestsCount }}</span>
                                     @endif
                                 </div>&nbsp;
-                                <span class="menu-title text-truncate" data-i18n="Roles &amp; Permission">
-                                    Roles &amp; Permission
+                                <span class="menu-title text-truncate" data-i18n="Permintaan Akses">
+                                    Permintaan Akses
                                 </span>
                             </div>
                         </a>
                     </li>&nbsp;&nbsp;
 
-                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('/user-management') }}"><i class="ficon" data-feather="users"></i>&nbsp; User Management</a></li>&nbsp;&nbsp;
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('/user-management') }}"><i class="ficon" data-feather="users"></i>&nbsp; Kelola Pengguna</a></li>&nbsp;&nbsp;
                     @endif
                 </ul>
 
@@ -291,12 +291,13 @@
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
-                        <a class="dropdown-item" href="{{ url('/settings') }}"><i class="me-50" data-feather="help-circle"></i> Log history</a>
+                        <a class="dropdown-item" href="{{ url('profile-settings') }}"><i class="me-50" data-feather="settings"></i> Pengaturan</a>
+                        <a class="dropdown-item" href="{{ url('/settings') }}"><i class="me-50" data-feather="help-circle"></i> Riwayat Log</a>
                         <div class="dropdown-divider"></div>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
-                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="me-50" data-feather="power"></i> Logout</a>
+                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="me-50" data-feather="power"></i> Keluar</a>
                     </div>
                 </li>
                 @endif
@@ -321,7 +322,7 @@
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
                 <li class="navigation-header mt-3">
-                    <span data-i18n="Search">Search</span>
+                    <span data-i18n="Pencarian">Pencarian</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -330,16 +331,15 @@
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
                             <form action="{{ route('search') }}" method="GET" class="input-group">
-                                <input type="text" class="form-control" name="keyword" placeholder="Dashboard name" />
-                                <button type="submit" class="btn btn-primary"><i data-feather="search"></i></button>
+                                <input type="text" class="form-control" name="keyword" placeholder="Berdasarkan nama" />
+                                <button type="submit" class="btn btn-danger"><i data-feather="search"></i></button>
                             </form>
-
                         </div>
                     </div>
                 </li>
 
                 <li class="navigation-header mt-2">
-                    <span data-i18n="Categories">Categories</span>
+                    <span data-i18n="Kategori">Kategori</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -355,7 +355,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input category-filter" type="radio" name="category_id"
                                                 id="allCategories" value="all" {{ request('category_id') == 'all' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="allCategories">All Categories</label>
+                                            <label class="form-check-label" for="allCategories">Semua Kategori</label>
                                         </div>
                                         @foreach($categories as $category)
                                         <div class="form-check">
@@ -399,12 +399,12 @@
                 <div class="content-header-left col-md-9 col-12 mb-2">
                     <div class="row breadcrumbs-top">
                         <div class="col-12">
-                            <h2 class="content-header-title float-start mb-0">&nbsp;Content Management</h2>
+                            <h2 class="content-header-title float-start mb-0">&nbsp;Kelola Konten</h2>
                             <div class="breadcrumb-wrapper">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ url('/home') }}">Home</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Categories List
+                                    <li class="breadcrumb-item active">Kategori
                                     </li>
                                 </ol>
                             </div>
@@ -416,10 +416,10 @@
                 <div class="card">
                     <div class="card-header border-bottom">
                         <div class="header-content">
-                            <h5 class="card-title">Categories List</h5>
+                            <h5 class="card-title">Daftar Kategori</h5>
                         </div>
                         <div class="action-button-container">
-                            <button type="button" class="action-button btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addNewCard"><i data-feather='plus'></i>&nbsp; New categories</button>
+                            <button type="button" class="action-button btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addNewCard"><i data-feather='plus'></i>&nbsp; Tambah data</button>
                         </div>
                     </div>
 

@@ -49,6 +49,8 @@
   <script src="{{ asset('app-assets/js/scripts/pages/app-user-view.js') }}"></script>
   <script src="{{ asset('app-assets/js/scripts/pages/app-invoice.js') }}"></script>
   <script src="{{ asset('app-assets/js/scripts/pages/app-user-view-billing.js') }}"></script>
+  <script src="{{ asset('app-assets/js/scripts/pages/app-user-edit.js') }}"></script>
+  <script src="{{ asset('app-assets/js/scripts/components/components-navs.js') }}"></script>
 
   <script>
       $(document).ready(function() {
@@ -159,8 +161,8 @@
           });
       });
   </script>
-
-  <!-- kode filter multiple -->
+  <!-- kode filter multiple 
+      -->
   <!-- <script>
       $(document).ready(function() {
           $('#filterBtn').on('click', function() {

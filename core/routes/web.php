@@ -14,6 +14,7 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\DetailLoginController;
 use App\Http\Controllers\MicrosoftController;
 use App\Http\Controllers\ForgotController;
+use App\Http\Controllers\ProfileController;
 
 Route::group(['middleware' => 'web'], function () {
     // Rute-rute Anda di sini
@@ -108,3 +109,8 @@ Route::get('/callback', [MicrosoftAuthController::class, 'handleCallback'])->nam
 
 Route::get('/recipient-emails', [PermissionController::class, 'getEmails'])->name('recipient-emails');
 Route::get('/recipient-details', [PermissionController::class, 'getRecipientDetails'])->name('recipient-details');
+
+Route::get('/profile-settings', [ProfileController::class, 'show'])->name('profile-settings');
+Route::post('/profile-update/{id}', [ProfileController::class, 'profileUpdate'])->name('profile-update');
+Route::delete('/avatar-reset/{id}', [ProfileController::class, 'resetAvatar'])->name('avatar-reset');
+Route::post('profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');

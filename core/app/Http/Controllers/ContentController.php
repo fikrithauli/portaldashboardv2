@@ -136,54 +136,6 @@ class ContentController extends Controller
     }
 
 
-    // public function dashboardUpdate(Request $request, $id)
-    // {
-    //     // Retrieve the old dashboard data
-    //     $oldDashboard = DB::table('dashboard')->where('dashboard_id', $id)->first();
-
-    //     // Validasi input
-    //     $validatedData = $request->validate([
-    //         'category_id' => 'required',
-    //         'dashboard_name' => 'required|max:255',
-    //         'description' => 'required',
-    //         'visualization_type' => 'required',
-    //         'embed_url' => 'required',
-    //         'view_name' => 'required',
-    //         'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Hanya menerima file gambar dengan ekstensi yang diizinkan (jpeg, png, jpg, gif) dengan ukuran maksimum 2MB
-    //     ]);
-
-    //     // Mengunggah gambar jika ada
-    //     $imagePath = $oldDashboard->image; // Default to the old image
-    //     if ($request->hasFile('image')) {
-    //         $image = $request->file('image');
-    //         $imageName = time() . '_' . $image->getClientOriginalName();
-    //         $image->move(base_path('uploads'), $imageName);
-    //         $imagePath = $imageName; // Use the new image if available
-
-    //         // Hapus gambar lama jika ada
-    //         if ($oldDashboard && $oldDashboard->image) {
-    //             $oldImagePath = public_path('uploads/' . $oldDashboard->image);
-    //             if (file_exists($oldImagePath)) {
-    //                 unlink($oldImagePath);
-    //             }
-    //         }
-    //     }
-
-    //     // Menggunakan query builder untuk mengupdate data dashboard
-    //     DB::table('dashboard')->where('dashboard_id', $id)->update([
-    //         'category_id' => $validatedData['category_id'],
-    //         'dashboard_name' => $validatedData['dashboard_name'],
-    //         'description' => $validatedData['description'],
-    //         'visualization_type' => $validatedData['visualization_type'],
-    //         'embed_url' => $validatedData['embed_url'],
-    //         'view_name' => $validatedData['view_name'],
-    //         'image' => $imagePath, // Use the new image path
-    //     ]);
-
-    //     // Redirect atau berikan respons sesuai kebutuhan
-    //     return redirect()->route('content-dashboard')->with('success', 'Dashboard updated successfully');
-    // }
-
     public function dashboardUpdate(Request $request, $id)
     {
         // Retrieve the old dashboard data

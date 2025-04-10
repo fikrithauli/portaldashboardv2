@@ -239,12 +239,12 @@
                     @if(Auth::user()->role_id == 1)
                     <li class="nav-item dropdown d-none d-lg-block">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="ficon" data-feather="package"></i>&nbsp; Content Management
+                            <i class="ficon" data-feather="package"></i>&nbsp; Kelola Konten
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ url('/categories') }}">Categories List</a>
-                            <a class="dropdown-item" href="{{ url('/content-dashboard') }}">Dashboard List</a>
-                            <a class="dropdown-item" href="{{ url('/service-interruption') }}">Under Maintenance</a>
+                            <a class="dropdown-item" href="{{ url('/content-dashboard') }}">Dashboard</a>
+                            <a class="dropdown-item" href="{{ url('/categories') }}">Kategori</a>
+                            <a class="dropdown-item" href="{{ url('/service-interruption') }}">Pemeliharaan</a>
                             <!-- Tambahkan menu-item lainnya jika diperlukan -->
                         </div>
                     </li>&nbsp;&nbsp;
@@ -256,13 +256,13 @@
                         <a class="nav-link" href="{{ url('/permission') }}">
                             <div class="d-flex align-items-center">
                                 <div class="position-relative">
-                                    <i class="ficon" data-feather="shield"></i>&nbsp;&nbsp;
+                                    <i class="ficon" data-feather="check-circle"></i>&nbsp;&nbsp;
                                     @if ($pendingRequestsCount > 0)
                                     <span class="badge rounded-pill bg-danger badge-up small-badge">{{ $pendingRequestsCount }}</span>
                                     @endif
                                 </div>&nbsp;
-                                <span class="menu-title text-truncate" data-i18n="Roles &amp; Permission">
-                                    Roles &amp; Permission
+                                <span class="menu-title text-truncate" data-i18n="Permintaan Akses">
+                                    Permintaan Akses
                                 </span>
                             </div>
                         </a>
@@ -291,12 +291,13 @@
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
-                        <a class="dropdown-item" href="{{ url('/settings') }}"><i class="me-50" data-feather="help-circle"></i> Log history</a>
+                        <a class="dropdown-item" href="{{ url('profile-settings') }}"><i class="me-50" data-feather="settings"></i> Pengaturan</a>
+                        <a class="dropdown-item" href="{{ url('/settings') }}"><i class="me-50" data-feather="help-circle"></i> Riwayat Log</a>
                         <div class="dropdown-divider"></div>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
-                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="me-50" data-feather="power"></i> Logout</a>
+                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="me-50" data-feather="power"></i> Keluar</a>
                     </div>
                 </li>
                 @endif
@@ -321,7 +322,7 @@
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
                 <li class="navigation-header mt-3">
-                    <span data-i18n="Search">Search</span>
+                    <span data-i18n="Pencarian">Pencarian</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -330,8 +331,8 @@
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
                             <form action="{{ route('search') }}" method="GET" class="input-group">
-                                <input type="text" class="form-control" name="keyword" placeholder="Dashboard name" />
-                                <button type="submit" class="btn btn-primary"><i data-feather="search"></i></button>
+                                <input type="text" class="form-control" name="keyword" placeholder="Berdasarkan nama" />
+                                <button type="submit" class="btn btn-danger"><i data-feather="search"></i></button>
                             </form>
 
                         </div>
@@ -339,7 +340,7 @@
                 </li>
 
                 <li class="navigation-header mt-2">
-                    <span data-i18n="Categories">Categories</span>
+                    <span data-i18n="Kategori">Kategori</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -355,7 +356,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input category-filter" type="radio" name="category_id"
                                                 id="allCategories" value="all" {{ request('category_id') == 'all' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="allCategories">All Categories</label>
+                                            <label class="form-check-label" for="allCategories">Semua Kategori</label>
                                         </div>
                                         @foreach($categories as $category)
                                         <div class="form-check">
@@ -399,9 +400,9 @@
             <div class="content-header row">
             </div>
             <div class="content-body">
-                <h3>Manage Request</h3>
+                <h3>Kelola Permintaan</h3>
                 <p class="mb-2">
-                    Manage user access permissions for dashboard access.
+                    Kelola izin akses pengguna untuk akses dashboard.
                 </p>
 
                 <!-- table -->
@@ -414,23 +415,23 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <ul class="nav nav-tabs" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" aria-controls="home" role="tab" aria-selected="true">Recent</a>
+                                                <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" aria-controls="home" role="tab" aria-selected="true">Terbaru</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" aria-controls="profile" role="tab" aria-selected="false">Granted</a>
+                                                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" aria-controls="profile" role="tab" aria-selected="false">Diberikan</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="rejected-tab" data-bs-toggle="tab" href="#rejected" aria-controls="rejected" role="tab" aria-selected="false">Denied</a>
+                                                <a class="nav-link" id="rejected-tab" data-bs-toggle="tab" href="#rejected" aria-controls="rejected" role="tab" aria-selected="false">Ditolak</a>
                                             </li>
                                         </ul>
                                         <div>
                                             @if ($pendingRequests->isNotEmpty())
                                             <button class="btn btn-sm btn-outline-primary ms-2" id="approveAllRequestsBtn">
-                                                Bulk Approval
+                                                Persetujuan Cepat
                                             </button>&nbsp;
                                             @endif
                                             <button class="btn btn-sm btn-primary" data-bs-target="#addRoleModal" data-bs-toggle="modal">
-                                                <i data-feather='plus'></i>&nbsp; Add Permission
+                                                <i data-feather='plus'></i>&nbsp; Tambah Akses
                                             </button>
                                         </div>
                                     </div>
@@ -447,11 +448,11 @@
                                                                 <input type="checkbox" id="selectAllCheckbox"> <!-- Checkbox di header -->
                                                             </th>
                                                             @endif
-                                                            <th>Recipient Name</th>
-                                                            <th>Permission Type</th>
+                                                            <th>Nama Penerima</th>
+                                                            <th>Jenis Izin</th>
                                                             <th>Job Title</th>
                                                             <th>Status</th>
-                                                            <th>Actions</th>
+                                                            <th>Aksi</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -500,11 +501,11 @@
                                                 <table id="examples" class="table table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th>Recipient Name</th>
+                                                            <th>Nama Penerima</th>
                                                             <th>Job Title</th>
                                                             <th>Dashboard</th>
                                                             <th>Status</th>
-                                                            <th>Actions</th>
+                                                            <th>Aksi</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -551,11 +552,11 @@
                                                 <table id="reject" class="table table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th>Recipient Name</th>
+                                                            <th>Nama Penerima</th>
                                                             <th>Job title</th>
-                                                            <th>Permission Type</th>
+                                                            <th>Jenis Izin</th>
                                                             <th>Status</th>
-                                                            <th>Request Time</th>
+                                                            <th>Waktu Permintaan</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -679,8 +680,8 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body px-sm-5 mx-50 pb-5">
-                                <h1 class="text-center mb-1" id="addNewCardTitle">Request Details</h1>
-                                <p class="text-center">Application details for opening dashboard permissions</p>
+                                <h1 class="text-center mb-1" id="addNewCardTitle">Detail Permintaan</h1>
+                                <p class="text-center">Detail permintaan untuk membuka izin dashboard</p>
 
                                 <hr class="invoice-spacing pt-2" />
 
@@ -699,7 +700,7 @@
                                             </h4>
                                             <hr>
                                             <div class="invoice-date-wrapper">
-                                                <p class="invoice-date-title"><b>Request Time :</b> <br><span class="invoice-date">{{ \Carbon\Carbon::parse($r->permission_date)->format('j M Y, H:i') }}</span></p>
+                                                <p class="invoice-date-title"><b>Waktu Permintaan :</b> <br><span class="invoice-date">{{ \Carbon\Carbon::parse($r->permission_date)->format('j M Y, H:i') }}</span></p>
                                             </div>
                                         </div>
                                     </div>
@@ -707,7 +708,7 @@
                                 </div>
 
                                 <div class="alert alert-dark mb-2" role="alert">
-                                    <h6 class="alert-heading">Reason for submission</h6>
+                                    <h6 class="alert-heading">Alasan Pengajuan</h6>
                                     <div class="alert-body fw-normal"> {{ $r->reason }}</div>
                                 </div>
                                 <!-- Invoice Description ends -->
@@ -718,8 +719,8 @@
                                 <div class="card-body invoice-padding pt-0">
                                     <div class="row">
                                         <div class="col-12">
-                                            <span class="fw-bold">Note:</span>
-                                            <span>The following comments serve as a recorded explanation for the request to access the dashboard. Thank You!</span>
+                                            <span class="fw-bold">Catatan:</span>
+                                            <span>Komentar berikut berfungsi sebagai penjelasan yang direkam untuk permintaan untuk mengakses dasbor. Terima kasih!</span>
                                         </div>
                                     </div>
 

@@ -111,31 +111,6 @@ class SearchController extends Controller
         return response()->json($filteredData);
     }
 
-    // public function filterByCategoryView(Request $request)
-    // {
-    //     $userId = Auth::id();
-    //     $selectedCategoryId = $request->input('category_id', 'all');
-    //     $categories = Category::all();
-
-    //     $query = DB::table('dashboard')
-    //         ->select('dashboard.*', 'permission_request.request_status', 'permission_request.user_id')
-    //         ->leftJoin('permission_request', function ($join) use ($userId) {
-    //             $join->on('dashboard.dashboard_id', '=', 'permission_request.dashboard_id')
-    //                 ->where('permission_request.user_id', '=', $userId);
-    //         });
-
-    //     if ($selectedCategoryId !== 'all') {
-    //         $query->where('dashboard.category_id', $selectedCategoryId);
-    //     }
-
-    //     $query->orderByDesc('dashboard.created_at');
-    //     $query->groupBy('dashboard.dashboard_id');
-
-    //     $results = $query->get();
-
-    //     return view('result', compact('results', 'selectedCategoryId', 'categories'));
-    // }
-
     public function filterByCategoryView(Request $request)
     {
         $userId = Auth::id();

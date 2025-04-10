@@ -239,12 +239,12 @@
                     @if(Auth::user()->role_id == 1)
                     <li class="nav-item dropdown d-none d-lg-block">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="ficon" data-feather="package"></i>&nbsp; Content Management
+                            <i class="ficon" data-feather="package"></i>&nbsp; Kelola Konten
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ url('/categories') }}">Categories List</a>
-                            <a class="dropdown-item" href="{{ url('/content-dashboard') }}">Dashboard List</a>
-                            <a class="dropdown-item" href="{{ url('/service-interruption') }}">Under Maintenance</a>
+                            <a class="dropdown-item" href="{{ url('/content-dashboard') }}">Dashboard</a>
+                            <a class="dropdown-item" href="{{ url('/categories') }}">Kategori</a>
+                            <a class="dropdown-item" href="{{ url('/service-interruption') }}">Pemeliharaan</a>
                             <!-- Tambahkan menu-item lainnya jika diperlukan -->
                         </div>
                     </li>&nbsp;&nbsp;
@@ -256,19 +256,19 @@
                         <a class="nav-link" href="{{ url('/permission') }}">
                             <div class="d-flex align-items-center">
                                 <div class="position-relative">
-                                    <i class="ficon" data-feather="shield"></i>&nbsp;&nbsp;
+                                    <i class="ficon" data-feather="check-circle"></i>&nbsp;&nbsp;
                                     @if ($pendingRequestsCount > 0)
                                     <span class="badge rounded-pill bg-danger badge-up small-badge">{{ $pendingRequestsCount }}</span>
                                     @endif
                                 </div>&nbsp;
-                                <span class="menu-title text-truncate" data-i18n="Roles &amp; Permission">
-                                    Roles &amp; Permission
+                                <span class="menu-title text-truncate" data-i18n="Permintaan Akses">
+                                    Permintaan Akses
                                 </span>
                             </div>
                         </a>
                     </li>&nbsp;&nbsp;
 
-                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('/user-management') }}"><i class="ficon" data-feather="users"></i>&nbsp; User Management</a></li>&nbsp;&nbsp;
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('/user-management') }}"><i class="ficon" data-feather="users"></i>&nbsp; Kelola Pengguna</a></li>&nbsp;&nbsp;
                     @endif
                 </ul>
 
@@ -291,12 +291,13 @@
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
-                        <a class="dropdown-item" href="{{ url('/settings') }}"><i class="me-50" data-feather="help-circle"></i> Log history</a>
+                        <a class="dropdown-item" href="{{ url('profile-settings') }}"><i class="me-50" data-feather="settings"></i> Pengaturan</a>
+                        <a class="dropdown-item" href="{{ url('/settings') }}"><i class="me-50" data-feather="help-circle"></i> Riwayat Log</a>
                         <div class="dropdown-divider"></div>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
-                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="me-50" data-feather="power"></i> Logout</a>
+                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="me-50" data-feather="power"></i> Keluar</a>
                     </div>
                 </li>
                 @endif
@@ -321,7 +322,7 @@
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
                 <li class="navigation-header mt-3">
-                    <span data-i18n="Search">Search</span>
+                    <span data-i18n="Pencarian">Pencarian</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -330,8 +331,8 @@
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
                             <form action="{{ route('search') }}" method="GET" class="input-group">
-                                <input type="text" class="form-control" name="keyword" placeholder="Dashboard name" autocomplete="off" />
-                                <button type="submit" class="btn btn-primary"><i data-feather="search"></i></button>
+                                <input type="text" class="form-control" name="keyword" placeholder="Berdasarkan nama" autocomplete="off" />
+                                <button type="submit" class="btn btn-danger"><i data-feather="search"></i></button>
                             </form>
 
                         </div>
@@ -339,7 +340,7 @@
                 </li>
 
                 <li class="navigation-header mt-2">
-                    <span data-i18n="Categories">Categories</span>
+                    <span data-i18n="Categories">Kategori</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -353,7 +354,7 @@
                                     <div class="col-md-12">
                                         <div class="form-check">
                                             <input class="form-check-input category-filter" type="radio" name="category_id" id="allCategories" checked value="all">
-                                            <label class="form-check-label" for="allCategories">All Categories</label>
+                                            <label class="form-check-label" for="allCategories">Semua Kategori</label>
                                         </div>
                                         @foreach($categories as $category)
                                         <div class="form-check">

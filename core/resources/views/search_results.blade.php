@@ -321,7 +321,7 @@
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
                 <li class="navigation-header mt-3">
-                    <span data-i18n="Search">Search</span>
+                    <span data-i18n="Pencarian">Pencarian</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -330,8 +330,8 @@
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
                             <form action="{{ route('search') }}" method="GET" class="input-group">
-                                <input type="text" class="form-control" name="keyword" placeholder="Dashboard name" autocomplete="off" />
-                                <button type="submit" class="btn btn-primary"><i data-feather="search"></i></button>
+                                <input type="text" class="form-control" name="keyword" placeholder="Berdasarkan nama" autocomplete="off" />
+                                <button type="submit" class="btn btn-danger"><i data-feather="search"></i></button>
                             </form>
 
                         </div>
@@ -339,7 +339,7 @@
                 </li>
 
                 <li class="navigation-header mt-2">
-                    <span data-i18n="Categories">Categories</span>
+                    <span data-i18n="Kategori">Kategori</span>
                     <i data-feather="more-horizontal"></i>
                 </li>
 
@@ -350,24 +350,24 @@
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
                             <form action="{{ route('filter.category') }}" method="POST" class="input-group" id="filterForm">
-                                @csrf <!-- Add the CSRF token field for POST requests -->
+                                @csrf
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="category_id[]" id="allCategories" checked value="all">
-                                            <label class="form-check-label" for="allCategories">All Categories</label>
+                                            <input class="form-check-input category-filter" type="radio" name="category_id" id="allCategories" checked value="all">
+                                            <label class="form-check-label" for="allCategories">Semua Kategori</label>
                                         </div>
                                         @foreach($categories as $category)
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="category_id[]" id="category{{ $category->category_id }}" value="{{ $category->category_id }}">
+                                            <input class="form-check-input category-filter" type="radio" name="category_id" id="category{{ $category->category_id }}" value="{{ $category->category_id }}">
                                             <label class="form-check-label" for="category{{ $category->category_id }}">{{ $category->category_name }}</label>
                                         </div>
                                         @endforeach
                                     </div>
                                 </div>
-                                <div class="d-grid col-lg-12 col-md-12 mb-1 mb-lg-0">
+                                <!-- <div class="d-grid col-lg-12 col-md-12 mb-1 mb-lg-0">
                                     <button type="button" id="filterBtn" class="btn btn-primary mt-1">Apply</button>
-                                </div>
+                                </div> -->
                             </form>
                         </div>
                     </div>
