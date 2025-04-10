@@ -239,12 +239,12 @@
                     @if(Auth::user()->role_id == 1)
                     <li class="nav-item dropdown d-none d-lg-block">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="ficon" data-feather="package"></i>&nbsp; Content Management
+                            <i class="ficon" data-feather="package"></i>&nbsp; Kelola Konten
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ url('/categories') }}">Categories List</a>
-                            <a class="dropdown-item" href="{{ url('/content-dashboard') }}">Dashboard List</a>
-                            <a class="dropdown-item" href="{{ url('/service-interruption') }}">Under Maintenance</a>
+                            <a class="dropdown-item" href="{{ url('/content-dashboard') }}">Dashboard</a>
+                            <a class="dropdown-item" href="{{ url('/categories') }}">Kategori</a>
+                            <a class="dropdown-item" href="{{ url('/service-interruption') }}">Pemeliharaan</a>
                             <!-- Tambahkan menu-item lainnya jika diperlukan -->
                         </div>
                     </li>&nbsp;&nbsp;
@@ -256,19 +256,19 @@
                         <a class="nav-link" href="{{ url('/permission') }}">
                             <div class="d-flex align-items-center">
                                 <div class="position-relative">
-                                    <i class="ficon" data-feather="shield"></i>&nbsp;&nbsp;
+                                    <i class="ficon" data-feather="check-circle"></i>&nbsp;&nbsp;
                                     @if ($pendingRequestsCount > 0)
                                     <span class="badge rounded-pill bg-danger badge-up small-badge">{{ $pendingRequestsCount }}</span>
                                     @endif
                                 </div>&nbsp;
-                                <span class="menu-title text-truncate" data-i18n="Roles &amp; Permission">
-                                    Roles &amp; Permission
+                                <span class="menu-title text-truncate" data-i18n="Permintaan Akses">
+                                    Permintaan Akses
                                 </span>
                             </div>
                         </a>
                     </li>&nbsp;&nbsp;
 
-                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('/user-management') }}"><i class="ficon" data-feather="users"></i>&nbsp; User Management</a></li>&nbsp;&nbsp;
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('/user-management') }}"><i class="ficon" data-feather="users"></i>&nbsp; Kelola Pengguna</a></li>&nbsp;&nbsp;
                     @endif
                 </ul>
 
@@ -350,26 +350,28 @@
                     <div class="row">
                         &nbsp;&nbsp;&nbsp;
                         <div class="col-md-11">
-                            <form action="{{ route('filter.category') }}" method="POST" class="input-group" id="filterForm">
-                                @csrf
+                            <form action="{{ route('filterByCategoryView') }}" method="GET" class="input-group" id="filterForm">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-check">
-                                            <input class="form-check-input category-filter" type="radio" name="category_id" id="allCategories" checked value="all">
+                                            <input class="form-check-input category-filter" type="radio" name="category_id"
+                                                id="allCategories" value="all" {{ request('category_id') == 'all' ? 'checked' : '' }}
+                                                onchange="this.form.submit()">
                                             <label class="form-check-label" for="allCategories">Semua Kategori</label>
                                         </div>
                                         @foreach($categories as $category)
                                         <div class="form-check">
-                                            <input class="form-check-input category-filter" type="radio" name="category_id" id="category{{ $category->category_id }}" value="{{ $category->category_id }}">
+                                            <input class="form-check-input category-filter" type="radio" name="category_id"
+                                                id="category{{ $category->category_id }}" value="{{ $category->category_id }}"
+                                                {{ request('category_id') == $category->category_id ? 'checked' : '' }}
+                                                onchange="this.form.submit()">
                                             <label class="form-check-label" for="category{{ $category->category_id }}">{{ $category->category_name }}</label>
                                         </div>
                                         @endforeach
                                     </div>
                                 </div>
-                                <!-- <div class="d-grid col-lg-12 col-md-12 mb-1 mb-lg-0">
-                                    <button type="button" id="filterBtn" class="btn btn-primary mt-1">Apply</button>
-                                </div> -->
                             </form>
+
                         </div>
                     </div>
 
