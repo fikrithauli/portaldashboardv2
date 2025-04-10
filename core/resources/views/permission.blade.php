@@ -426,11 +426,11 @@
                                         </ul>
                                         <div>
                                             @if ($pendingRequests->isNotEmpty())
-                                            <button class="btn btn-sm btn-outline-primary ms-2" id="approveAllRequestsBtn">
+                                            <button class="btn btn-sm btn-outline-danger ms-2" id="approveAllRequestsBtn">
                                                 Persetujuan Cepat
                                             </button>&nbsp;
                                             @endif
-                                            <button class="btn btn-sm btn-primary" data-bs-target="#addRoleModal" data-bs-toggle="modal">
+                                            <button class="btn btn-sm btn-danger" data-bs-target="#addRoleModal" data-bs-toggle="modal">
                                                 <i data-feather='plus'></i>&nbsp; Tambah Akses
                                             </button>
                                         </div>
