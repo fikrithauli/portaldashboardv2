@@ -225,7 +225,7 @@
                           detailButton = `<a href="#" class="btn btn-danger mt-2 btn-under-maintenance">Under Maintenance</a>`;
                       } else {
                           if (userRoleId == 1) {
-                              detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
+                              detailButton = `<a href="/portaldashboard/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
                           } else {
                               if (row.is_allowed) {
                                   if (row.permission_type === 0) {
@@ -233,7 +233,7 @@
                                       detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
                                   } else {
                                       // Otherwise, display "Detail Dashboard" button
-                                      detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
+                                      detailButton = `<a href="/portaldashboard/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
                                   }
                               } else {
                                   var permissionType = row.permission_type // default to 0 if permission_type is null
@@ -335,13 +335,13 @@
                           detailButton = `<a href="#" class="btn btn-danger mt-2 btn-under-maintenance">Under Maintenance</a>`;
                       } else {
                           if (userRoleId == 1) {
-                              detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
+                              detailButton = `<a href="/portaldashboard/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
                           } else {
                               if (row.is_allowed) {
                                   if (row.permission_type === 0) {
                                       detailButton = `<button class="btn btn-danger mt-2">Access revoked</button>`;
                                   } else {
-                                      detailButton = `<a href="/portaldashboardv2/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
+                                      detailButton = `<a href="/portaldashboard/detail/${dashboardNameSlug}" class="btn btn-relief-primary mt-2">View Dashboard</a>`;
                                   }
                               } else {
                                   var permissionType = row.permission_type;
@@ -421,7 +421,7 @@
                   // Simulate a delay using setTimeout (replace this with your actual AJAX request)
                   setTimeout(function() {
                       $.ajax({
-                          url: `/portaldashboardv2/permissions/${userId}`,
+                          url: `/portaldashboard/permissions/${userId}`,
                           type: 'POST',
                           headers: {
                               'Content-Type': 'application/json',
